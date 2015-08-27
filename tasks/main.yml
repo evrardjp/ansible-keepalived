@@ -1,0 +1,67 @@
+---
+# tasks file for keepalived
+- name: install keepalived
+  apt:
+    pkg: keepalived
+    state: present
+  tags:
+    - keepalived-apt-packages
+
+- name: configure keepalived
+  template:
+    src: keepalived.conf.j2
+    dest: /etc/keepalived/keepalived.conf
+  tags:
+    - keepalived-config
+  notify:
+    - restart keepalived
+
+- name: Dropping the tracking scripts
+  copy:
+    src: "{{item.value.src_check_script}}"
+    dest: "{{item.value.check_script}}"
+    mode: 0755
+  with_dict: "{{keepalived_scripts | default('{}')}}"
+  when: item.value.src_check_script is defined
+  notify:
+    - restart keepalived
+
+- name: Dropping the general notification scripts
+  copy:
+    src: "{{item.value.src_notify_script}}"
+    dest: "{{item.value.notify_script}}"
+    mode: 0755
+  with_dict: "{{keepalived_sync_groups}}"
+  when: item.value.src_notify_script is defined
+  notify:
+    - restart keepalived
+
+- name: Dropping the notification scripts for switching to master
+  copy:
+    src: "{{item.value.src_notify_master}}"
+    dest: "{{item.value.notify_master}}"
+    mode: 0755
+  with_dict: "{{keepalived_sync_groups}}"
+  when: item.value.src_notify_master is defined
+  notify:
+    - restart keepalived
+
+- name: Dropping the notification scripts for switching to backup
+  copy:
+    src: "{{item.value.src_notify_backup}}"
+    dest: "{{item.value.notify_backup}}"
+    mode: 0755
+  with_dict: "{{keepalived_sync_groups}}"
+  when: item.value.src_notify_backup is defined
+  notify:
+    - restart keepalived
+
+- name: Dropping the notification scripts for failures
+  copy:
+    src: "{{item.value.src_notify_fault}}"
+    dest: "{{item.value.notify_fault}}"
+    mode: 0755
+  with_dict: "{{keepalived_sync_groups}}"
+  when: item.value.src_notify_fault is defined
+  notify:
+    - restart keepalived

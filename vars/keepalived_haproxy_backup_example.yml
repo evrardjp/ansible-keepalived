@@ -1,0 +1,71 @@
+---
+keepalived_sync_groups:
+  # You can have multiple sync groups. Here is an example of just one.
+  haproxy:
+    # Each group can have muliple instances
+    instances:
+      - external
+      - internal
+    # Uncomment this to have a notification script, triggered on state change.
+    # all the *_scripts can be a direct command, or a path to a script
+    # For the latter, you MUST define a script that will be used a source in
+    # src_*_script (available on the deployment host).
+    # The src_*_script will be uploaded to your destination host at the _script
+    # location
+    #notify_script: /etc/keepalived/haproxy_notify.sh
+    #src_notify_script: <path to source script if notify_script is not a command>
+    # If instead of one notification script handling all types of events, you
+    # want to define script per type of notification, please uncomment this.
+    # They will act before the general notification script.
+    # Their deployment and configuration are like the notify_script
+    #notify_master:
+    #src_notify_master:
+    #notify_backup:
+    #src_notify_backup:
+    #notify_fault:
+    #src_notify_fault:
+
+# Uncomment this to have keepalived status checking. They will run on all the hosts
+# whether it's master or backup. You can have multiple scripts.
+#keepalived_scripts:
+  #haproxy_check_script:
+    # Here is an example with a command instead of a script.
+    # Add src_check_script if you want to run a script instead of a command
+    # and upload it from your deploy host
+    #check_script: "killall -0 haproxy"
+  #pingable_check_script:
+    #check_script: "ping -c 1 193.0.14.129 1>&2"
+    # Interval is the time in seconds between each check
+    #interval: 10
+    # Fall is the time to mark the keepalived status as not ok
+    #fall: 2
+    # Rise is the time to mark the keepalived status as back to ok
+    #rise: 4
+
+keepalived_instances:
+  #This dict name is the same as the one above, in keepalived_sync_groups.
+  external:
+    #remember you can use ansible variables here.
+    interface: eth0
+    state: BACKUP
+    virtual_router_id: 10
+    priority: 20
+    authentication_password: "{{ keepalived_authentication_password | default('secret') }}"
+    vips:
+      - "{{keepalived_external_vip_cidr}} dev eth0"
+    # Optional Scripts for tracking the current status of the keepalived instance
+    #track_scripts:
+    #  - haproxy_check_script
+    #  - pingable_check_script
+  internal:
+    interface: eth1
+    state: BACKUP
+    virtual_router_id: 11
+    priority: 20
+    authentication_password: "{{ keepalived_authentication_password | default('secret') }}"
+    # Optional Scripts for tracking the current status of the keepalived instance
+    #track_scripts:
+    #  - haproxy_check_script
+    #  - pingable_check_script
+    vips:
+      - "{{keepalived_internal_vip_cidr}} dev eth1"
