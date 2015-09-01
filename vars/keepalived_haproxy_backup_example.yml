@@ -1,4 +1,18 @@
 ---
+# Copyright 2015, Jean-Philippe Evrard <jean-philippe@evrard.me>
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 keepalived_sync_groups:
   # You can have multiple sync groups. Here is an example of just one.
   haproxy:
@@ -50,7 +64,11 @@ keepalived_instances:
     state: BACKUP
     virtual_router_id: 10
     priority: 20
-    authentication_password: "{{ keepalived_authentication_password | default('secret') }}"
+    # Please set this if you want to use authentication in your VRRP
+    # instance. If more than 8 characters, it will be truncated.
+    # The password must be the same per router_id (so backup and
+    # master should have the same password).
+    #authentication_password: "your_password"
     vips:
       - "{{keepalived_external_vip_cidr}} dev eth0"
     # Optional Scripts for tracking the current status of the keepalived instance
@@ -62,7 +80,11 @@ keepalived_instances:
     state: BACKUP
     virtual_router_id: 11
     priority: 20
-    authentication_password: "{{ keepalived_authentication_password | default('secret') }}"
+    # Please set this if you want to use authentication in your VRRP
+    # instance. If more than 8 characters, it will be truncated.
+    # The password must be the same per router_id (so backup and
+    # master should have the same password).
+    #authentication_password: "your_password"
     # Optional Scripts for tracking the current status of the keepalived instance
     #track_scripts:
     #  - haproxy_check_script
