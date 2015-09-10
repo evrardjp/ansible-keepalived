@@ -1,3 +1,4 @@
+#jinja2: lstrip_blocks: True
 # Copyright 2015, Jean-Philippe Evrard <jean-philippe@evrard.me>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -38,9 +39,9 @@ vrrp_sync_group {{ name }} {
 {% for name, details in keepalived_scripts.iteritems() %}
 vrrp_script {{ name }} {
   script "{{ details.check_script }}"
-  interval "{{ details.interval | default(5) }}"   # checking "{{ details.check_script }}" every "{{ details.interval | default(5) }}" seconds by default
-  fall "{{ details.fall | default(3) }}"           # require "{{ details.fall | default(3) }}" failures for KO
-  rise "{{ details.rise | default(6) }}"           # require "{{ details.rise | default(6) }}" successes for OK
+  interval "{{ details.interval | default(5) }}"   # checking every 5 seconds by default
+  fall "{{ details.fall | default(3) }}"           # require 3 failures for KO
+  rise "{{ details.rise | default(6) }}"           # require 6 successes for OK
 }
 {% endfor %}
 {% endif %}
