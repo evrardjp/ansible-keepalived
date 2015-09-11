@@ -20,6 +20,14 @@
   tags:
     - keepalived-apt-packages
 
+- name: Allow consuming apps to bind on non local addresses
+  sysctl:
+    name: net.ipv4.ip_nonlocal_bind
+    value: 1
+    sysctl_set: yes
+    state: present
+  when: keepalived_bind_on_non_local | bool
+
 - name: configure keepalived
   template:
     src: keepalived.conf.j2

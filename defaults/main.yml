@@ -15,3 +15,4 @@
 
 keepalived_instances: []
 keepalived_sync_groups: []
+keepalived_bind_on_non_local: False
