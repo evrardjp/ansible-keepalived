@@ -13,6 +13,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+## APT Cache options
+cache_timeout: 600
+
 keepalived_instances: []
 keepalived_sync_groups: []
 keepalived_bind_on_non_local: False
+keepalived_use_latest_stable_ppa: True
+keepalived_repo: "ppa:keepalived/stable"
+keepalived_repo_keyid: "7C33BDC6"
+#keepalived_repo_keyurl:
+keepalived_keyserver: keyserver.ubuntu.com
