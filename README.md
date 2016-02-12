@@ -20,6 +20,11 @@ The main variables are:
 * keepalived_sync_groups: This is a mandatory dict. It groups items defined in keepalived_instances, and (if desired) allow the configuration of notifications scripts per group of keepalived_instances. Notification scripts are triggered on keepalived's state change and are facultative.
 * keepalived_scripts: This is an optional dict where you could have checking scripts that can trigger the notifications scripts.
 * keepalived_bind_on_non_local: This variable (defaulted to "False") determines whether the system that host keepalived will allow its apps to bind on non-local addresses. If you set it to true, this allows apps to bind (and start) even if they don't currently have the VIP for example.
+* keepalived_use_latest_stable_ppa: (Default: True) When this setting is set to False, the role will use the package provided with the distribution instead of using the ppa.
+* keepalived_repo: The url to the repo for installing keepalived.
+* keepalived_repo_keyid: The keyid for the repo for installing keepalived.
+* keepalived_repo_keyurl: The key url of the repo.
+* cache_timeout: This is the expiration time of the apt cache. When expired, apt will automatically update its cache. This variable will be removed when the ansible bug upstream will be fixed.
 
 Please check the examples for more explanations on how these dicts must be configured.
 
