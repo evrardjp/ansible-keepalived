@@ -56,6 +56,15 @@
   apt:
     pkg: keepalived
     state: present
+  when: not keepalived_use_latest_stable | bool
+  tags:
+    - keepalived-apt-packages
+
+- name: install keepalived
+  apt:
+    pkg: keepalived
+    state: latest
+  when: keepalived_use_latest_stable | bool
   tags:
     - keepalived-apt-packages
 
