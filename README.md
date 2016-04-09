@@ -17,7 +17,7 @@ Examples are given in the vars folder. Don't try them immediately, they won't wo
 The main variables are:
 
 * keepalived_use_latest_stable: This is by default set to false. When set to true, the role will always install latest version of keepalived, making it restart when a new version appears in the ppa.
-* keepalived_instances: This is a mandatory dict. It gathers information about the vips, the prefered state (master/backup), the VRRIP IDs and priorities, the password used for authentication...
+* keepalived_instances: This is a mandatory dict. It gathers information about the vips, the prefered state (master/backup), the VRRIP IDs and priorities, the password used for authentication... This is where things like nopreempt are configured. nopreempt allows to stay in backup state (instead of preempting to configured master) on a master return of availability, after its failure. Please check the template for additional settings support, and original keepalived documentation for their configuration.
 * keepalived_sync_groups: This is a mandatory dict. It groups items defined in keepalived_instances, and (if desired) allow the configuration of notifications scripts per group of keepalived_instances. Notification scripts are triggered on keepalived's state change and are facultative.
 * keepalived_scripts: This is an optional dict where you could have checking scripts that can trigger the notifications scripts.
 * keepalived_bind_on_non_local: This variable (defaulted to "False") determines whether the system that host keepalived will allow its apps to bind on non-local addresses. If you set it to true, this allows apps to bind (and start) even if they don't currently have the VIP for example.
