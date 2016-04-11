@@ -52,6 +52,15 @@
   tags:
     - keepalived-apt-packages
 
+- name: Prevent keepalived from starting on install
+  copy:
+    dest: /etc/init/keepalived.override
+    content: manual
+  changed_when: False
+  tags:
+    - keepalived-config
+    - keepalived-prevent-start
+
 - name: install keepalived
   apt:
     pkg: keepalived
@@ -134,3 +143,12 @@
   when: item.value.src_notify_fault is defined
   notify:
     - restart keepalived
+
+- name: Allow keepalived from starting on install
+  file:
+    path: /etc/init/keepalived.override
+    state: absent
+  changed_when: False
+  tags:
+    - keepalived-config
+    - keepalived-prevent-start
