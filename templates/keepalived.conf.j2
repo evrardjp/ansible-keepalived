@@ -64,6 +64,14 @@ vrrp_instance {{ name }} {
     auth_pass {{instance.authentication_password}}
   }
   {% endif %}
+  {% if instance.unicast_src_ip is defined and instance.unicast_peers|length > 0 %}
+  unicast_src_ip {{ instance.unicast_src_ip }}
+  unicast_peer {
+  {% for peer in instance.unicast_peers %}
+    {{ peer }}
+  {% endfor %}
+  }
+  {% endif %}
   virtual_ipaddress {
     {% for vip in instance.vips %}
     {{ vip }}
