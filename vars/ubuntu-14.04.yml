@@ -12,16 +12,3 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-galaxy_info:
-  author: Jean-Philippe Evrard
-  description:  This role installs and configure keepalived based on a variable file
-  license: Apache
-  min_ansible_version: 1.9
-  platforms:
-  - name: Ubuntu
-    versions:
-    - trusty
-  categories:
-  - clustering
-dependencies: []
