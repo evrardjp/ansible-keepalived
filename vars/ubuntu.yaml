@@ -13,16 +13,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-galaxy_info:
-  author: Jean-Philippe Evrard
-  description:  This role installs and configure keepalived based on a variable file
-  license: Apache
-  min_ansible_version: 1.9
-  platforms:
-  - name: Ubuntu
-    versions:
-    - trusty
-    - xenial
-  categories:
-  - clustering
-dependencies: []
+## APT Cache options
+apt_cache_timeout: "{{ cache_timeout }}"
+
+#Standard names and paths for ubuntu 14.04
+keepalived_package_name: "keepalived"
+keepalived_config_file_path: "/etc/keepalived/keepalived.conf"
+
+## Repo details for ubuntu 14.04
+# repo, keyid are mandatory.
+# One of (keyurl or keyserver) is required
+keepalived_repo: "ppa:keepalived/stable"
+keepalived_repo_keyid: "7C33BDC6"
+#keepalived_repo_keyurl:
+keepalived_keyserver: "keyserver.ubuntu.com"
