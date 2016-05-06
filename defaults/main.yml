@@ -13,15 +13,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-## APT Cache options
+#This is the expiration time of your package manager cache.
+#When expired, this role will require to update the package manger cache.
+#This variable will be removed when the ansible upstream bugs will be fixed.
 cache_timeout: 600
 
+# This is the variable to ensure the state of the package on your system.
+# When False, the role will only make sure a package is installed.
+# When True, the role will always install latest version of the
+#   keepalived package, making it restart when a new version appears.
 keepalived_use_latest_stable: False
+
+# This variable used to be called keepalived_use_latest_stable_ppa
+# When this setting is set to False, the role will use the package
+# provided with the distribution instead of using an external source.
+keepalived_use_external_repo: True
+
 keepalived_instances: []
 keepalived_sync_groups: {}
 keepalived_bind_on_non_local: False
-keepalived_use_latest_stable_ppa: True
-keepalived_repo: "ppa:keepalived/stable"
-keepalived_repo_keyid: "7C33BDC6"
-#keepalived_repo_keyurl:
-keepalived_keyserver: keyserver.ubuntu.com
