@@ -39,7 +39,7 @@
 - name: configure keepalived
   template:
     src: keepalived.conf.j2
-    dest: /etc/keepalived/keepalived.conf
+    dest: "{{ keepalived_config_file_path }}"
   tags:
     - keepalived-config
   notify:
@@ -94,14 +94,3 @@
   when: item.value.src_notify_fault is defined
   notify:
     - restart keepalived
-
-- name: Allow keepalived from starting on install
-  file:
-    path: /etc/init/keepalived.override
-    state: absent
-  changed_when: False
-  when:
-    - ansible_pkg_mgr == 'apt'
-  tags:
-    - keepalived-config
-    - keepalived-prevent-start
