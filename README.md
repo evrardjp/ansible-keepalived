@@ -36,7 +36,7 @@ Example Playbook
 
 Here is how you could use the role
 
-    - hosts: keepalived_servers[0]
+    - hosts: keepalived_hosts[0]
       vars_files:
         - roles/keepalived/vars/keepalived_haproxy_master_example.yml
       roles:
