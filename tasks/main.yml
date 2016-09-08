@@ -96,3 +96,53 @@
   when: item.value.src_notify_fault is defined
   notify:
     - restart keepalived
+
+- name: Dropping the general notification scripts (instances)
+  copy:
+    src: "{{item.value.src_notify_script}}"
+    dest: "{{item.value.notify_script}}"
+    mode: "0755"
+  with_dict: "{{keepalived_instances}}"
+  when: item.value.src_notify_script is defined
+  notify:
+    - restart keepalived
+
+- name: Dropping the notification scripts for switching to master (instances)
+  copy:
+    src: "{{item.value.src_notify_master}}"
+    dest: "{{item.value.notify_master}}"
+    mode: "0755"
+  with_dict: "{{keepalived_instances}}"
+  when: item.value.src_notify_master is defined
+  notify:
+    - restart keepalived
+
+- name: Dropping the notification scripts for switching to backup (instances)
+  copy:
+    src: "{{item.value.src_notify_backup}}"
+    dest: "{{item.value.notify_backup}}"
+    mode: "0755"
+  with_dict: "{{keepalived_instances}}"
+  when: item.value.src_notify_backup is defined
+  notify:
+    - restart keepalived
+
+- name: Dropping the notification scripts for stopping vrrp (instances)
+  copy:
+    src: "{{item.value.src_notify_stop}}"
+    dest: "{{item.value.notify_stop}}"
+    mode: "0755"
+  with_dict: "{{keepalived_instances}}"
+  when: item.value.src_notify_stop is defined
+  notify:
+    - restart keepalived
+
+- name: Dropping the notification scripts for failures (instances)
+  copy:
+    src: "{{item.value.src_notify_fault}}"
+    dest: "{{item.value.notify_fault}}"
+    mode: "0755"
+  with_dict: "{{keepalived_instances}}"
+  when: item.value.src_notify_fault is defined
+  notify:
+    - restart keepalived
