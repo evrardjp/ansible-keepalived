@@ -20,10 +20,15 @@ apt_cache_timeout: "{{ cache_timeout }}"
 keepalived_package_name: "keepalived"
 keepalived_config_file_path: "/etc/keepalived/keepalived.conf"
 
-## Repo details for ubuntu 14.04
+## Repo details for keepalived ppa
 # repo, keyid are mandatory.
 # One of (keyurl or keyserver) is required
 keepalived_repo: "ppa:keepalived/stable"
 keepalived_repo_keyid: "7C33BDC6"
 #keepalived_repo_keyurl:
 keepalived_keyserver: "keyserver.ubuntu.com"
+
+## Repo details for keepalived uca
+uca_repo: "deb {{ uca_apt_repo_url }} {{ uca_repo_dist }} main"
+uca_repo_dist: "{{ ansible_lsb.codename }}-updates/{{ uca_openstack_release }}"
+uca_openstack_release: mitaka

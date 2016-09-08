@@ -29,6 +29,12 @@ keepalived_use_latest_stable: False
 # provided with the distribution instead of using an external source.
 keepalived_use_external_repo: True
 
+# This variables changes the external repo used for ubuntu. If set
+# to true, it will use the ubuntu cloud archive as external repo.
+# If set to False, it will use the ppa as external repo.
+keepalived_uca_enable: False
+uca_apt_repo_url: "http://ubuntu-cloud.archive.canonical.com/ubuntu"
+
 keepalived_instances: []
 keepalived_sync_groups: {}
 keepalived_bind_on_non_local: False

@@ -19,7 +19,9 @@
     url: "{{ keepalived_repo_keyurl | default(omit)}}"
     keyserver: "{{ keepalived_keyserver | default(omit) }}"
     state: present
-  when: keepalived_use_external_repo | bool
+  when:
+    - keepalived_use_external_repo | bool
+    - not keepalived_uca_enable | bool
   tags:
     - keepalived-apt-keys
 
@@ -28,10 +30,30 @@
     repo: "{{ keepalived_repo }}"
     update_cache: True
     state: present
-  when: keepalived_use_external_repo | bool
+  when:
+    - keepalived_use_external_repo | bool
+    - not keepalived_uca_enable | bool
   register: add_apt_repository
   tags:
     - keepalived-repo
+
+- name: Add Ubuntu Cloud Archive keyring
+  apt:
+    pkg: ubuntu-cloud-keyring
+    state: "latest"
+  register: add_uca_keys
+  when:
+    - keepalived_use_external_repo | bool
+    - keepalived_uca_enable | bool
+
+- name: Add Ubuntu Cloud Archive Repository
+  apt_repository:
+    repo: "{{ uca_repo }}"
+    update_cache: True
+    state: present
+  when:
+    - keepalived_use_external_repo | bool
+    - keepalived_uca_enable | bool
 
 #TODO(evrardjp): Replace the next 2 tasks by a standard apt with cache
 #when https://github.com/ansible/ansible-modules-core/pull/1517 is merged
