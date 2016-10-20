@@ -146,3 +146,8 @@
   when: item.value.src_notify_fault is defined
   notify:
     - restart keepalived
+
+- name: Ensuring keepalived is enabled
+  service:
+    name: "{{ keepalived_service_name }}"
+    enabled: "yes"
