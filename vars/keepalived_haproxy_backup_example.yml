@@ -70,7 +70,7 @@ keepalived_instances:
     # master should have the same password).
     #authentication_password: "your_password"
     vips:
-      - "{{keepalived_external_vip_cidr}} dev eth0"
+      - "{{ keepalived_external_vip_cidr | default('127.0.2.1') }} dev {{ keepalived_external_interface | default('eth0') }}"
     # Optional Scripts for tracking the current status of the keepalived instance
     #track_scripts:
     #  - haproxy_check_script
@@ -98,4 +98,4 @@ keepalived_instances:
     #  - eth1
     #  - eth2
     vips:
-      - "{{keepalived_internal_vip_cidr}} dev eth1"
+      - "{{ keepalived_internal_vip_cidr | default('127.0.3.1') }} dev {{ keepalived_internal_interface | default('eth1') }} "
