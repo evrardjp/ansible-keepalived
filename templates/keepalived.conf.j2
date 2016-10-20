@@ -85,6 +85,14 @@ vrrp_instance {{ name }} {
   }
   {% endif %}
 
+  {% if instance.track_interfaces is defined %}
+  track_interface {
+    {% for track_interface in instance.track_interfaces %}
+    {{ track_interface }}
+    {% endfor %}
+  }
+  {% endif %}
+
   {% if instance.notify_script is defined %}
   notify "{{ instance.notify_script }}"
   {% endif %}

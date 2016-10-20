@@ -75,6 +75,10 @@ keepalived_instances:
     #track_scripts:
     #  - haproxy_check_script
     #  - pingable_check_script
+    # Optional Interfaces for tracking the link status of the interfaces listed
+    #track_interfaces:
+    #  - eth1
+    #  - eth2
   internal:
     interface: eth1
     state: BACKUP
@@ -89,5 +93,9 @@ keepalived_instances:
     #track_scripts:
     #  - haproxy_check_script
     #  - pingable_check_script
+    # Optional Interfaces for tracking the link status of the interfaces listed
+    #track_interfaces:
+    #  - eth1
+    #  - eth2
     vips:
       - "{{keepalived_internal_vip_cidr}} dev eth1"
