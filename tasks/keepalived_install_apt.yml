@@ -69,7 +69,7 @@
   apt:
     update_cache: yes
   when: >
-    "ansible_date_time.epoch|float - apt_cache_stat.stat.mtime > {{ apt_cache_timeout }}" or
+    ansible_date_time.epoch|float - apt_cache_stat.stat.mtime > apt_cache_timeout or
     add_apt_repository|changed
   tags:
     - keepalived-apt-packages
