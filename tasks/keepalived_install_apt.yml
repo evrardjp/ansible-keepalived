@@ -40,7 +40,7 @@
 - name: Add Ubuntu Cloud Archive keyring
   apt:
     pkg: ubuntu-cloud-keyring
-    state: "latest"
+    state: "{{ keepalived_use_latest_stable | bool | ternary('latest','present') }}"
   register: add_uca_keys
   when:
     - keepalived_use_external_repo | bool
@@ -73,6 +73,8 @@
     add_apt_repository|changed
   tags:
     - keepalived-apt-packages
+    # don't trigger ANSIBLE0016
+    - skip_ansible_lint
 
 - name: Prevent keepalived from starting on install
   copy:
