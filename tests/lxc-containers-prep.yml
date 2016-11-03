@@ -1,0 +1,34 @@
+---
+- name: Create containers
+  lxc_container:
+    name: "{{ item }}"
+    template: ubuntu
+    state: stopped
+    template_options: --release "{{ ubuntu_release }}"
+  with_items: "{{ groups['containers'] }}"
+
+- name: Include new nic for container
+  copy:
+    content: |
+      lxc.network.type = veth
+      lxc.network.name = eth1
+      lxc.network.link = br-mgmt
+      lxc.network.hwaddr = 00:16:3e:xx:xx:xx
+      lxc.network.flags = up
+    dest: /var/lib/lxc/{{ item }}/eth1.ini
+  with_items: "{{ groups['containers'] }}"
+
+- name: Update container networking
+  lineinfile:
+    dest: "/var/lib/lxc/{{ item }}/config"
+    line: "lxc.include = /var/lib/lxc/{{ item }}/eth1.ini"
+  with_items: "{{ groups['containers'] }}"
+
+- name: Start containers
+  lxc_container:
+    name: "{{ item }}"
+    state: started
+    container_command: |
+      apt-get update
+      apt-get install -y {{ base_packages | join(' ') }}
+  with_items: "{{ groups['containers'] }}"

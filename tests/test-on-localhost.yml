@@ -1,0 +1,7 @@
+---
+- hosts: localhost
+  vars_files:
+    - keepalived_config.yml
+    - generic_config.yml
+  roles:
+     - "{{ rolename | basename }}"
