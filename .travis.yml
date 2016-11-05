@@ -10,6 +10,5 @@ script:
   - tox
 env:
   - TOXENV=linters
-#  - TOXENV=functional_1.9.4
-#  - TOXENV=functional_2.1
   - TOXENV=functional_2.2
+  - TOXENV=functional_2.2_containers
