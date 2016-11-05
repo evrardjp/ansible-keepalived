@@ -1,0 +1,12 @@
+---
+- hosts: localhost
+  vars_files:
+    - generic_config.yml
+    - keepalived_config.yml
+  roles:
+    - "{{ rolename | basename }}"
+
+- name: Functional test
+  hosts: localhost
+  tasks:
+    - shell: ping -c 4 172.24.69.1

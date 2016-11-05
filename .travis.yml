@@ -1,0 +1,15 @@
+language: python
+sudo: required
+dist: trusty
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y libxml2-dev python-dev lxc bridge-utils lxc-dev libffi-dev libssl-dev
+install:
+  - pip install tox
+script:
+  - tox
+env:
+  - TOXENV=linters
+#  - TOXENV=functional_1.9.4
+#  - TOXENV=functional_2.1
+  - TOXENV=functional_2.2

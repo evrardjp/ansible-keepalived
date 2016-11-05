@@ -1,0 +1,22 @@
+---
+apt_cache_timeout: 3600
+ubuntu_release: "trusty"
+keepalived_pip_package_state: "latest"
+keepalived_apt_package_state: "latest"
+base_system_packages:
+  - python-dev
+  - python-pip
+  - libffi-dev
+  - libssl-dev
+  - libxml2-dev
+lxc_system_packages:
+  - lxc-dev
+base_pip_packages:
+  - pip
+  - urllib3
+  - pyopenssl
+  - ndg-httpsclient
+  - pyasn1
+lxc_pip_packages:
+  - lxc-python2
+lxc_attach_command: "lxc-attach -n {{ item  }} -- "
