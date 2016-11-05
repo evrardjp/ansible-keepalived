@@ -55,27 +55,6 @@
     - keepalived_use_external_repo | bool
     - keepalived_uca_enable | bool
 
-#TODO(evrardjp): Replace the next 2 tasks by a standard apt with cache
-#when https://github.com/ansible/ansible-modules-core/pull/1517 is merged
-#in 1.9.x or we move to 2.0 (if tested working)
-- name: Check apt last update file
-  stat:
-    path: /var/cache/apt
-  register: apt_cache_stat
-  tags:
-    - keepalived-apt-packages
-
-- name: Update apt if needed
-  apt:
-    update_cache: yes
-  when: >
-    ansible_date_time.epoch|float - apt_cache_stat.stat.mtime > apt_cache_timeout or
-    add_apt_repository|changed
-  tags:
-    - keepalived-apt-packages
-    # don't trigger ANSIBLE0016
-    - skip_ansible_lint
-
 - name: Prevent keepalived from starting on install
   copy:
     dest: /etc/init/keepalived.override
@@ -89,6 +68,8 @@
   apt:
     pkg: "{{ keepalived_package_name }}"
     state: "{{ keepalived_use_latest_stable | bool | ternary('latest','present') }}"
+    update_cache: yes
+    cache_valid_time: "{{ apt_cache_timeout }}"
   tags:
     - keepalived-apt-packages
 
