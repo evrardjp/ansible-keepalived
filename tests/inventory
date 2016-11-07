@@ -2,5 +2,5 @@
 localhost ansible_connection=local ansible_become=True ansible_ssh_host=127.0.0.1
 
 [containers]
-container1 ansible_connection=lxc physical_host=localhost br_mgmt_ip=172.24.69.2
-container2 ansible_connection=lxc physical_host=localhost br_mgmt_ip=172.24.69.3
+container1 ansible_connection=lxc ansible_become=True physical_host=localhost br_mgmt_ip=172.24.69.2
+container2 ansible_connection=lxc ansible_become=True physical_host=localhost br_mgmt_ip=172.24.69.3
