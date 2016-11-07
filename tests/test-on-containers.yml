@@ -13,6 +13,7 @@
     - "{{ rolename | basename }}"
 
 - name: Functional test
+  gather_facts: no
   hosts: localhost
   tasks:
     - shell: ping -c 4 172.24.69.1

@@ -82,3 +82,7 @@
   register: lxcls
 - debug:
     msg: "{{ lxcls }}"
+- command: python -c 'import lxc; print(lxc.Container("container1").state)'
+  register: lxccontainerimport
+- debug:
+    msg: "{{ lxccontainerimport }}"
