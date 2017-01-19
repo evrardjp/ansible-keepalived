@@ -99,3 +99,30 @@ keepalived_instances:
     #  - eth2
     vips:
       - "{{ keepalived_internal_vip_cidr | default('127.0.3.1') }} dev {{ keepalived_internal_interface | default('eth1') }} "
+
+# Uncomment and adjust to make use of keepalived's virtual_server functions.
+#keepalived_virtual_servers:
+#  # Example with recycled {{ keepalived_internal_vip_cidr }}
+#  - ip: "{{ keepalived_internal_vip_cidr | ipaddr('address') }}"
+#    port: '53'
+#    protocol: 'UDP'
+#    lvs_method: 'NAT'
+#    # Optional, set false or omit to not use it.
+#    ha_suspend: true
+#    real_servers:
+#      - ip: '8.8.8.8'
+#        port: '53'
+#        # Currently on MISC_CHECK is supported. Section is optional.
+#        misc_check:
+#            - misc_path: '/usr/bin/host -W 1 github.com 8.8.8.8'
+#              # Role default is 3
+#              misc_timeout: '2'
+#      - ip: '8.8.4.4'
+#        port: '53'
+#        misc_check:
+#            - misc_path: '/usr/bin/host -W 1 github.com 8.8.4.4'
+#              misc_timeout: '10'
+#              # Optinal, set false or omit to not use it.
+#              warmup: true
+#              # Optinal, set false or omit to not use it.
+#              misc_dynamic: true

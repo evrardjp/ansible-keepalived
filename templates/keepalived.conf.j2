@@ -110,3 +110,40 @@ vrrp_instance {{ name }} {
   {% endif %}
 }
 {% endfor %}
+
+{% if keepalived_virtual_servers is defined %}
+{% for vserver in keepalived_virtual_servers %}
+virtual_server {{ vserver.ip }} {{ vserver.port }} {
+  ip_family {{ vserver.ip_family | default('inet') }}
+  {% if vserver.delay_loop is defined %}
+  delay_loop {{ vserver.delay_loop }}
+  {% endif %}
+  lvs_sched {{ vserver.lvs_sched | default ('rr') }}
+  lvs_method {{ vserver.lvs_method | default ('DR') }}
+  protocol {{ vserver.protocol | default ('TCP') }}
+  {% if vserver.ha_suspend is defined and vserver.ha_suspend %}
+  ha_suspend
+  {% endif %}
+
+  {% for rserver in vserver.real_servers %}
+  real_server {{ rserver.ip }} {{ rserver.port }} {
+    {% if rserver.misc_check is defined %}
+    {% for mcheck in rserver.misc_check %}
+    MISC_CHECK {
+      misc_path "{{ mcheck.misc_path }}"
+      misc_timeout {{ mcheck.misc_timeout | default('3') }}
+      {% if mcheck.warmup is defined and mcheck.warmup %}
+      warmup
+      {% endif %}
+      {% if mcheck.misc_dynamic is defined and mcheck.misc_dynamic %}
+      misc_dynamic
+      {% endif %}
+    }
+    {% endfor %}
+    {% endif %}
+  }
+  {% endfor %}
+
+}
+{% endfor %}
+{% endif %}
