@@ -30,6 +30,12 @@
   tags:
     - install-apt
 
+- include: keepalived_install_yum.yml
+  when:
+    - ansible_pkg_mgr == 'yum'
+  tags:
+    - install-yum
+
 - name: Allow consuming apps to bind on non local addresses
   sysctl:
     name: net.ipv4.ip_nonlocal_bind

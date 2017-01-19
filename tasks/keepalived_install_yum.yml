@@ -13,7 +13,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Standard names and paths for CentOS 7
-keepalived_package_name: "keepalived"
-keepalived_service_name: "keepalived"
-keepalived_config_file_path: "/etc/keepalived/keepalived.conf"
+- name: Ensure that the EPEL repository is available
+  yum:
+    pkg: epel-release
+    state: present
+  tags:
+    - keepalived-yum-packages
+
+- name: Install keepalived
+  yum:
+    pkg: "{{ keepalived_package_name }}"
+    state: "{{ keepalived_use_latest_stable | bool | ternary('latest','present') }}"
+  tags:
+    - keepalived-yum-packages
