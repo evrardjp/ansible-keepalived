@@ -1,0 +1,66 @@
+---
+# Copyright 2017, Major Hayden <major@mhtx.net>
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- name: Get list of SELinux modules loaded
+  command: semodule -l
+  changed_when: False
+  register: selinux_modules
+
+- name: Ensure SELinux packages are installed
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - libselinux
+    - libselinux-devel
+  when:
+    - '"keepalived_ping" not in selinux_modules.stdout'
+
+- name: Create directory for compiling SELinux role
+  file:
+    path: /tmp/ansible-keepalived-selinux/
+    state: directory
+    mode: '0755'
+  when:
+    - '"keepalived_ping" not in selinux_modules.stdout'
+
+- name: Deploy SELinux policy source file
+  copy:
+    src: keepalived_ping.te
+    dest: /tmp/ansible-keepalived-selinux/keepalived_ping.te
+    owner: root
+    group: root
+    mode: "0755"
+  when:
+    - '"keepalived_ping" not in selinux_modules.stdout'
+
+- name: Compile and load SELinux module
+  command: "{{ item }}"
+  args:
+    creates: /etc/selinux/targeted/active/modules/400/keepalived_ping/cil
+    chdir: /tmp/ansible-keepalived-selinux
+  with_items:
+    - checkmodule -M -m -o keepalived_ping.mod keepalived_ping.te
+    - semodule_package -o keepalived_ping.pp -m keepalived_ping.mod
+    - semodule -i keepalived_ping.pp
+  when:
+    - '"keepalived_ping" not in selinux_modules.stdout'
+
+- name: Remove temporary directory
+  file:
+    path: /tmp/ansible-keepalived-selinux/
+    state: absent
+  when:
+    - '"keepalived_ping" not in selinux_modules.stdout'
