@@ -36,6 +36,11 @@
   tags:
     - install-yum
 
+- include: keepalived_selinux.yml
+  when:
+    - ansible_selinux.status is defined
+    - ansible_selinux.status == "enabled"
+
 - name: Allow consuming apps to bind on non local addresses
   sysctl:
     name: net.ipv4.ip_nonlocal_bind
