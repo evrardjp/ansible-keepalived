@@ -58,6 +58,16 @@
   notify:
     - restart keepalived
 
+- name: Configure /etc/sysconfig/keepalived parameters
+  template:
+    src: sysconfig_keepalived.j2
+    dest: "{{ keepalived_sysconfig_file_path }}"
+  tags:
+    - keepalived-sysconfig
+  notify:
+    - restart keepalived
+
+
 - name: Dropping the tracking scripts
   copy:
     src: "{{item.value.src_check_script}}"

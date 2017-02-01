@@ -17,3 +17,4 @@
 keepalived_package_name: "keepalived"
 keepalived_service_name: "keepalived"
 keepalived_config_file_path: "/etc/keepalived/keepalived.conf"
+keepalived_sysconfig_file_path: "/etc/sysconfig/keepalived"
