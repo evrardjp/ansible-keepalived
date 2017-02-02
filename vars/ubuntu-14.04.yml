@@ -20,7 +20,7 @@ apt_cache_timeout: "{{ cache_timeout }}"
 keepalived_package_name: "keepalived"
 keepalived_service_name: "keepalived"
 keepalived_config_file_path: "/etc/keepalived/keepalived.conf"
-keepalived_sysconfig_file_path: "/etc/sysconfig/keepalived"
+keepalived_sysconfig_file_path: "/etc/default/keepalived"
 
 ## Repo details for keepalived ppa
 # repo, keyid are mandatory.
