@@ -13,13 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Ensure that the EPEL repository is available
-  yum:
-    pkg: epel-release
-    state: present
-  tags:
-    - keepalived-yum-packages
-
 - name: Install keepalived
   yum:
     pkg: "{{ keepalived_package_name }}"
