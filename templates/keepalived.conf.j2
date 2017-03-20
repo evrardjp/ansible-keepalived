@@ -39,9 +39,9 @@ vrrp_sync_group {{ name }} {
 {% for name, details in keepalived_scripts.iteritems() %}
 vrrp_script {{ name }} {
   script "{{ details.check_script }}"
-  interval "{{ details.interval | default(5) }}"   # checking every "{{ details.interval | default(5) }}" seconds (default: 5 seconds)
-  fall "{{ details.fall | default(3) }}"           # require "{{ details.fall | default(3) }}" failures for KO (default: 3)
-  rise "{{ details.rise | default(6) }}"           # require "{{ details.rise | default(6) }}" successes for OK (default: 6)
+  interval {{ details.interval | default(5) }}   # checking every {{ details.interval | default(5) }} seconds (default: 5 seconds)
+  fall {{ details.fall | default(3) }}           # require {{ details.fall | default(3) }} failures for KO (default: 3)
+  rise {{ details.rise | default(6) }}           # require {{ details.rise | default(6) }} successes for OK (default: 6)
 }
 {% endfor %}
 {% endif %}
