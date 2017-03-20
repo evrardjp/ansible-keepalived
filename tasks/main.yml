@@ -36,6 +36,12 @@
   tags:
     - install-yum
 
+- include: keepalived_install_zypper.yml
+  when:
+    - ansible_pkg_mgr == 'zypper'
+  tags:
+    - install-zypper
+
 - include: keepalived_selinux.yml
   when:
     - ansible_selinux.status is defined

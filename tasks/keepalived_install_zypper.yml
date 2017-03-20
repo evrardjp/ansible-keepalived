@@ -1,5 +1,5 @@
 ---
-# Copyright 2015, Jean-Philippe Evrard <jean-philippe@evrard.me>
+# Copyright 2017, SUSE LINUX GmbH.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,22 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-galaxy_info:
-  author: Jean-Philippe Evrard
-  description:  This role installs and configure keepalived based on a variable file
-  license: Apache
-  min_ansible_version: 1.9
-  platforms:
-  - name: EL
-    versions:
-    - 7
-  - name: Ubuntu
-    versions:
-    - trusty
-    - xenial
-  - name: opensuse
-    versions:
-    - all
-  categories:
-  - clustering
-dependencies: []
+- name: Install keepalived
+  zypper:
+    name: "{{ keepalived_package_name }}"
+    state: "{{ keepalived_use_latest_stable | bool | ternary('latest','present') }}"
+  tags:
+    - keepalived-zypper-packages
