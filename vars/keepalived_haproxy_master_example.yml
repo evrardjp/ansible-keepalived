@@ -55,6 +55,8 @@ keepalived_sync_groups:
     #fall: 2
     # Rise is the time to mark the keepalived status as back to ok
     #rise: 4
+    # Allow the check script to complete within a timeout
+    #timeout: 2
 
 keepalived_instances:
   #This dict name is the same as the one above, in keepalived_sync_groups.
