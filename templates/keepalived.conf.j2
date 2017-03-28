@@ -80,6 +80,20 @@ vrrp_instance {{ name }} {
     {{ vip }}
     {% endfor %}
   }
+  {% if instance.virtual_routes is defined %}
+  virtual_routes {
+  {% for route in instance.virtual_routes %}
+    {{ route }}
+  {% endfor %}
+  }
+  {% endif %}
+  {% if instance.track_scripts is defined %}
+  track_script {
+    {% for track_script in instance.track_scripts %}
+    {{ track_script }}
+    {% endfor %}
+  }
+  {% endif %}  
   {% if instance.track_scripts is defined %}
   track_script {
     {% for track_script in instance.track_scripts %}
