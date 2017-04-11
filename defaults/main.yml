@@ -38,3 +38,4 @@ uca_apt_repo_url: "http://ubuntu-cloud.archive.canonical.com/ubuntu"
 keepalived_instances: []
 keepalived_sync_groups: {}
 keepalived_bind_on_non_local: False
+keepalived_options: "-D"
