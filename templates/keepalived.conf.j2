@@ -143,7 +143,7 @@ virtual_server {{ vserver.ip }} {{ vserver.port }} {
       misc_path "{{ mcheck.misc_path }}"
       misc_timeout {{ mcheck.misc_timeout | default('3') }}
       {% if mcheck.warmup is defined and mcheck.warmup %}
-      warmup
+      warmup {{ mcheck.warmup }}
       {% endif %}
       {% if mcheck.misc_dynamic is defined and mcheck.misc_dynamic %}
       misc_dynamic
