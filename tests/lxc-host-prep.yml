@@ -1,0 +1,20 @@
+---
+- name: Install lxc
+  apt:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - lxc
+    - bridge-utils
+    - "{{ base_packages }}"
+
+- name: Install lxc-python
+  pip:
+    name: lxc-python2
+    state: latest
+
+- name: Create bridge
+  shell: |
+    brctl addbr br-mgmt
+    ifconfig br-mgmt up
+    ip a a 172.24.69.254/24 dev br-mgmt

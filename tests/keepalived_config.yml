@@ -1,0 +1,14 @@
+---
+keepalived_sync_groups:
+  haproxy:
+    instances:
+      - internal
+
+keepalived_instances:
+  internal:
+    interface: eth1
+    state:  "{{ (play_hosts.index(inventory_hostname) == 0) | ternary('MASTER', 'BACKUP') }}"
+    virtual_router_id: 11
+    priority: 100
+    vips:
+      - "172.24.69.1 dev eth1"

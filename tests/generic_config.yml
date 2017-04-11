@@ -1,0 +1,9 @@
+---
+apt_cache_timeout: 3600
+ubuntu_release: "trusty"
+base_packages:
+  - python-dev
+  - lxc-dev
+  - libffi-dev
+  - libssl-dev
+  - libxml2-dev
