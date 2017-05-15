@@ -13,27 +13,32 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# keepalived_ubuntu_src should be either "uca", "ppa" or "native":
+# "ppa" will ensure that keepalived ppa source is installed (recommended)
+# "uca" will ensure that the Ubuntu Cloud Archive is installed (good enough)
+# "native" will not ensure any external repository is set
+#  and use what's available (not recommended, unless you defined one of the
+#  above on your hosts)
+# Please see vars/ for information about these repositories
+# TODO(evrardjp), 2017-11:to remove the conditional
+# Remove the deprecation conditional and provide a good unconditional
+# default:
+#keepalived_ubuntu_src: "uca"
+keepalived_ubuntu_src: "{{ (keepalived_uca_enable is defined and (keepalived_uca_enable | bool)) | ternary('uca','ppa') }}"
+
+# If using UCA, you may want to point with your local mirror of UCA.
+keepalived_uca_apt_repo_url: "http://ubuntu-cloud.archive.canonical.com/ubuntu"
+
+# TODO(evrardjp), 2017-11:
+# Remove the deprecation conditional and provide a good unconditional
+# default:
+#keepalived_package_state: "latest"
+keepalived_package_state: "{{ (keepalived_use_latest_stable | bool) | ternary('latest','present') }}"
+
 #This is the expiration time of your package manager cache.
 #When expired, this role will require to update the package manger cache.
 #This variable will be removed when the ansible upstream bugs will be fixed.
 cache_timeout: 600
-
-# This is the variable to ensure the state of the package on your system.
-# When False, the role will only make sure a package is installed.
-# When True, the role will always install latest version of the
-#   keepalived package, making it restart when a new version appears.
-keepalived_use_latest_stable: False
-
-# This variable used to be called keepalived_use_latest_stable_ppa
-# When this setting is set to False, the role will use the package
-# provided with the distribution instead of using an external source.
-keepalived_use_external_repo: True
-
-# This variables changes the external repo used for ubuntu. If set
-# to true, it will use the ubuntu cloud archive as external repo.
-# If set to False, it will use the ppa as external repo.
-keepalived_uca_enable: False
-uca_apt_repo_url: "http://ubuntu-cloud.archive.canonical.com/ubuntu"
 
 keepalived_instances: []
 keepalived_sync_groups: {}
