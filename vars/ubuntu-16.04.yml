@@ -32,4 +32,4 @@ keepalived_keyserver: "keyserver.ubuntu.com"
 ## Repo details for keepalived uca
 uca_repo: "deb {{ uca_apt_repo_url }} {{ uca_repo_dist }} main"
 uca_repo_dist: "{{ ansible_lsb.codename }}-updates/{{ uca_openstack_release }}"
-uca_openstack_release: newton
+uca_openstack_release: ocata
