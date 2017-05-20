@@ -1,0 +1,88 @@
+---
+- name: Ensuring base system packages are installed
+  apt:
+    name: "{{ item }}"
+    state: "{{ keepalived_pip_package_state }}"
+  with_items:
+    - "{{ base_system_packages }}"
+    - "{{ lxc_system_packages }}"
+
+- name: Ensuring base pip packages are installed
+  pip:
+    name: "{{ item }}"
+    state: "{{ keepalived_pip_package_state }}"
+  with_items:
+    - "{{ base_pip_packages }}"
+    - "{{ lxc_pip_packages }}"
+
+- name: Create bridge
+  shell: |
+    brctl addbr br-mgmt
+    ifconfig br-mgmt up
+    ip a a 172.24.69.254/24 dev br-mgmt
+  tags:
+    - skip_ansible_lint
+
+- name: Create containers
+  lxc_container:
+    name: "{{ item }}"
+    template: ubuntu
+    state: stopped
+    template_options: --release "{{ ubuntu_release }}"
+  with_items: "{{ groups['containers'] }}"
+
+- name: Include new nic for container
+  copy:
+    content: |
+      lxc.network.type = veth
+      lxc.network.name = eth1
+      lxc.network.link = br-mgmt
+      lxc.network.hwaddr = 00:16:3e:xx:xx:xx
+      lxc.network.flags = up
+    dest: /var/lib/lxc/{{ item }}/eth1.ini
+  with_items: "{{ groups['containers'] }}"
+
+- name: Update container networking
+  lineinfile:
+    dest: "/var/lib/lxc/{{ item }}/config"
+    line: "lxc.include = /var/lib/lxc/{{ item }}/eth1.ini"
+  with_items: "{{ groups['containers'] }}"
+
+- name: Start containers
+  lxc_container:
+    name: "{{ item }}"
+    state: started
+    container_log: True
+  with_items: "{{ groups['containers'] }}"
+
+- name: Execute commands on container because lxc_container module sucks
+  shell: |
+      {{ lxc_attach_command }} rm -f /etc/resolv.conf
+      {{ lxc_attach_command }} ifdown eth0
+      {{ lxc_attach_command }} ifup eth0
+      {{ lxc_attach_command }} sleep 5
+      {{ lxc_attach_command }} ping -c 2 archive.ubuntu.com
+      {{ lxc_attach_command }} apt-get update
+      {{ lxc_attach_command }} apt-get install --allow-unauthenticated -y {{ base_system_packages | join(' ') }}
+      {{ lxc_attach_command }} pip install -U {{ base_pip_packages | join(' ') }}
+      {{ lxc_attach_command }} ip link set up dev eth1
+      {{ lxc_attach_command }} ip a a {{ hostvars[item]['br_mgmt_ip'] }}/24 dev eth1
+  with_items: "{{ groups['containers'] }}"
+  tags:
+    - container-prep-commands
+    - skip_ansible_lint
+
+- command: pip freeze
+  register: pip_freeze_results
+  changed_when: false
+- debug:
+    msg: "{{ pip_freeze_results }}"
+
+- command: lxc-ls -f
+  register: lxcls
+- debug:
+    msg: "{{ lxcls }}"
+- command: python -c 'import lxc; print(lxc.Container("container1").state)'
+  register: lxccontainerimport
+- debug:
+    msg: "{{ lxccontainerimport }}"
