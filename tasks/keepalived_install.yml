@@ -54,8 +54,8 @@
 
 - name: Prevent keepalived from starting on install
   copy:
-    dest: "{{ ansible_distribution_major_version < '15' | ternary('/usr/sbin/policy-rc.d','/etc/init/keepalived.override')}}"
-    content: "{{ ansible_distribution_major_version < '15' | ternary('exit 101','manual') }}"
+    dest: "{{ prevent_start_file }}"
+    content: "{{ prevent_start_file_content }}"
   when:
     - ansible_os_family | lower == 'debian'
     - check_if_present | changed
@@ -71,9 +71,9 @@
   tags:
     - keepalived-apt-packages
 
-- name: Allow keepalived from starting on install
+- name: Revert keepalived start prevention
   file:
-    dest: "{{ ansible_distribution_major_version < '15' | ternary('/usr/sbin/policy-rc.d','/etc/init/keepalived.override')}}"
+    dest: "{{ prevent_start_file }}"
     state: absent
   when:
     - ansible_os_family | lower == 'debian'

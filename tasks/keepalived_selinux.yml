@@ -25,6 +25,8 @@
   with_items:
     - libselinux
     - libselinux-devel
+    - checkpolicy
+    - policycoreutils-python
   when:
     - '"keepalived_ping" not in selinux_modules.stdout'
 

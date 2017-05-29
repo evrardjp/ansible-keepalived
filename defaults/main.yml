@@ -33,7 +33,7 @@ keepalived_uca_apt_repo_url: "http://ubuntu-cloud.archive.canonical.com/ubuntu"
 # Remove the deprecation conditional and provide a good unconditional
 # default:
 #keepalived_package_state: "latest"
-keepalived_package_state: "{{ (keepalived_use_latest_stable | bool) | ternary('latest','present') }}"
+keepalived_package_state: "{{ ( (keepalived_use_latest_stable | default(true)) | bool) | ternary('latest','present') }}"
 
 #This is the expiration time of your package manager cache.
 #When expired, this role will require to update the package manger cache.
