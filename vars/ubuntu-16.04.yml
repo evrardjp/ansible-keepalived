@@ -13,23 +13,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-## APT Cache options
-apt_cache_timeout: "{{ cache_timeout }}"
-
-#Standard names and paths for ubuntu 14.04
+#Standard names and paths for ubuntu 16.04
 keepalived_package_name: "keepalived"
 keepalived_service_name: "keepalived.service"
 keepalived_config_file_path: "/etc/keepalived/keepalived.conf"
 
 ## Repo details for keepalived ppa
-# repo, keyid are mandatory.
-# One of (keyurl or keyserver) is required
-keepalived_repo: "ppa:keepalived/stable"
-keepalived_repo_keyid: "7C33BDC6"
-#keepalived_repo_keyurl:
-keepalived_keyserver: "keyserver.ubuntu.com"
+keepalived_ppa_repo: "ppa:keepalived/stable"
+keepalived_ppa_keyid: "7C33BDC6"
+keepalived_ppa_keyserver: "keyserver.ubuntu.com"
 
-## Repo details for keepalived uca
-uca_repo: "deb {{ uca_apt_repo_url }} {{ uca_repo_dist }} main"
-uca_repo_dist: "{{ ansible_lsb.codename }}-updates/{{ uca_openstack_release }}"
-uca_openstack_release: ocata
+## Repo details for uca
+keepalived_uca_repo: "deb {{ keepalived_uca_apt_repo_url }} {{ keepalived_uca_repo_dist }} main"
+keepalived_uca_repo_dist: "{{ ansible_lsb.codename }}-updates/{{ keepalived_uca_openstack_release }}"
+keepalived_uca_openstack_release: newton
+
+## Prevent start on install
+prevent_start_file: "/usr/sbin/policy-rc.d"
+prevent_start_file_content: "exit 101"
