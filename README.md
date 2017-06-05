@@ -37,18 +37,28 @@ No dependency
 Example Playbook
 ----------------
 
-Here is how you could use the role
+Here is how you could use the role:
 
     - hosts: keepalived_hosts[0]
       vars_files:
-        - roles/keepalived/vars/keepalived_haproxy_master_example.yml
+        - roles/keepalived/tests/keepalived_haproxy_master_example.yml
       roles:
          - keepalived
     - hosts: keepalived_hosts:!keepalived_hosts[0]
       vars_files:
-        - roles/keepalived/vars/keepalived_haproxy_backup_example.yml
+        - roles/keepalived/tests/keepalived_haproxy_backup_example.yml
       roles:
          - keepalived
+
+Or more simply:
+
+    - hosts: keepalived_hosts
+      vars_files:
+        - roles/keepalived/tests/keepalived_haproxy_combined_example.yml
+      roles:
+         - keepalived
+
+You could also replace the vars_files by proper group_vars, host_vars.
 
 License
 -------
