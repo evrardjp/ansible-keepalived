@@ -27,7 +27,7 @@
 - name: Add Ubuntu Cloud Archive keyring
   apt:
     pkg: ubuntu-cloud-keyring
-    state: "latest"
+    state: "{{ keepalived_package_state }}"
   when:
     - ansible_pkg_mgr == 'apt'
     - keepalived_ubuntu_src == "uca"
