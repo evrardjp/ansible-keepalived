@@ -30,39 +30,9 @@
   when:
     - '"keepalived_ping" not in selinux_modules.stdout'
 
-- name: Create directory for compiling SELinux role
-  file:
-    path: /tmp/ansible-keepalived-selinux/
-    state: directory
-    mode: '0755'
-  when:
-    - '"keepalived_ping" not in selinux_modules.stdout'
-
-- name: Deploy SELinux policy source file
-  copy:
-    src: keepalived_ping.te
-    dest: /tmp/ansible-keepalived-selinux/keepalived_ping.te
-    owner: root
-    group: root
-    mode: "0755"
-  when:
-    - '"keepalived_ping" not in selinux_modules.stdout'
-
-- name: Compile and load SELinux module
-  command: "{{ item }}"
-  args:
-    creates: /etc/selinux/targeted/active/modules/400/keepalived_ping/cil
-    chdir: /tmp/ansible-keepalived-selinux
+- include: keepalived_selinux_compile.yml
   with_items:
-    - checkmodule -M -m -o keepalived_ping.mod keepalived_ping.te
-    - semodule_package -o keepalived_ping.pp -m keepalived_ping.mod
-    - semodule -i keepalived_ping.pp
-  when:
-    - '"keepalived_ping" not in selinux_modules.stdout'
-
-- name: Remove temporary directory
-  file:
-    path: /tmp/ansible-keepalived-selinux/
-    state: absent
-  when:
-    - '"keepalived_ping" not in selinux_modules.stdout'
+    - "keepalived_haproxy_pid_file"
+    - "keepalived_ping"
+  loop_control:
+    loop_var: selinux_policy_name
