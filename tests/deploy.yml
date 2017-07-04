@@ -1,11 +1,16 @@
 ---
+- hosts: keepalived2
+  gather_facts: no
+  tasks:
+    - raw: sudo apt-get install -y python
+
 - hosts: all
   gather_facts: yes
   become: true
   become_method: sudo
   pre_tasks:
     - name: Ensure the vrrp nics are up
-      shell: ifconfig {{ vrrp_nic }} up || true
+      shell: ip link set dev {{ vrrp_nic }} up || true
       changed_when: false
     - name: Display the configuration
       debug:

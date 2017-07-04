@@ -34,14 +34,14 @@ Vagrant.configure(2) do |config|
   end
 
   # Optional vagrant cache
-  if Vagrant.has_plugin?("vagrant-cachier")
-    # http://fgrehm.viewdocs.io/vagrant-cachier/usage/
-    config.cache.scope = :box
-    #config.cache.synced_folder_opts = {
-    #  type: :nfs,
-    #  mount_options: ['rw', 'vers=3', 'tcp', 'nolock']
-    #}
-  end
+  #if Vagrant.has_plugin?("vagrant-cachier")
+  #  # http://fgrehm.viewdocs.io/vagrant-cachier/usage/
+  #  config.cache.scope = :box
+  #  #config.cache.synced_folder_opts = {
+  #  #  type: :nfs,
+  #  #  mount_options: ['rw', 'vers=3', 'tcp', 'nolock']
+  #  #}
+  #end
 
   boxes.each do |boxopts|
     config.vm.define boxopts[:name] do |config|
