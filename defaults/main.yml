@@ -29,6 +29,11 @@ keepalived_ubuntu_src: "{{ (keepalived_uca_enable is defined and (keepalived_uca
 # If using UCA, you may want to point with your local mirror of UCA.
 keepalived_uca_apt_repo_url: "http://ubuntu-cloud.archive.canonical.com/ubuntu"
 
+# If running keepalived with SELinux, you could need to compile your
+# rules. Please override this list with path to files to compile.
+keepalived_selinux_compile_rules:
+  - keepalived_ping
+
 # TODO(evrardjp), 2017-11:
 # Remove the deprecation conditional and provide a good unconditional
 # default:

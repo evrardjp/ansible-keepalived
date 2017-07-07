@@ -31,8 +31,6 @@
     - '"keepalived_ping" not in selinux_modules.stdout'
 
 - include: keepalived_selinux_compile.yml
-  with_items:
-    - "keepalived_haproxy_pid_file"
-    - "keepalived_ping"
+  with_items: "{{ keepalived_selinux_compile_rules }}"
   loop_control:
     loop_var: selinux_policy_name
