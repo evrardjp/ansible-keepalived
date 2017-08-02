@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-{% for name, sync_group in keepalived_sync_groups.iteritems() %}
+{% for name, sync_group in keepalived_sync_groups.items() %}
 vrrp_sync_group {{ name }} {
   group {
     {% for instance in sync_group.instances %}
@@ -36,7 +36,7 @@ vrrp_sync_group {{ name }} {
 {% endfor %}
 
 {% if keepalived_scripts is defined %}
-{% for name, details in keepalived_scripts.iteritems() %}
+{% for name, details in keepalived_scripts.items() %}
 vrrp_script {{ name }} {
   script "{{ details.check_script }}"
   interval {{ details.interval | default(5) }}   # checking every {{ details.interval | default(5) }} seconds (default: 5 seconds)
@@ -49,7 +49,7 @@ vrrp_script {{ name }} {
 {% endfor %}
 {% endif %}
 
-{% for name, instance in keepalived_instances.iteritems() %}
+{% for name, instance in keepalived_instances.items() %}
 vrrp_instance {{ name }} {
   interface {{ instance.interface }}
   state {{ instance.state }}
