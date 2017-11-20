@@ -33,6 +33,7 @@ keepalived_uca_apt_repo_url: "http://ubuntu-cloud.archive.canonical.com/ubuntu"
 # rules. Please override this list with path to files to compile.
 keepalived_selinux_compile_rules:
   - keepalived_ping
+  - keepalived_setpgid
 
 # TODO(evrardjp), 2017-11:
 # Remove the deprecation conditional and provide a good unconditional
