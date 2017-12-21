@@ -59,6 +59,19 @@
   when:
     - ansible_os_family | lower == 'debian'
     - check_if_present | changed
+    - prevent_start_mask_systemd is not defined
+  tags:
+    - keepalived-prevent-start
+
+- name: Prevent keepalived from starting on install - systemd mask
+  file:
+    state: link
+    src: "/dev/null"
+    dest: "{{ prevent_start_file }}"
+  when:
+    - ansible_os_family | lower == 'debian'
+    - check_if_present | changed
+    - prevent_start_mask_systemd is defined
   tags:
     - keepalived-prevent-start
 
@@ -81,3 +94,9 @@
   tags:
     - keepalived-config
     - keepalived-prevent-start
+
+- name: "Reload systemd if we deleted service mask"
+  systemd:
+    daemon_reload: yes
+  when:
+    - prevent_start_mask_systemd is defined

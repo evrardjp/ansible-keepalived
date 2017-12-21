@@ -29,5 +29,5 @@ keepalived_uca_repo_dist: "{{ ansible_lsb.codename }}-updates/{{ keepalived_uca_
 keepalived_uca_openstack_release: ocata
 
 ## Prevent start on install
-prevent_start_file: "/usr/sbin/policy-rc.d"
-prevent_start_file_content: "exit 101"
+prevent_start_file: "/etc/systemd/system/keepalived.service"
+prevent_start_mask_systemd: true
