@@ -2,9 +2,13 @@
 - hosts: keepalived2
   gather_facts: no
   tasks:
-    - raw: sudo apt-get install -y python
+    - name: Install python2
+      raw: sudo apt-get update && sudo apt install -y python
+      changed_when: false
 
 - hosts: all
+  # please comment order: sorted for 2.3 and below
+  order: sorted
   gather_facts: yes
   become: true
   become_method: sudo
@@ -17,17 +21,19 @@
         var: keepalived_instances
   roles:
     - ../ansible-keepalived
-
-- name: Check if first node is master
-  hosts: keepalived1
-  gather_facts: yes
-  become: true
-  become_method: sudo
-  tasks:
-    - assert:
+  post_tasks:
+    - name: Wait a few seconds to ensure that network connectivity is up
+      wait_for:
+        timeout: 12
+    - name: Ensure the facts are up to date
+      setup:
+        gather_subset: network
+    - name: Ensure the first node is master
+      assert:
         that:
-          - "'ipv4_secondaries' in ansible_eth1"
-          - "ansible_eth1['ipv4_secondaries'][0]['address'] == '192.168.33.2'"
+          - "'ipv4_secondaries' in ansible_{{ vrrp_nic }}"
+          - "ansible_{{ vrrp_nic }}['ipv4_secondaries'][0]['address'] == '192.168.33.2'"
+      when: inventory_hostname == ansible_play_hosts[0]
 
 - name: Check if failover works
   hosts: all
@@ -49,5 +55,3 @@
         that:
           - "'192.168.33.2' in ansible_all_ipv4_addresses"
       when: inventory_hostname == ansible_play_hosts[2]
-    #- shell: ifconfig {{ vrrp_nic }} up || true
-    #  changed_when: false
