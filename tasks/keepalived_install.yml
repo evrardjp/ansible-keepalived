@@ -59,6 +59,21 @@
   when:
     - ansible_os_family | lower == 'debian'
     - check_if_present | changed
+    - ansible_service_mgr is defined
+    - ansible_service_mgr != 'systemd'
+  tags:
+    - keepalived-prevent-start
+
+- name: Prevent keepalived from starting on install - systemd mask
+  file:
+    state: link
+    src: "/dev/null"
+    dest: "{{ prevent_start_file }}"
+  when:
+    - ansible_os_family | lower == 'debian'
+    - check_if_present | changed
+    - ansible_service_mgr is defined
+    - ansible_service_mgr == 'systemd'
   tags:
     - keepalived-prevent-start
 
@@ -70,6 +85,7 @@
     cache_valid_time: "{{ (ansible_pkg_mgr == 'apt') | ternary(cache_timeout, omit) }}"
   tags:
     - keepalived-apt-packages
+  notify: "systemctl-daemon-reload"
 
 - name: Revert keepalived start prevention
   file:
