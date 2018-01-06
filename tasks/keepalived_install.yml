@@ -59,7 +59,8 @@
   when:
     - ansible_os_family | lower == 'debian'
     - check_if_present | changed
-    - prevent_start_mask_systemd is not defined
+    - ansible_service_mgr is defined
+    - ansible_service_mgr != 'systemd'
   tags:
     - keepalived-prevent-start
 
@@ -71,7 +72,8 @@
   when:
     - ansible_os_family | lower == 'debian'
     - check_if_present | changed
-    - prevent_start_mask_systemd is defined
+    - ansible_service_mgr is defined
+    - ansible_service_mgr == 'systemd'
   tags:
     - keepalived-prevent-start
 
@@ -83,6 +85,7 @@
     cache_valid_time: "{{ (ansible_pkg_mgr == 'apt') | ternary(cache_timeout, omit) }}"
   tags:
     - keepalived-apt-packages
+  notify: "systemctl-daemon-reload"
 
 - name: Revert keepalived start prevention
   file:
@@ -94,9 +97,3 @@
   tags:
     - keepalived-config
     - keepalived-prevent-start
-
-- name: "Reload systemd if we deleted service mask"
-  systemd:
-    daemon_reload: yes
-  when:
-    - prevent_start_mask_systemd is defined
