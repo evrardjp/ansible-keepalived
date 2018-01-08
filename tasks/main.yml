@@ -178,3 +178,22 @@
   service:
     name: "{{ keepalived_service_name }}"
     enabled: "yes"
+
+- name: Make directory for keepalived's systemd overrides
+  file:
+    path: /etc/systemd/system/keepalived.service.d/
+    state: directory
+  when: ansible_service_mgr == 'systemd'
+
+- name: Apply keepalived override to start after network is up
+  ini_file:
+    path: /etc/systemd/system/keepalived.service.d/override.conf
+    create: yes
+    section: 'Unit'
+    option: "{{ item }}"
+    value: 'network-online.target'
+    mode: '0644'
+  with_items:
+    - 'Wants'
+    - 'After'
+  when: ansible_service_mgr == 'systemd'
