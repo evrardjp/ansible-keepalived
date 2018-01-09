@@ -52,7 +52,7 @@
   register: check_if_present
   check_mode: yes
 
-- name: Prevent keepalived from starting on install
+- name: Prevent keepalived from starting on install (upstart)
   copy:
     dest: "{{ prevent_start_file }}"
     content: "{{ prevent_start_file_content }}"
@@ -64,7 +64,7 @@
   tags:
     - keepalived-prevent-start
 
-- name: Prevent keepalived from starting on install - systemd mask
+- name: Prevent keepalived from starting on install (systemd)
   file:
     state: link
     src: "/dev/null"
@@ -85,7 +85,6 @@
     cache_valid_time: "{{ (ansible_pkg_mgr == 'apt') | ternary(cache_timeout, omit) }}"
   tags:
     - keepalived-apt-packages
-  notify: "systemctl-daemon-reload"
 
 - name: Ensure no new "samples" folder appeared
   file:
@@ -103,3 +102,12 @@
     - check_if_present | changed
   tags:
     - keepalived-prevent-start
+
+- name: "Systemd daemon_reload"
+  command: systemctl daemon-reload
+  changed_when: check_if_present | changed
+  when:
+    - ansible_service_mgr is defined
+    - ansible_service_mgr == 'systemd'
+  tags:
+    - skip_ansible_lint

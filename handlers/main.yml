@@ -17,11 +17,3 @@
   service:
     name: "{{ keepalived_service_name }}"
     state: restarted
-
-- name: "Reload systemd"
-  systemd:
-    daemon_reload: yes
-  listen: "systemctl-daemon-reload"
-  when:
-    - ansible_service_mgr is defined
-    - ansible_service_mgr == 'systemd'
