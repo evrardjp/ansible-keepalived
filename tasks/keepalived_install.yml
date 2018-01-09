@@ -87,6 +87,13 @@
     - keepalived-apt-packages
   notify: "systemctl-daemon-reload"
 
+- name: Ensure no new "samples" folder appeared
+  file:
+    path: /etc/keepalived/samples/
+    state: absent
+  when: 
+    - ansible_os_family | lower == 'debian'
+
 - name: Revert keepalived start prevention
   file:
     dest: "{{ prevent_start_file }}"
@@ -95,5 +102,4 @@
     - ansible_os_family | lower == 'debian'
     - check_if_present | changed
   tags:
-    - keepalived-config
     - keepalived-prevent-start
