@@ -1,2 +1,0 @@
----
-vrrp_nic: "{{ ansible_interfaces | reject('equalto','lo') | sort | last }}"

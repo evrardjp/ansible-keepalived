@@ -52,13 +52,28 @@
   register: check_if_present
   check_mode: yes
 
-- name: Prevent keepalived from starting on install
+- name: Prevent keepalived from starting on install (upstart)
   copy:
     dest: "{{ prevent_start_file }}"
     content: "{{ prevent_start_file_content }}"
   when:
     - ansible_os_family | lower == 'debian'
     - check_if_present | changed
+    - ansible_service_mgr is defined
+    - ansible_service_mgr != 'systemd'
+  tags:
+    - keepalived-prevent-start
+
+- name: Prevent keepalived from starting on install (systemd)
+  file:
+    state: link
+    src: "/dev/null"
+    dest: "{{ prevent_start_file }}"
+  when:
+    - ansible_os_family | lower == 'debian'
+    - check_if_present | changed
+    - ansible_service_mgr is defined
+    - ansible_service_mgr == 'systemd'
   tags:
     - keepalived-prevent-start
 
@@ -71,6 +86,13 @@
   tags:
     - keepalived-apt-packages
 
+- name: Ensure no new "samples" folder appeared
+  file:
+    path: /etc/keepalived/samples/
+    state: absent
+  when: 
+    - ansible_os_family | lower == 'debian'
+
 - name: Revert keepalived start prevention
   file:
     dest: "{{ prevent_start_file }}"
@@ -79,5 +101,13 @@
     - ansible_os_family | lower == 'debian'
     - check_if_present | changed
   tags:
-    - keepalived-config
     - keepalived-prevent-start
+
+- name: "Systemd daemon_reload"
+  command: systemctl daemon-reload
+  changed_when: check_if_present | changed
+  when:
+    - ansible_service_mgr is defined
+    - ansible_service_mgr == 'systemd'
+  tags:
+    - skip_ansible_lint
