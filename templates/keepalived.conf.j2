@@ -13,6 +13,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+{% if keepalived_global_defs is defined %}
+global_defs {
+{% for def in keepalived_global_defs %}
+  {{ def }}
+{% endfor %}
+}
+{% endif %}
+
 {% for name, sync_group in keepalived_sync_groups.items() %}
 vrrp_sync_group {{ name }} {
   group {
