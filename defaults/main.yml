@@ -52,4 +52,6 @@ keepalived_bind_on_non_local: False
 
 # This list of strings will appear in the global_defs section of the
 # keepalived configuration file.
-keepalived_global_defs: []
+# Example:
+#keepalived_global_defs:
+#  - enable_script_security
