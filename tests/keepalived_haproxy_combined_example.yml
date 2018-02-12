@@ -20,8 +20,8 @@ keepalived_sync_groups:
 keepalived_instances:
   internal:
     interface: "{{ vrrp_nic }}"
-    state: "{{ (play_hosts.index(inventory_hostname) == 0) | ternary('MASTER','BACKUP') }}"
+    state: "{{ (groups['all'].index(inventory_hostname) == 0) | ternary('MASTER','BACKUP') }}"
     virtual_router_id: 42
-    priority: "{{ (play_hosts.index(inventory_hostname) == 0) | ternary('100','50') }}"
+    priority: "{{ (groups['all']|length - groups['all'].index(inventory_hostname)) * 250 // (groups['all']|length) }}"
     vips:
       - "192.168.33.2/24 dev {{ vrrp_nic }}"
