@@ -13,25 +13,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-galaxy_info:
-  author: Jean-Philippe Evrard
-  description:  This role installs and configure keepalived based on a variable file
-  license: Apache
-  min_ansible_version: 2.3
-  platforms:
-  - name: EL
-    versions:
-    - 7
-  - name: Ubuntu
-    versions:
-    - trusty
-    - xenial
-  - name: opensuse
-    versions:
-    - all
-  - name: debian
-    versions:
-    - stretch
-  categories:
-  - clustering
-dependencies: []
+#Standard names and paths for ubuntu 16.04
+keepalived_package_name: "keepalived"
+keepalived_service_name: "keepalived"
+keepalived_config_file_path: "/etc/keepalived/keepalived.conf"
+# Debian is WIP, and only native packages from the distribution are supported for now.
+keepalived_ubuntu_src: "native" #no support of ppas under debian -> forced source to be native
+
+## Prevent start on install
+prevent_start_file: "/etc/systemd/system/keepalived.service"
+prevent_start_file_content: false

@@ -4,7 +4,7 @@
   gather_facts: no
   tasks:
     - name: Install python2
-      raw: sudo apt-get update && sudo apt install -y python; sudo locale-gen en_GB.UTF-8
+      raw: sudo apt-get update && sudo apt install -y python python-apt; sudo locale-gen en_GB.UTF-8
       changed_when: false
 
 - hosts: all
@@ -45,17 +45,8 @@
   become: true
   become_method: sudo
   tasks:
-    - shell: ifconfig {{ vrrp_nic }} down || true
-      changed_when: false
-      when: inventory_hostname != ansible_play_hosts[-1]
-    - name: The VRRP state needs to adapt the topo change
-      wait_for:
-        timeout: 12
-    - setup:
-        gather_subset: network
-    - debug:
-        var: ansible_all_ipv4_addresses
-    - assert:
-        that:
-          - "'192.168.33.2' in ansible_all_ipv4_addresses"
-      when: inventory_hostname == ansible_play_hosts[-1]
+    - name: Do functional tests for each server
+      include: functional-test.yml
+      with_items: "{{ ansible_play_hosts[2:] }}"
+      loop_control:
+        loop_var: master_hostname
