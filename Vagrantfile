@@ -6,23 +6,28 @@ ANSIBLE_RAW_SSH_ARGS = []
 boxes = [
     {
         :name => "keepalived1",
-        :eth1 => "192.168.33.10",
+        :eth1 => "192.168.33.11",
         :image => "ubuntu/trusty64",
     },
     {
         :name => "keepalived2",
-        :eth1 => "192.168.33.11",
-        :image => "ubuntu/xenial64",
-    },
-    {
-        :name => "keepalived3",
         :eth1 => "192.168.33.12",
         :image => "ubuntu/xenial64",
     },
     {
-        :name => "keepalived4",
+        :name => "keepalived3",
         :eth1 => "192.168.33.13",
+        :image => "ubuntu/xenial64",
+    },
+    {
+        :name => "keepalived4",
+        :eth1 => "192.168.33.14",
         :image => "centos/7",
+    },
+    {
+        :name => "keepalived5",
+        :eth1 => "192.168.33.15",
+        :image => "debian/stretch64",
     }
 ]
 
@@ -56,7 +61,7 @@ Vagrant.configure(2) do |config|
       # Vagrant works serially and provision machines
       # serially. Each of them is unaware of the others.
       # Therefore, we should start provisioning only on last machine
-      if boxopts[:name] == "keepalived4"
+      if boxopts[:name] == "keepalived5"
         config.vm.provision :ansible do |ansible|
           ansible.playbook = "tests/deploy.yml"
           ansible.extra_vars = "tests/keepalived_haproxy_combined_example.yml"
