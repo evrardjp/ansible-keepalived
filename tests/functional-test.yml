@@ -1,10 +1,13 @@
 ---
+- name: Ensure all vrrp nics are up
+  shell: ip link set dev {{ vrrp_nic }} up || ifconfig {{ vrrp_nic }} up || true
+  changed_when: false
 - name: Testing failover on {{ master_hostname }}
   debug:
     var: master_hostname
     verbosity: 3
-- name: Bringing the interface down
-  shell: ifconfig {{ vrrp_nic }} down || ip link set {{ vrrp_nic }} down || true
+- name: Bringing the interfaces down
+  shell: ip link set {{ vrrp_nic }} down || ifconfig {{ vrrp_nic }} down || true
   changed_when: false
   when: inventory_hostname != master_hostname
 - name: The VRRP state needs to adapt the topo change
@@ -18,6 +21,3 @@
     that:
       - "'192.168.33.2' in ansible_all_ipv4_addresses"
   when: inventory_hostname == master_hostname
-- name: Ensure all vrrp nics are up
-  shell: ip link set dev {{ vrrp_nic }} up || true
-  changed_when: false
