@@ -46,7 +46,7 @@ keepalived_package_state: "{{ ( (keepalived_use_latest_stable | default(true)) |
 #This variable will be removed when the ansible upstream bugs will be fixed.
 cache_timeout: 600
 
-keepalived_instances: []
+keepalived_instances: {}
 keepalived_sync_groups: {}
 keepalived_bind_on_non_local: False
 
