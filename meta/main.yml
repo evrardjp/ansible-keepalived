@@ -29,7 +29,7 @@ galaxy_info:
   - name: opensuse
     versions:
     - all
-  - name: debian
+  - name: Debian
     versions:
     - stretch
   categories:
