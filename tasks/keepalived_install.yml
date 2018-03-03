@@ -45,6 +45,15 @@
   tags:
     - keepalived-repo
 
+- name: Ensure python apt is installed
+  apt:
+    name: python-apt
+    state: present
+  when:
+    - ansible_pkg_mgr == 'apt'
+  tags:
+    - keepalived-apt-packages
+
 - name: Check if keepalived is already installed
   package:
     name: "{{ keepalived_package_name }}"
