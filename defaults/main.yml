@@ -55,3 +55,15 @@ keepalived_bind_on_non_local: False
 # Example:
 #keepalived_global_defs:
 #  - enable_script_security
+
+# Set location of keepalived daemon options file path
+# For Debian based systems it's usually /etc/default/keepalived
+# For RedHat based systems it's usually /etc/sysconfig/keepalived
+keepalived_daemon_options_file_path: ""
+
+# Overriding keepalived daemon extra arguments, which will be applied inside of
+# the keepalived_daemon_options_file_path variable. 
+# Example:
+#keepalived_daemon_default_options_overrides: 
+#  - "DAEMON_ARGS='--snmp'"
+keepalived_daemon_default_options_overrides: []

@@ -45,10 +45,25 @@
   tags:
     - keepalived-install
 
-- name: configure keepalived
+- name: Configure keepalived
   template:
     src: keepalived.conf.j2
     dest: "{{ keepalived_config_file_path }}"
+  tags:
+    - keepalived-config
+  notify:
+    - restart keepalived
+
+- name: Configure keepalived extra params
+  lineinfile:
+    line: "{{ item }}"
+    regexp: "^{{ item.split('=')[0] }}"
+    dest: "{{ keepalived_daemon_options_file_path }}"
+    state: present
+  with_items: "{{ keepalived_daemon_default_options_overrides }}" 
+  when:
+    - keepalived_daemon_default_options_overrides is defined
+    - keepalived_daemon_options_file_path is defined
   tags:
     - keepalived-config
   notify:
