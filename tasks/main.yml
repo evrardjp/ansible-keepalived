@@ -45,10 +45,21 @@
   tags:
     - keepalived-install
 
-- name: configure keepalived
+- name: Configure keepalived
   template:
     src: keepalived.conf.j2
     dest: "{{ keepalived_config_file_path }}"
+  tags:
+    - keepalived-config
+  notify:
+    - restart keepalived
+
+- name: Setting keepalived extra args
+  lineinfile:
+    line: '{{ keepalived_daemon_options_variable }}="{% if keepalived_extra_args|length > 0 %}{% for arg in keepalived_extra_args %} --{{ arg }}{% endfor %}{% endif %}"'
+    regexp: "^{{ keepalived_daemon_options_variable }}"
+    path: "{{ keepalived_daemon_options_file_path }}"
+    state: present
   tags:
     - keepalived-config
   notify:

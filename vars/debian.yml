@@ -17,6 +17,8 @@
 keepalived_package_name: "keepalived"
 keepalived_service_name: "keepalived"
 keepalived_config_file_path: "/etc/keepalived/keepalived.conf"
+keepalived_daemon_options_file_path: "/etc/default/keepalived"
+keepalived_daemon_options_variable: "DAEMON_ARGS"
 # Debian is WIP, and only native packages from the distribution are supported for now.
 keepalived_ubuntu_src: "native" #no support of ppas under debian -> forced source to be native
 

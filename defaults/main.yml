@@ -55,3 +55,8 @@ keepalived_bind_on_non_local: False
 # Example:
 #keepalived_global_defs:
 #  - enable_script_security
+
+# Set keepalived daemon extra arguments.
+# Example:
+#keepalived_extra_args: ["snmp"]
+keepalived_extra_args: []

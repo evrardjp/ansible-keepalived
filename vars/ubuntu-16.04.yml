@@ -17,6 +17,8 @@
 keepalived_package_name: "keepalived"
 keepalived_service_name: "keepalived.service"
 keepalived_config_file_path: "/etc/keepalived/keepalived.conf"
+keepalived_daemon_options_file_path: "/etc/default/keepalived"
+keepalived_daemon_options_variable: "DAEMON_ARGS"
 
 ## Repo details for keepalived ppa
 keepalived_ppa_repo: "ppa:keepalived/stable"
