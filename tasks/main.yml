@@ -54,16 +54,19 @@
   notify:
     - restart keepalived
 
+- name: Check that daemon options file exists
+  stat:
+    path: "{{ keepalived_daemon_options_file_path }}"
+  register: keepalived_daemon_options_file
+
 - name: Configure keepalived extra params
   lineinfile:
     line: "{{ item }}"
     regexp: "^{{ item.split('=')[0] }}"
     dest: "{{ keepalived_daemon_options_file_path }}"
     state: present
-  with_items: "{{ keepalived_daemon_default_options_overrides }}" 
-  when:
-    - keepalived_daemon_default_options_overrides is defined
-    - keepalived_daemon_options_file_path is defined
+  with_items: "{{ keepalived_daemon_default_options_overrides }}"
+  when: keepalived_daemon_options_file.stat.exists
   tags:
     - keepalived-config
   notify:
