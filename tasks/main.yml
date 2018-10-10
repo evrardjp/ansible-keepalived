@@ -58,6 +58,8 @@
   stat:
     path: "{{ keepalived_daemon_options_file_path }}"
   register: keepalived_daemon_options_file
+  tags:
+    - keepalived-config
 
 - name: Configure keepalived extra params
   lineinfile:
