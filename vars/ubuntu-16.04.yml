@@ -18,6 +18,12 @@ keepalived_package_name: "keepalived"
 keepalived_service_name: "keepalived.service"
 keepalived_config_file_path: "/etc/keepalived/keepalived.conf"
 
+# As native repo has more fresh version of keepalived package,
+# daemon file path is the default one.
+# PPA package uses different location and file structure,
+# like redhat.
+_keepalived_daemon_options_file_path: "/etc/default/keepalived"
+
 ## Repo details for keepalived ppa
 keepalived_ppa_repo: "ppa:keepalived/stable"
 keepalived_ppa_keyid: "7C33BDC6"
