@@ -67,7 +67,7 @@
     content: "{{ prevent_start_file_content }}"
   when:
     - ansible_os_family | lower == 'debian'
-    - check_if_present | changed
+    - check_if_present is changed
     - ansible_service_mgr is defined
     - ansible_service_mgr != 'systemd'
   tags:
@@ -80,7 +80,7 @@
     dest: "{{ prevent_start_file }}"
   when:
     - ansible_os_family | lower == 'debian'
-    - check_if_present | changed
+    - check_if_present is changed
     - ansible_service_mgr is defined
     - ansible_service_mgr == 'systemd'
   tags:
@@ -99,7 +99,7 @@
   file:
     path: /etc/keepalived/samples/
     state: absent
-  when: 
+  when:
     - ansible_os_family | lower == 'debian'
 
 - name: Revert keepalived start prevention
@@ -108,13 +108,13 @@
     state: absent
   when:
     - ansible_os_family | lower == 'debian'
-    - check_if_present | changed
+    - check_if_present is changed
   tags:
     - keepalived-prevent-start
 
 - name: "Systemd daemon_reload"
   command: systemctl daemon-reload
-  changed_when: check_if_present | changed
+  changed_when: check_if_present is changed
   when:
     - ansible_service_mgr is defined
     - ansible_service_mgr == 'systemd'
