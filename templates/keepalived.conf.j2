@@ -145,6 +145,14 @@ virtual_server {{ vserver.ip }} {{ vserver.port }} {
 
   {% for rserver in vserver.real_servers %}
   real_server {{ rserver.ip }} {{ rserver.port }} {
+    {% if rserver.tcp_checks is defined %}
+    {% for tcp_check in rserver.tcp_checks %}
+    TCP_CHECK {
+      connect_port "{{ tcp_check.connect_port }}"
+      connect_timeout "{{ tcp_check.connect_timeout }}"
+    }
+    {% endfor %}
+    {% endif %}
     {% if rserver.misc_check is defined %}
     {% for mcheck in rserver.misc_check %}
     MISC_CHECK {
