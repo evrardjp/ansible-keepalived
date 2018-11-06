@@ -148,8 +148,8 @@ virtual_server {{ vserver.ip }} {{ vserver.port }} {
     {% if rserver.tcp_checks is defined %}
     {% for tcp_check in rserver.tcp_checks %}
     TCP_CHECK {
-      connect_port "{{ tcp_check.connect_port }}"
-      connect_timeout "{{ tcp_check.connect_timeout | default('5') }}"
+      connect_port {{ tcp_check.connect_port }}
+      connect_timeout {{ tcp_check.connect_timeout | default('5') }}
     }
     {% endfor %}
     {% endif %}
