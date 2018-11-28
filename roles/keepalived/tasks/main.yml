@@ -28,6 +28,7 @@
   tags:
     - keepalived-install
 
+# disable selinux
 - include: keepalived_selinux.yml
   when:
     - ansible_selinux.status is defined
@@ -50,10 +51,11 @@
     src: keepalived.conf.j2
     dest: "{{ keepalived_config_file_path }}"
   tags:
-    - keepalived-config
+    - keepalived-config-t
   notify:
     - restart keepalived
 
+#keepalived systemd file
 - name: Check that daemon options file exists
   stat:
     path: "{{ keepalived_daemon_options_file_path }}"
@@ -61,6 +63,7 @@
   tags:
     - keepalived-config
 
+# add extart parmam for keepalived systemd file
 - name: Configure keepalived extra params
   lineinfile:
     line: "{{ item }}"

@@ -1,18 +1,4 @@
 ---
-# Copyright 2015, Jean-Philippe Evrard <jean-philippe@evrard.me>
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 # keepalived_ubuntu_src should be either "uca", "ppa" or "native":
 # "ppa" will ensure that keepalived ppa source is installed (recommended)
 # "uca" will ensure that the Ubuntu Cloud Archive is installed (good enough)
@@ -50,12 +36,6 @@ keepalived_instances: {}
 keepalived_sync_groups: {}
 keepalived_bind_on_non_local: False
 
-# This list of strings will appear in the global_defs section of the
-# keepalived configuration file.
-# Example:
-#keepalived_global_defs:
-#  - enable_script_security
-
 # Set location of keepalived daemon options file path
 # For Debian based systems it's usually /etc/default/keepalived
 # For RedHat based systems it's usually /etc/sysconfig/keepalived
@@ -67,3 +47,5 @@ keepalived_daemon_options_file_path: "{{ _keepalived_daemon_options_file_path }}
 #keepalived_daemon_default_options_overrides: 
 #  - "DAEMON_ARGS='--snmp'"
 keepalived_daemon_default_options_overrides: []
+
+

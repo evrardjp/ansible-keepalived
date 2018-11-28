@@ -1,0 +1,14 @@
+#role master
+- hosts: lvss[0]
+  vars_files:
+    - keepalived_haproxy_master.yml
+    - vars_file_master.yml
+  roles:
+    - keepalived
+#role backup
+- hosts: lvss[1]
+  vars_files:
+    - keepalived_haproxy_backup.yml
+    - vars_file_backup.yml
+  roles:
+    - keepalived

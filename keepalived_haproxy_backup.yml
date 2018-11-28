@@ -1,0 +1,39 @@
+---
+keepalived_global_defs:
+  - router_id LVS_BACKUP
+
+keepalived_sync_groups:
+  haproxy:
+    instances:
+      - external
+      - internal
+
+keepalived_scripts:
+  haproxy_check_script:
+    check_script: "uptime"
+
+keepalived_instances:
+
+  external:
+    interface: "{{ wan_if }}"
+    state: BACKUP
+    virtual_router_id: "{{ route_id_wan }}"
+    nopreempt: 1
+    priority: "{{ priority_wan }}"
+    authentication_password: "{{ wan_auth_pass }}"
+    track_interfaces:
+     - "{{ wan_if }}"
+     - "{{ lan_if }}"
+
+  internal:
+    interface: "{{ lan_if }}"
+    state: BACKUP
+    virtual_router_id: "{{ route_id_lan }}"
+    nopreempt: 1
+    priority: "{{ priority_lan }}"
+    authentication_password: "{{ lan_auth_pass }}"
+    track_interfaces:
+     - "{{ wan_if }}"
+     - "{{ lan_if }}"
+
+keepalived_virtual_servers: "{{ virtual_server }}"
