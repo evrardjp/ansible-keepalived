@@ -21,6 +21,8 @@ keepalived_instances:
     nopreempt: 1
     priority: "{{ priority_wan }}"
     authentication_password: "{{ wan_auth_pass }}"
+    unicast_src_ip: "{{ wan_unicast_src_ip }}"
+    unicast_peers: "{{ wan_unicast_peers }}"
     track_interfaces:
      - "{{ wan_if }}"
      - "{{ lan_if }}"
@@ -32,6 +34,8 @@ keepalived_instances:
     nopreempt: 1
     priority: "{{ priority_lan }}"
     authentication_password: "{{ lan_auth_pass }}"
+    unicast_src_ip: "{{ wan_unicast_src_ip }}"
+    unicast_peers: "{{ wan_unicast_peers }}"
     track_interfaces:
      - "{{ wan_if }}"
      - "{{ lan_if }}"

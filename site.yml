@@ -12,3 +12,22 @@
     - vars_file_backup.yml
   roles:
     - keepalived
+
+#ip forward 
+#ansible-playbook -i hosts.ini site.yml --tags "rs_forward" -e "DPORT=2022 RIP=11.11.11.12 RPORT=22"
+#rs route
+#ansible-playbook -i hosts.ini site.yml --tags "rs_forward" -e "DPORT=2022 RIP=11.11.11.12 RPORT=22"
+
+
+# - hosts: backends
+#   vars_files:
+#     - vars_file_master.yml
+#     - vars_file_backup.yml
+#   tasks:
+#     - name: remove rs route
+#       net_static_route:
+#         prefix: "{{ wan_unicast_src_ip }}"
+#         mask: "{{ virtual_maskint_wan[0] }}"
+#         state: absent
+
+

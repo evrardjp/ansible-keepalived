@@ -1,29 +1,36 @@
 ---
+#master
 #wan config
 wan_if: eth0
 route_id_wan: 10
 priority_wan: 100
 wan_auth_pass: "gainet{{ route_id_wan }}"
+wan_unicast_src_ip: 192.168.66.75
+wan_unicast_peers:
+  - 192.168.66.77
 virtual_ip_wan:
-  - 10.02.03.2
-  - 102.2.20.21
+  - 192.168.66.201
+  - 192.168.66.72
 virtual_maskint_wan:
-  - 23
+  - 24
   - 24
 #lan config
 lan_if: eth1
 route_id_lan: 20
 priority_lan: 100
 lan_auth_pass: "gainet{{ route_id_lan }}"
+lan_unicast_src_ip: 11.11.11.10
+lan_unicast_peers:
+  - 11.11.11.11
 virtual_ip_lan: 
-  - 172.16.3.35
+  - 11.11.11.13
 virtual_maskint_lan: 
-  - 26
+  - 24
 
 #vs config
 virtual_server: 
-  - ip: 10.23.36.32
-    port: 3306
+  - ip: 192.168.66.201
+    port: 80
     protocol: TCP
     delay_loop: 6
     persistence_timeout: 60
@@ -31,49 +38,50 @@ virtual_server:
     lb_kind: NAT
     real_server:
       ip:
-        - 127.0.0.6
-        - 127.0.0.5
+        - 11.11.11.12
+        #- 127.0.0.5
       port:
-        - 65
-        - 66
+        - 80
+        #- 66
       connect_port:
-        - 65
-        - 66
+        - 80
+        #- 66
       connect_timeout:
         - 5
-        - 6
+        #- 6
       nb_get_retry:
         - 3
-        - 4
+        #- 4
       delay_before_retry:
         - 5
-        - 6
-  - ip: 10.23.36.32
-    port: 3307
-    protocol: UDP
-    delay_loop: 6
-    persistence_timeout: 70
-    lb_algo: rr
-    lb_kind: NAT
-    real_server:
-      ip:
-        - 127.0.0.6
-        - 127.0.0.5
-      port:
-        - 65
-        - 66
-      connect_port:
-        - 65
-        - 66
-      connect_timeout:
-        - 5
-        - 6
-      nb_get_retry:
-        - 3
-        - 4
-      delay_before_retry:
-        - 5
-        - 6
+        #- 6
+
+  # - ip: 10.23.36.32
+  #   port: 3307
+  #   protocol: UDP
+  #   delay_loop: 6
+  #   persistence_timeout: 70
+  #   lb_algo: rr
+  #   lb_kind: NAT
+  #   real_server:
+  #     ip:
+  #       - 127.0.0.6
+  #       - 127.0.0.5
+  #     port:
+  #       - 65
+  #       - 66
+  #     connect_port:
+  #       - 65
+  #       - 66
+  #     connect_timeout:
+  #       - 5
+  #       - 6
+  #     nb_get_retry:
+  #       - 3
+  #       - 4
+  #     delay_before_retry:
+  #       - 5
+  #       - 6
 
 
     

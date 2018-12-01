@@ -134,12 +134,15 @@ virtual_server {{ vs.ip }} {{ vs.port }} {
 {% for rs in vs.real_server.ip %}
    
   real_server {{ vs.real_server.ip[loop.index0] }} {{ vs.real_server.port[loop.index0] }} {
+  
+{% if vs.real_server.connect_port is defined %}  
   TCP_CHECK {
 	connect_port {{ vs.real_server.connect_port[loop.index0] }}
 	connect_timeout {{ vs.real_server.connect_timeout[loop.index0] | default(5) }}
 	nb_get_retry {{ vs.real_server.nb_get_retry[loop.index0] | default(3) }}
 	delay_before_retry {{ vs.real_server.delay_before_retry[loop.index0] | default(3) }}
-        
+{% endif %}
+
      }
   }
 {% endfor %}
