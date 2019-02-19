@@ -77,7 +77,7 @@
 - name: Dropping the tracking scripts
   copy:
     src: "{{ item.value.src_check_script }}"
-    dest: "{{ item.value.check_script }}"
+    dest: "{{ item.value.dest_check_script|default(item.value.check_script) }}"
     mode: "0755"
   with_dict: "{{ keepalived_scripts | default('{}') }}"
   when: item.value.src_check_script is defined
