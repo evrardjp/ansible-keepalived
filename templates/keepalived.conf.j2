@@ -167,6 +167,19 @@ virtual_server {{ vserver.ip }} {{ vserver.port }} {
     }
     {% endfor %}
     {% endif %}
+    {% if rserver.ssl_get is defined %}
+    {% for sslcheck in rserver.ssl_get %}
+    SSL_GET {
+      url {
+        path {{ sslcheck.url_path }}
+        digest {{ sslcheck.url_digest }} 
+      }
+      connect_timeout {{ sslcheck.connect_timeout | default('3') }}
+      nb_get_retry {{ sslcheck.nb_get_retry | default('3') }}
+      delay_before_retry {{ sslcheck.delay_before_retry | default('2') }}
+    }
+    {% endfor %}
+    {% endif %}
   }
   {% endfor %}
 
