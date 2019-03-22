@@ -128,3 +128,11 @@ keepalived_instances:
 #              warmup: true
 #              # Optinal, set false or omit to not use it.
 #              misc_dynamic: true
+#        ssl_get:
+#          - url_path: '/'
+#            url_digest: 'a797b47875d8fd5c949066182902099d'
+#            # Optional
+#            connect_timeout: 3
+#            nb_get_retry: 3
+#            delay_before_retry: 2
+
