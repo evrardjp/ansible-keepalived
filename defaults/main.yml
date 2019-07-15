@@ -62,8 +62,8 @@ keepalived_bind_on_non_local: False
 keepalived_daemon_options_file_path: "{{ _keepalived_daemon_options_file_path }}"
 
 # Overriding keepalived daemon extra arguments, which will be applied inside of
-# the keepalived_daemon_options_file_path variable. 
+# the keepalived_daemon_options_file_path variable.
 # Example:
-#keepalived_daemon_default_options_overrides: 
+#keepalived_daemon_default_options_overrides:
 #  - "DAEMON_ARGS='--snmp'"
 keepalived_daemon_default_options_overrides: []

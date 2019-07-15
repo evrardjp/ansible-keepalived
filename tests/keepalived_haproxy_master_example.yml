@@ -135,4 +135,3 @@ keepalived_instances:
 #            connect_timeout: 3
 #            nb_get_retry: 3
 #            delay_before_retry: 2
-

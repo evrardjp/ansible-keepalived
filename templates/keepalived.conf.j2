@@ -175,7 +175,7 @@ virtual_server {{ vserver.ip }} {{ vserver.port }} {
     SSL_GET {
       url {
         path {{ sslcheck.url_path }}
-        digest {{ sslcheck.url_digest }} 
+        digest {{ sslcheck.url_digest }}
       }
       connect_timeout {{ sslcheck.connect_timeout | default('3') }}
       nb_get_retry {{ sslcheck.nb_get_retry | default('3') }}
