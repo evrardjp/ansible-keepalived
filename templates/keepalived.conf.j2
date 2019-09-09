@@ -98,6 +98,13 @@ vrrp_instance {{ name }} {
   {% endfor %}
   }
   {% endif %}
+  {% if instance.virtual_rules is defined %}
+  virtual_rules {
+  {% for rule in instance.virtual_rules %}
+    {{ rule }}
+  {% endfor %}
+  }
+  {% endif %}
   {% if instance.track_scripts is defined %}
   track_script {
     {% for track_script in instance.track_scripts %}
