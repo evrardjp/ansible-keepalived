@@ -40,6 +40,13 @@ vrrp_sync_group {{ name }} {
   {% if sync_group.notify_fault is defined %}
   notify_fault "{{ sync_group.notify_fault }}"
   {% endif %}
+  {% if sync_group.track_scripts is defined %}
+  track_script {
+    {% for track_script in sync_group.track_scripts %}
+    {{ track_script }}
+    {% endfor %}
+  }
+  {% endif %}
 }
 {% endfor %}
 
@@ -55,6 +62,9 @@ vrrp_script {{ name }} {
   {% endif %}
   {% if details.timeout is defined %}
   timeout {{ details.timeout }}                  # allow scripts like ping to succeed, before timing out
+  {% endif %}
+  {% if details.user is defined %}
+  user {{ details.user }}                        # user/group names to run script under.
   {% endif %}
 }
 {% endfor %}
