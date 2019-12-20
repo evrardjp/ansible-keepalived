@@ -17,6 +17,7 @@
   command: semodule -l
   changed_when: False
   register: selinux_modules
+  check_mode: no
 
 - name: Ensure SELinux packages are installed
   yum:
