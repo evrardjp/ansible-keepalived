@@ -30,6 +30,7 @@
 
 - include: keepalived_selinux.yml
   when:
+    - keepalived_selinux_compile_rules | length > 0
     - ansible_selinux.status is defined
     - ansible_selinux.status == "enabled"
   tags:
