@@ -56,6 +56,11 @@ keepalived_bind_on_non_local: False
 #keepalived_global_defs:
 #  - enable_script_security
 
+# Whether to add systemd overrides for keepalived:
+# Wants=network-online.target
+# After=network-online.target
+keepalived_systemd_overrides: True
+
 # Set location of keepalived daemon options file path
 # For Debian based systems it's usually /etc/default/keepalived
 # For RedHat based systems it's usually /etc/sysconfig/keepalived

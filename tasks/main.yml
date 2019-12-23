@@ -206,7 +206,9 @@
   file:
     path: /etc/systemd/system/keepalived.service.d/
     state: directory
-  when: ansible_service_mgr == 'systemd'
+  when:
+    - ansible_service_mgr == 'systemd'
+    - keepalived_systemd_overrides | bool
 
 - name: Apply keepalived override to start after network is up
   ini_file:
@@ -219,4 +221,14 @@
   with_items:
     - 'Wants'
     - 'After'
-  when: ansible_service_mgr == 'systemd'
+  when:
+    - ansible_service_mgr == 'systemd'
+    - keepalived_systemd_overrides | bool
+
+- name: Remove keepalived overrides
+  file:
+    path: /etc/systemd/system/keepalived.service.d/override.conf
+    state: absent
+  when:
+    - ansible_service_mgr == 'systemd'
+    - not (keepalived_systemd_overrides | bool)
