@@ -18,8 +18,6 @@
     path: "/tmp/ansible-keepalived-selinux-{{ selinux_policy_name }}"
     state: directory
     mode: '0755'
-  when:
-    - selinux_policy_name not in selinux_modules.stdout
 
 - name: Deploy SELinux policy source file
   copy:
@@ -28,8 +26,6 @@
     owner: root
     group: root
     mode: "0755"
-  when:
-    - selinux_policy_name not in selinux_modules.stdout
 
 - name: Compile and load SELinux module
   command: "{{ item }}"
@@ -40,12 +36,8 @@
     - checkmodule -M -m -o {{ selinux_policy_name }}.mod {{ selinux_policy_name }}.te
     - semodule_package -o {{ selinux_policy_name }}.pp -m {{ selinux_policy_name }}.mod
     - semodule -i {{ selinux_policy_name }}.pp
-  when:
-    - selinux_policy_name not in selinux_modules.stdout
 
 - name: Remove temporary directory
   file:
     path: "/tmp/ansible-keepalived-selinux-{{ selinux_policy_name }}"
     state: absent
-  when:
-    - selinux_policy_name not in selinux_modules.stdout

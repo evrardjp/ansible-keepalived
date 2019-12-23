@@ -17,6 +17,7 @@
   command: semodule -l
   changed_when: False
   register: selinux_modules
+  check_mode: no
 
 - name: Ensure SELinux packages are installed
   yum:
@@ -30,6 +31,8 @@
     - '"keepalived_ping" not in selinux_modules.stdout'
 
 - include: keepalived_selinux_compile.yml
+  when:
+    - selinux_policy_name not in selinux_modules.stdout
   with_items: "{{ keepalived_selinux_compile_rules }}"
   loop_control:
     loop_var: selinux_policy_name
