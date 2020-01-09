@@ -128,6 +128,12 @@ keepalived_instances:
 #              warmup: true
 #              # Optinal, set false or omit to not use it.
 #              misc_dynamic: true
+#              # Optional, Specify the username/groupname that the script should
+#                          be run under.
+#                          If group is not specified, the group of the user
+#                          is used
+#              user: 'root'
+#              group: 'root'
 #        ssl_get:
 #          - url_path: '/'
 #            url_digest: 'a797b47875d8fd5c949066182902099d'
@@ -135,3 +141,45 @@ keepalived_instances:
 #            connect_timeout: 3
 #            nb_get_retry: 3
 #            delay_before_retry: 2
+#            # Ip to connect to, if not set real_server ip will be used
+#            connect_ip: '10.0.0.1'
+#            # Port to connect to, if not set real_server Port will be used
+#            connect_port: 443
+#            # source IP
+#            bindto: '10.0.0.2'
+#            # Optional fwmark to mark all outgoing checker packets with
+#            fwmark: 2
+#            # Optional random delay to start the initial check    
+#            warmup: 2
+#        http_get:
+#          - url_path: '/'
+#            url_digest: 'a797b47875d8fd5c949066182902099d'
+#            # Optional
+#            connect_timeout: 3
+#            nb_get_retry: 3
+#            delay_before_retry: 2
+#            # Ip to connect to, if not set real_server ip will be used
+#            connect_ip: '10.0.0.1'
+#            # Port to connect to, if not set real_server Port will be used
+#            connect_port: 80
+#            # source IP
+#            bindto: '10.0.0.2'
+#            # Optional fwmark to mark all outgoing checker packets with
+#            fwmark: 2
+#            # Optional random delay to start the initial check    
+#            warmup: 2
+#        tcp_checks:
+#            # Ip to connect to, if not set real_server ip will be used
+#            connect_ip: '10.0.0.1'
+#            # Port to connect to, if not set real_server Port will be used
+#            connect_port: 23
+#            # Optional
+#            connect_timeout: 3
+#            retry: 3
+#            delay_before_retry: 2
+#            # source IP
+#            bindto: '10.0.0.2'
+#            # Optional fwmark to mark all outgoing checker packets with
+#            fwmark: 2
+#            # Optional random delay to start the initial check    
+#            warmup: 2
