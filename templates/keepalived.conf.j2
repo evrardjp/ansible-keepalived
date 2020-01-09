@@ -272,7 +272,7 @@ virtual_server {{ vserver.ip }} {{ vserver.port }} {
       {% endfor %}
     {% endif %}
     {% if rserver.dns_check is defined %}
-      {% for dns_check in rserver.dns_get %}
+      {% for dns_check in rserver.dns_checks %}
         DNS_CHECK {
           {% if dns_check.connect_ip is defined and dns_check.connect_ip %}
           connect_ip {{ dns_check.connect_ip }}
