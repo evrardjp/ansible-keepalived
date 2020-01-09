@@ -36,3 +36,10 @@ keepalived_uca_openstack_release: mitaka
 ## Prevent start on install
 prevent_start_file: "/etc/init/keepalived.override"
 prevent_start_file_content: "manual"
+
+# Packages for Selinux
+keepalived_selinux_packages:
+  - policycoreutils-python
+  - libselinux
+  - libselinux-devel
+  - checkpolicy

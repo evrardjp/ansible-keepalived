@@ -28,6 +28,11 @@ boxes = [
         :name => "keepalived5",
         :eth1 => "192.168.33.15",
         :image => "debian/stretch64",
+    },
+    {
+        :name => "keepalived6",
+        :eth1 => "192.168.33.16",
+        :image => "centos/8",
     }
 ]
 
