@@ -170,10 +170,12 @@ virtual_server {{ vserver.ip }} {{ vserver.port }} {
     {% if rserver.tcp_checks is defined %}
       {% for tcp_check in rserver.tcp_checks %}
         TCP_CHECK {
-          {% if tcp_check.connect is defined and tcp_check.connect_ip %}
+          {% if tcp_check.connect_ip is defined and tcp_check.connect_ip %}
           connect_ip {{ tcp_check.connect_ip }}
           {% endif %}
+          {% if tcp_check.connect_port is defined and tcp_check.connect_port %}
           connect_port {{ tcp_check.connect_port }}
+          {% endif %}
           connect_timeout {{ tcp_check.connect_timeout | default('5') }}
           retry {{ tcp_check.retry | default('1') }}
           delay_before_retry {{ tcp_check.delay_before_retry | default('1') }}
