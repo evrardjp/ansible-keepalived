@@ -183,3 +183,19 @@ keepalived_instances:
 #            fwmark: 2
 #            # Optional random delay to start the initial check    
 #            warmup: 2
+#        dns_checks:
+#            # Ip to connect to, if not set real_server ip will be used
+#            connect_ip: '10.0.0.1'
+#            # Port to connect to, if not set real_server Port will be used
+#            connect_port: 1053
+#            # Optional
+#            connect_timeout: 3
+#            retry: 3
+#            # source IP
+#            bindto: '10.0.0.2'
+#            # Optional fwmark to mark all outgoing checker packets with
+#            fwmark: 2
+#            # Optional DNS type to query (SOA is default)
+#            type: SOA
+#            # Optional DNS name to query ("." is default)
+#            name: '.'
