@@ -105,28 +105,29 @@ keepalived_instances:
 # Uncomment and adjust to make use of keepalived's virtual_server functions.
 #keepalived_virtual_servers:
 #  # Example with recycled {{ keepalived_internal_vip_cidr }}
-#  - ip: "{{ keepalived_internal_vip_cidr | ipaddr('address') }}"
+#  - IP: "{{ keepalived_internal_vip_cidr | ipaddr('address') }}"
 #    port: '53'
 #    protocol: 'UDP'
 #    lvs_method: 'NAT'
 #    # Optional, set false or omit to not use it.
 #    ha_suspend: true
 #    real_servers:
-#      - ip: '8.8.8.8'
+#      - IP: '8.8.8.8'
 #        port: '53'
 #        # Currently on MISC_CHECK is supported. Section is optional.
 #        misc_check:
 #            - misc_path: '/usr/bin/host -W 1 github.com 8.8.8.8'
 #              # Role default is 3
 #              misc_timeout: '2'
-#      - ip: '8.8.4.4'
+#      - IP: '8.8.4.4'
 #        port: '53'
 #        misc_check:
 #            - misc_path: '/usr/bin/host -W 1 github.com 8.8.4.4'
+#              # Optional
 #              misc_timeout: '10'
-#              # Optinal, set false or omit to not use it.
+#              # Optional, set false or omit to not use it.
 #              warmup: true
-#              # Optinal, set false or omit to not use it.
+#              # Optional, set false or omit to not use it.
 #              misc_dynamic: true
 #              # Optional, Specify the username/groupname that the script should
 #                          be run under.
@@ -139,17 +140,19 @@ keepalived_instances:
 #            url_digest: 'a797b47875d8fd5c949066182902099d'
 #            # Optional
 #            connect_timeout: 3
+#            # Optional
 #            nb_get_retry: 3
+#            # Optional
 #            delay_before_retry: 2
-#            # Ip to connect to, if not set real_server ip will be used
+#            # Optional, IP to connect to, if not set real_server IP will be used
 #            connect_ip: '10.0.0.1'
-#            # Port to connect to, if not set real_server Port will be used
+#            # Optional, Port to connect to, if not set real_server Port will be used
 #            connect_port: 443
-#            # source IP
+#            # Optional, source IP
 #            bindto: '10.0.0.2'
-#            # Optional fwmark to mark all outgoing checker packets with
+#            # Optional, fwmark to mark all outgoing checker packets with
 #            fwmark: 2
-#            # Optional random delay to start the initial check    
+#            # Optional, random delay to start the initial check    
 #            warmup: 2
 #        http_get:
 #          - url_path: '/'
@@ -158,44 +161,61 @@ keepalived_instances:
 #            connect_timeout: 3
 #            nb_get_retry: 3
 #            delay_before_retry: 2
-#            # Ip to connect to, if not set real_server ip will be used
+#            # Optional, IP to connect to, if not set real_server IP will be used
 #            connect_ip: '10.0.0.1'
-#            # Port to connect to, if not set real_server Port will be used
+#            # Optional, Port to connect to, if not set real_server Port will be used
 #            connect_port: 80
-#            # source IP
+#            # Optional, source IP
 #            bindto: '10.0.0.2'
-#            # Optional fwmark to mark all outgoing checker packets with
+#            # Optional, Optional fwmark to mark all outgoing checker packets with
 #            fwmark: 2
 #            # Optional random delay to start the initial check    
 #            warmup: 2
 #        tcp_checks:
-#            # Ip to connect to, if not set real_server ip will be used
+#            #
+#            # ATTENTION
+#            # all these Variables are optional for keepalived, but you'll need to set at least one for ansible. it will result in a dict error otherwise
+#            # for example
+#            # tcp_checks:
+#            #   connect_timeout: 3
+#            #
+#            # Optional, IP to connect to, if not set real_server IP will be used
 #            connect_ip: '10.0.0.1'
-#            # Port to connect to, if not set real_server Port will be used
+#            # Optional, Port to connect to, if not set real_server Port will be used
 #            connect_port: 23
 #            # Optional
 #            connect_timeout: 3
+#            # Optional
 #            retry: 3
+#            # Optional
 #            delay_before_retry: 2
-#            # source IP
+#            # Optional, source IP
 #            bindto: '10.0.0.2'
-#            # Optional fwmark to mark all outgoing checker packets with
+#            # Optional, fwmark to mark all outgoing checker packets with
 #            fwmark: 2
-#            # Optional random delay to start the initial check    
+#            # Optional, random delay to start the initial check    
 #            warmup: 2
 #        dns_checks:
-#            # Ip to connect to, if not set real_server ip will be used
+#            #
+#            # ATTENTION
+#            # all these Variables are optional for keepalived, but you'll need to set at least one for ansible. it will result in a dict error otherwise
+#            # for example
+#            # dns_checks:
+#            #   connect_timeout: 3
+#            #
+#            # Optional, IP to connect to, if not set real_server IP will be used
 #            connect_ip: '10.0.0.1'
-#            # Port to connect to, if not set real_server Port will be used
+#            # Optional, Port to connect to, if not set real_server Port will be used
 #            connect_port: 1053
 #            # Optional
 #            connect_timeout: 3
+#            # Optional
 #            retry: 3
-#            # source IP
+#            # Optional, source IP
 #            bindto: '10.0.0.2'
-#            # Optional fwmark to mark all outgoing checker packets with
+#            # Optional, fwmark to mark all outgoing checker packets with
 #            fwmark: 2
-#            # Optional DNS type to query (SOA is default)
+#            # Optional, DNS type to query (SOA is default)
 #            type: SOA
-#            # Optional DNS name to query ("." is default)
+#            # Optional, DNS name to query ("." is default)
 #            name: '.'
