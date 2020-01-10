@@ -22,4 +22,3 @@ keepalived_selinux_packages:
   - python3-policycoreutils
   - libselinux
   - libselinux-devel
-  - checkpolicy

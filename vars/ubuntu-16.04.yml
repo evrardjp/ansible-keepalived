@@ -40,7 +40,3 @@ prevent_start_file_content: false
 
 # Packages for Selinux
 keepalived_selinux_packages:
-  - policycoreutils-python
-  - libselinux
-  - libselinux-devel
-  - checkpolicy
