@@ -39,4 +39,4 @@ prevent_start_file: "/etc/systemd/system/keepalived.service"
 prevent_start_file_content: false
 
 # Packages for Selinux
-keepalived_selinux_packages:
+keepalived_selinux_packages: []

@@ -38,4 +38,4 @@ prevent_start_file: "/etc/init/keepalived.override"
 prevent_start_file_content: "manual"
 
 # Packages for Selinux
-keepalived_selinux_packages:
+keepalived_selinux_packages: []
