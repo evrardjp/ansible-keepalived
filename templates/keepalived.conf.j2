@@ -170,15 +170,17 @@ virtual_server {{ vserver.ip }} {{ vserver.port }} {
     {% if rserver.tcp_checks is defined %}
     {% for tcp_check in rserver.tcp_checks %}
     TCP_CHECK {
+      connect_port {{ tcp_check.connect_port }}
+      connect_timeout {{ tcp_check.connect_timeout | default('5') }}
       {% if tcp_check.connect_ip is defined and tcp_check.connect_ip %}
       connect_ip {{ tcp_check.connect_ip }}
       {% endif %}
-      {% if tcp_check.connect_port is defined and tcp_check.connect_port %}
-      connect_port {{ tcp_check.connect_port }}
+      {% if tcp_check.retry is defined and tcp_check.retry | int %}
+      retry {{ tcp_check.retry }}
       {% endif %}
-      connect_timeout {{ tcp_check.connect_timeout | default('5') }}
-      retry {{ tcp_check.retry | default('1') }}
-      delay_before_retry {{ tcp_check.delay_before_retry | default('1') }}
+      {% if tcp_check.delay_before_retry is defined and tcp_check.delay_before_retry | int %}
+      delay_before_retry {{ tcp_check.delay_before_retry }}
+      {% endif %}
       {% if tcp_check.bindto is defined and tcp_check.bindto %}
       bindto {{ tcp_check.bindto }}
       {% endif %}
@@ -222,12 +224,12 @@ virtual_server {{ vserver.ip }} {{ vserver.port }} {
         path {{ http_check.url_path }}
         digest {{ http_check.url_digest }}
       } 
-      {% if http_check.connect_port is defined and http_check.connect_port %}
-      connect_port {{ http_check.connect_port }}
-      {% endif %}
       connect_timeout {{ http_check.connect_timeout | default('3') }}
       nb_get_retry {{ http_check.nb_get_retry | default('3') }}
       delay_before_retry {{ http_check.delay_before_retry | default('2') }}
+      {% if http_check.connect_port is defined and http_check.connect_port %}
+      connect_port {{ http_check.connect_port }}
+      {% endif %}
       {% if http_check.connect_ip is defined and http_check.connect_ip %}
       connect_ip {{ http_check.connect_ip }}
       {% endif %}
@@ -250,12 +252,12 @@ virtual_server {{ vserver.ip }} {{ vserver.port }} {
         path {{ ssl_check.url_path }}
         digest {{ ssl_check.url_digest }}
       }
-      {% if ssl_check.connect_port is defined and ssl_check.connect_port %}
-      connect_port {{ ssl_check.connect_port }}
-      {% endif %}
       connect_timeout {{ ssl_check.connect_timeout | default('3') }}
       nb_get_retry {{ ssl_check.nb_get_retry | default('3') }}
       delay_before_retry {{ ssl_check.delay_before_retry | default('2') }}
+      {% if ssl_check.connect_port is defined and ssl_check.connect_port %}
+      connect_port {{ ssl_check.connect_port }}
+      {% endif %}
       {% if ssl_check.connect_ip is defined and ssl_check.connect_ip %}
       connect_ip {{ ssl_check.connect_ip }}
       {% endif %}
@@ -271,12 +273,10 @@ virtual_server {{ vserver.ip }} {{ vserver.port }} {
     }
     {% endfor %}
     {% endif %}
-    {% if rserver.dns_check is defined %}
+    {% if rserver.dns_checks is defined %}
     {% for dns_check in rserver.dns_checks %}
     DNS_CHECK {
-      {% if dns_check.connect_ip is defined and dns_check.connect_ip %}
       connect_ip {{ dns_check.connect_ip }}
-      {% endif %}
       {% if dns_check.connect_port is defined and dns_check.connect_port %}
       connect_port {{ dns_check.connect_port }}
       {% endif %}
@@ -286,13 +286,21 @@ virtual_server {{ vserver.ip }} {{ vserver.port }} {
       {% if dns_check.bind_port is defined and dns_check.bind_port %}
       bind_port {{ dns_check.bind_port }}
       {% endif %}
-      connect_timeout {{ dns_check.connect_timeout | default('5') }}
+      {% if dns_check.connect_timeout is defined and dns_check.connect_timeout | int %}}
+      connect_timeout {{ dns_check.connect_timeout }}
+      {% endif %}
       {% if dns_check.fwmark is defined and dns_check.fwmark %}
       fwmark {{ dns_check.fwmark }}
       {% endif %}
-      retry {{ dns_check.retry | default('3') }}
-      type {{ dns_check.type | default('SOA') }}
-      name {{ dns_check.name | default('.') }}
+      {% if dns_check.retry is defined and dns_check.retry | int %}
+      retry {{ dns_check.retry }}
+      {% endif %}
+      {% if dns_check.type is defined and dns_check.type %}
+      type {{ dns_check.type }}
+      {% endif %}
+      {% if dns_check.name is defined and dns_check.name %}
+      name {{ dns_check.name }}
+      {% endif %}
     }
     {% endfor %}
     {% endif %}

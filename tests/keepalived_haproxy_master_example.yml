@@ -172,17 +172,10 @@ keepalived_instances:
 #            # Optional random delay to start the initial check    
 #            warmup: 2
 #        tcp_checks:
-#            #
-#            # ATTENTION
-#            # all these Variables are optional for keepalived, but you'll need to set at least one for ansible. it will result in a dict error otherwise
-#            # for example
-#            # tcp_checks:
-#            #   connect_timeout: 3
-#            #
+#            #Port to connect to
+#            connect_port: 23
 #            # Optional, IP to connect to, if not set real_server IP will be used
 #            connect_ip: '10.0.0.1'
-#            # Optional, Port to connect to, if not set real_server Port will be used
-#            connect_port: 23
 #            # Optional
 #            connect_timeout: 3
 #            # Optional
@@ -196,14 +189,7 @@ keepalived_instances:
 #            # Optional, random delay to start the initial check    
 #            warmup: 2
 #        dns_checks:
-#            #
-#            # ATTENTION
-#            # all these Variables are optional for keepalived, but you'll need to set at least one for ansible. it will result in a dict error otherwise
-#            # for example
-#            # dns_checks:
-#            #   connect_timeout: 3
-#            #
-#            # Optional, IP to connect to, if not set real_server IP will be used
+#            # IP to connect to
 #            connect_ip: '10.0.0.1'
 #            # Optional, Port to connect to, if not set real_server Port will be used
 #            connect_port: 1053
