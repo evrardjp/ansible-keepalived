@@ -24,3 +24,6 @@ keepalived_ubuntu_src: "native" #no support of ppas under debian -> forced sourc
 ## Prevent start on install
 prevent_start_file: "/etc/systemd/system/keepalived.service"
 prevent_start_file_content: false
+
+# Packages for Selinux
+keepalived_selinux_packages: []
