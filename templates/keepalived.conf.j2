@@ -167,6 +167,15 @@ virtual_server {{ vserver.ip }} {{ vserver.port }} {
 
   {% for rserver in vserver.real_servers %}
   real_server {{ rserver.ip }} {{ rserver.port }} {
+    {% if rserver.weight is defined and rserver.weight | int %}
+    weight {{ rserver.weight }}
+    {% endif %}
+    {% if rserver.uthreshold is defined and rserver.uthreshold | int %}
+    uthreshold {{ rserver.uthreshold }}
+    {% endif %}
+    {% if rserver.lthreshold is defined and rserver.lthreshold | int %}
+    lthreshold {{ rserver.lthreshold }}
+    {% endif %}
     {% if rserver.tcp_checks is defined %}
     {% for tcp_check in rserver.tcp_checks %}
     TCP_CHECK {
@@ -208,7 +217,7 @@ virtual_server {{ vserver.ip }} {{ vserver.port }} {
       misc_dynamic
       {% endif %}
       {% if mcheck.user is defined and mcheck.user %}
-      {% if mcheck.group is defined and mcheck.group %} 
+      {% if mcheck.group is defined and mcheck.group %}
       user {{ mcheck.user }} {{ mcheck.group }}
       {% else %}
       user {{ mcheck.user }}
@@ -223,7 +232,7 @@ virtual_server {{ vserver.ip }} {{ vserver.port }} {
       url {
         path {{ http_check.url_path }}
         digest {{ http_check.url_digest }}
-      } 
+      }
       connect_timeout {{ http_check.connect_timeout | default('3') }}
       nb_get_retry {{ http_check.nb_get_retry | default('3') }}
       delay_before_retry {{ http_check.delay_before_retry | default('2') }}

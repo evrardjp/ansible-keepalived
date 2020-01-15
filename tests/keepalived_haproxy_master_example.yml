@@ -114,7 +114,13 @@ keepalived_instances:
 #    real_servers:
 #      - IP: '8.8.8.8'
 #        port: '53'
-#        # Currently on MISC_CHECK is supported. Section is optional.
+#        # Optional, relative weight to use, default: 1
+#        weight: 3
+#        # Optional, maximum number of connections to server
+#        uthreshold: 1000
+#        # Optional, minimum number of connections to server
+#        lthreshold: 1000
+#        # Section is optional.
 #        misc_check:
 #            - misc_path: '/usr/bin/host -W 1 github.com 8.8.8.8'
 #              # Role default is 3
