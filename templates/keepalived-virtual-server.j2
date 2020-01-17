@@ -1,0 +1,11 @@
+{# extra spaces are needed for backward compatibility #}
+  ip_family {{ vserver.ip_family | default('inet') }}
+  {% if vserver.delay_loop is defined %}
+  delay_loop {{ vserver.delay_loop }}
+  {% endif %}
+  lvs_sched {{ vserver.lvs_sched | default ('rr') }}
+  lvs_method {{ vserver.lvs_method | default ('DR') }}
+  protocol {{ vserver.protocol | default ('TCP') }}
+  {% if vserver.ha_suspend is defined and vserver.ha_suspend %}
+  ha_suspend
+  {% endif %}
