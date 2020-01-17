@@ -169,3 +169,26 @@ virtual_server {{ vserver.ip }} {{ vserver.port }} {
 }
 {% endfor %}
 {% endif %}
+{% if keepalived_virtual_server_groups is defined %}
+{% for vserver_group in keepalived_virtual_server_groups %}
+virtual_server_group {{ vserver_group.name }} {
+  {% for vserver_group_vip in vserver_group.vips %}
+  {{ vserver_group_vip.ip }} {{ vserver_group_vip.port }}
+  {% endfor %}
+  {% if vserver_group.fwmark is defined %}
+  fwmark {{ vserver_group.fwmark }}
+  {% endif %}
+}
+virtual_server group {{ vserver_group.name }} {
+  {# set variable to prevent duplicate code for the same task #}
+  {% set vserver = vserver_group %}
+  {% include './templates/keepalived-virtual-server.j2' %}
+  {% for rserver in vserver_group.real_servers %}
+  real_server {{ rserver.ip }} {{ rserver.port }} {
+    {% include './templates/keepalived-real-server.j2' %}
+    {% include './templates/keepalived-checks.j2' %}
+  }
+  {% endfor %}
+}
+{% endfor %}
+{% endif %}
