@@ -84,7 +84,7 @@ vrrp_instance {{ name }} {
   {% if instance.preempt_delay is defined %}
   preempt_delay {{ instance.preempt_delay }}       # Seconds after startup until preemption. 0 (default) to 1,000.
   {% endif %}
-  {% if instance.advert_int is defined and instance.advert_int | int %}
+  {% if instance.advert_int is defined %}
   advert_int {{ instance.advert_int }}
   {% endif %}
   {% if instance.authentication_password is defined %}
@@ -170,14 +170,14 @@ virtual_server {{ vserver.ip }} {{ vserver.port }} {
 
   {% for rserver in vserver.real_servers %}
   real_server {{ rserver.ip }} {{ rserver.port }} {
-    {% if rserver.weight is defined and rserver.weight | int %}
-    weight {{ rserver.weight }}
+    {% if rserver.weight is defined %}
+    weight {{ rserver.weight | int }}
     {% endif %}
-    {% if rserver.uthreshold is defined and rserver.uthreshold | int %}
-    uthreshold {{ rserver.uthreshold }}
+    {% if rserver.uthreshold is defined %}
+    uthreshold {{ rserver.uthreshold | int }}
     {% endif %}
-    {% if rserver.lthreshold is defined and rserver.lthreshold | int %}
-    lthreshold {{ rserver.lthreshold }}
+    {% if rserver.lthreshold is defined %}
+    lthreshold {{ rserver.lthreshold | int }}
     {% endif %}
     {% if rserver.tcp_checks is defined %}
     {% for tcp_check in rserver.tcp_checks %}
