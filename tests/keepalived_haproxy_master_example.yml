@@ -66,6 +66,8 @@ keepalived_instances:
     state: MASTER
     virtual_router_id: 10
     priority: 100
+    #Optional, VRRP Advert interval in seconds 
+    #advert_int: 1
     # Please set this if you want to use authentication in your VRRP
     # instance. If more than 8 characters, it will be truncated.
     # The password must be the same per router_id (so backup and
@@ -114,7 +116,13 @@ keepalived_instances:
 #    real_servers:
 #      - IP: '8.8.8.8'
 #        port: '53'
-#        # Currently on MISC_CHECK is supported. Section is optional.
+#        # Optional, relative weight to use, default: 1
+#        weight: 3
+#        # Optional, maximum number of connections to server
+#        uthreshold: 1000
+#        # Optional, minimum number of connections to server
+#        lthreshold: 1000
+#        # Section is optional.
 #        misc_check:
 #            - misc_path: '/usr/bin/host -W 1 github.com 8.8.8.8'
 #              # Role default is 3
