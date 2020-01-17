@@ -213,3 +213,25 @@ keepalived_instances:
 #            type: SOA
 #            # Optional, DNS name to query ("." is default)
 #            name: '.'
+#
+#
+# # Define Keepalived Virtual Server Groups
+# 
+#keepalived_virtual_servers_groups:
+#  - name: server_group_1
+#    # Multiple VIPs (configured in keepalived_instances) are allowed, incl. IP Ranges
+#    vips:
+#      - ip: 10.0.0.1
+#        port: 80
+#    # Optional, define protocol (TCP is default)
+#    protocol: 'TCP'
+#    # Optional, LVS Scheduler (rr is default)
+#    lvs_sched: 'rr'
+#    # Optional, LVS Method (DR is default)
+#    lvs_method: 'NAT'
+#    # Optional, set false or omit to not use it.
+#    ha_suspend: true
+#    # Optional, iptables fwmark
+#    fwmark: 2
+#    real_servers:
+#    # -> same config/check options like keepalived_virtual_servers
