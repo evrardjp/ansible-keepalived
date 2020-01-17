@@ -84,6 +84,9 @@ vrrp_instance {{ name }} {
   {% if instance.preempt_delay is defined %}
   preempt_delay {{ instance.preempt_delay }}       # Seconds after startup until preemption. 0 (default) to 1,000.
   {% endif %}
+  {% if instance.advert_int is defined %}
+  advert_int {{ instance.advert_int }}
+  {% endif %}
   {% if instance.authentication_password is defined %}
   authentication {
     auth_type PASS
@@ -167,6 +170,15 @@ virtual_server {{ vserver.ip }} {{ vserver.port }} {
 
   {% for rserver in vserver.real_servers %}
   real_server {{ rserver.ip }} {{ rserver.port }} {
+    {% if rserver.weight is defined %}
+    weight {{ rserver.weight | int }}
+    {% endif %}
+    {% if rserver.uthreshold is defined %}
+    uthreshold {{ rserver.uthreshold | int }}
+    {% endif %}
+    {% if rserver.lthreshold is defined %}
+    lthreshold {{ rserver.lthreshold | int }}
+    {% endif %}
     {% if rserver.tcp_checks is defined %}
     {% for tcp_check in rserver.tcp_checks %}
     TCP_CHECK {
@@ -208,7 +220,7 @@ virtual_server {{ vserver.ip }} {{ vserver.port }} {
       misc_dynamic
       {% endif %}
       {% if mcheck.user is defined and mcheck.user %}
-      {% if mcheck.group is defined and mcheck.group %} 
+      {% if mcheck.group is defined and mcheck.group %}
       user {{ mcheck.user }} {{ mcheck.group }}
       {% else %}
       user {{ mcheck.user }}
@@ -223,7 +235,7 @@ virtual_server {{ vserver.ip }} {{ vserver.port }} {
       url {
         path {{ http_check.url_path }}
         digest {{ http_check.url_digest }}
-      } 
+      }
       connect_timeout {{ http_check.connect_timeout | default('3') }}
       nb_get_retry {{ http_check.nb_get_retry | default('3') }}
       delay_before_retry {{ http_check.delay_before_retry | default('2') }}
