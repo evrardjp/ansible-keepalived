@@ -217,7 +217,7 @@ keepalived_instances:
 #
 # # Define Keepalived Virtual Server Groups
 # 
-#keepalived_virtual_servers_groups:
+#keepalived_virtual_server_groups:
 #  - name: server_group_1
 #    # Multiple VIPs (configured in keepalived_instances) are allowed, incl. IP Ranges
 #    vips:
