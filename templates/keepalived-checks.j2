@@ -1,0 +1,138 @@
+{# extra spaces are needed for backward compatibility #}
+    {% if rserver.tcp_checks is defined %}
+    {% for tcp_check in rserver.tcp_checks %}
+    TCP_CHECK {
+      connect_port {{ tcp_check.connect_port }}
+      connect_timeout {{ tcp_check.connect_timeout | default('5') }}
+      {% if tcp_check.connect_ip is defined and tcp_check.connect_ip %}
+      connect_ip {{ tcp_check.connect_ip }}
+      {% endif %}
+      {% if tcp_check.retry is defined and tcp_check.retry | int %}
+      retry {{ tcp_check.retry }}
+      {% endif %}
+      {% if tcp_check.delay_before_retry is defined and tcp_check.delay_before_retry | int %}
+      delay_before_retry {{ tcp_check.delay_before_retry }}
+      {% endif %}
+      {% if tcp_check.bindto is defined and tcp_check.bindto %}
+      bindto {{ tcp_check.bindto }}
+      {% endif %}
+      {% if tcp_check.bind_port is defined and tcp_check.bind_port %}
+      bind_port {{ tcp_check.bind_port }}
+      {% endif %}
+      {% if tcp_check.fwmark is defined and tcp_check.fwmark %}
+      fwmark {{ tcp_check.fwmark }}
+      {% endif %}
+      {% if tcp_check.warmup is defined and tcp_check.warmup %}
+      warmup {{ tcp_check.warmup }}
+      {% endif %}
+    }
+    {% endfor %}
+    {% endif %}
+    {% if rserver.misc_check is defined %}
+    {% for mcheck in rserver.misc_check %}
+    MISC_CHECK {
+      misc_path "{{ mcheck.misc_path }}"
+      misc_timeout {{ mcheck.misc_timeout | default('3') }}
+      {% if mcheck.warmup is defined and mcheck.warmup %}
+      warmup {{ mcheck.warmup }}
+      {% endif %}
+      {% if mcheck.misc_dynamic is defined %}
+      misc_dynamic
+      {% endif %}
+      {% if mcheck.user is defined and mcheck.user %}
+      {% if mcheck.group is defined and mcheck.group %}
+      user {{ mcheck.user }} {{ mcheck.group }}
+      {% else %}
+      user {{ mcheck.user }}
+      {% endif %}
+      {% endif %}
+    }
+    {% endfor %}
+    {% endif %}
+    {% if rserver.http_get is defined %}
+    {% for http_check in rserver.http_get %}
+    HTTP_GET {
+      url {
+        path {{ http_check.url_path }}
+        digest {{ http_check.url_digest }}
+      }
+      connect_timeout {{ http_check.connect_timeout | default('3') }}
+      nb_get_retry {{ http_check.nb_get_retry | default('3') }}
+      delay_before_retry {{ http_check.delay_before_retry | default('2') }}
+      {% if http_check.connect_port is defined and http_check.connect_port %}
+      connect_port {{ http_check.connect_port }}
+      {% endif %}
+      {% if http_check.connect_ip is defined and http_check.connect_ip %}
+      connect_ip {{ http_check.connect_ip }}
+      {% endif %}
+      {% if http_check.bindto is defined and http_check.bindto %}
+      bindto {{ http_check.bindto }}
+      {% endif %}
+      {% if http_check.fwmark is defined and http_check.fwmark %}
+      fwmark {{ http_check.fwmark }}
+      {% endif %}
+      {% if http_check.warmup is defined and http_check.warmup %}
+      warmup {{ http_check.warmup }}
+      {% endif %}
+    }
+    {% endfor %}
+    {% endif %}
+    {% if rserver.ssl_get is defined %}
+    {% for ssl_check in rserver.ssl_get %}
+    SSL_GET {
+      url {
+        path {{ ssl_check.url_path }}
+        digest {{ ssl_check.url_digest }}
+      }
+      connect_timeout {{ ssl_check.connect_timeout | default('3') }}
+      nb_get_retry {{ ssl_check.nb_get_retry | default('3') }}
+      delay_before_retry {{ ssl_check.delay_before_retry | default('2') }}
+      {% if ssl_check.connect_port is defined and ssl_check.connect_port %}
+      connect_port {{ ssl_check.connect_port }}
+      {% endif %}
+      {% if ssl_check.connect_ip is defined and ssl_check.connect_ip %}
+      connect_ip {{ ssl_check.connect_ip }}
+      {% endif %}
+      {% if ssl_check.bindto is defined and ssl_check.bindto %}
+      bindto {{ ssl_check.bindto }}
+      {% endif %}
+      {% if ssl_check.fwmark is defined and ssl_check.fwmark %}
+      fwmark {{ ssl_check.fwmark }}
+      {% endif %}
+      {% if ssl_check.warmup is defined and ssl_check.warmup %}
+      warmup {{ ssl_check.warmup }}
+      {% endif %}
+    }
+    {% endfor %}
+    {% endif %}
+    {% if rserver.dns_checks is defined %}
+    {% for dns_check in rserver.dns_checks %}
+    DNS_CHECK {
+      connect_ip {{ dns_check.connect_ip }}
+      {% if dns_check.connect_port is defined and dns_check.connect_port %}
+      connect_port {{ dns_check.connect_port }}
+      {% endif %}
+      {% if dns_check.bindto is defined and dns_check.bindto %}
+      bindto {{ dns_check.bindto }}
+      {% endif %}
+      {% if dns_check.bind_port is defined and dns_check.bind_port %}
+      bind_port {{ dns_check.bind_port }}
+      {% endif %}
+      {% if dns_check.connect_timeout is defined and dns_check.connect_timeout | int %}}
+      connect_timeout {{ dns_check.connect_timeout }}
+      {% endif %}
+      {% if dns_check.fwmark is defined and dns_check.fwmark %}
+      fwmark {{ dns_check.fwmark }}
+      {% endif %}
+      {% if dns_check.retry is defined and dns_check.retry | int %}
+      retry {{ dns_check.retry }}
+      {% endif %}
+      {% if dns_check.type is defined and dns_check.type %}
+      type {{ dns_check.type }}
+      {% endif %}
+      {% if dns_check.name is defined and dns_check.name %}
+      name {{ dns_check.name }}
+      {% endif %}
+    }
+    {% endfor %}
+    {% endif %}
