@@ -1,0 +1,10 @@
+{# extra spaces are needed for backward compatibility #}
+    {% if rserver.weight is defined %}
+    weight {{ rserver.weight | int }}
+    {% endif %}
+    {% if rserver.uthreshold is defined %}
+    uthreshold {{ rserver.uthreshold | int }}
+    {% endif %}
+    {% if rserver.lthreshold is defined %}
+    lthreshold {{ rserver.lthreshold | int }}
+    {% endif %}
