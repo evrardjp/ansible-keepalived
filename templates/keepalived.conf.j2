@@ -106,6 +106,13 @@ vrrp_instance {{ name }} {
     {{ vip }}
     {% endfor %}
   }
+  {% if instance.vips_excluded is defined %}
+  virtual_ipaddress_excluded {
+    {% for vip in instance.vips_excluded %}
+    {{ vip }}
+    {% endfor %}
+  }
+  {% endif %}
   {% if instance.virtual_routes is defined %}
   virtual_routes {
   {% for route in instance.virtual_routes %}

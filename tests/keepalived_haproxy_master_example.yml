@@ -83,6 +83,9 @@ keepalived_instances:
     #track_interfaces:
     #  - eth1
     #  - eth2
+    # Optional virtual_ipaddress_excluded section
+    #vips_excluded:
+    #  - "10.0.0.1 dev eth0"
   internal:
     interface: eth1
     state: MASTER
