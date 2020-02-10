@@ -1,3 +1,7 @@
 *.retry
 *.log
 .vagrant/
+Gemfile.lock
+*.retry
+*/__pycache__
+*.pyc

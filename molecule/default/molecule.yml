@@ -1,0 +1,96 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: vagrant
+  provider:
+    name: virtualbox
+lint:
+  name: yamllint
+platforms:
+  - name: keepalived1
+    box: ubuntu/trusty64
+    interfaces:
+      - network_name: private_network
+        ip: '192.168.33.11'
+  - name: keepalived2
+    box: ubuntu/xenial64
+    interfaces:
+      - network_name: private_network
+        ip: '192.168.33.12'
+  - name: keepalived3
+    box: ubuntu/xenial64
+    interfaces:
+      - network_name: private_network
+        ip: '192.168.33.13'
+  - name: keepalived4
+    box: centos/7
+    interfaces:
+      - network_name: private_network
+        ip: '192.168.33.14'
+  - name: keepalived5
+    box: debian/stretch64
+    interfaces:
+      - network_name: private_network
+        ip: '192.168.33.15'
+  - name: keepalived6
+    box: centos/8
+    interfaces:
+      - network_name: private_network
+        ip: '192.168.33.16'
+provisioner:
+  name: ansible
+  inventory:
+    group_vars:
+      all:
+        keepalived_sync_groups:
+          haproxy:
+            instances:
+              - internal
+        keepalived_instances:
+          internal:
+            interface: "{{ vrrp_nic }}"
+            state: "{{ (groups['all'].index(inventory_hostname) == 0) | ternary('MASTER','BACKUP') }}"
+            virtual_router_id: 42
+            priority: "{{ (groups['all']|length - groups['all'].index(inventory_hostname)) * 250 // (groups['all']|length) }}"
+            vips:
+              - "192.168.33.2/24 dev {{ vrrp_nic }}"
+  lint:
+    name: ansible-lint
+verifier:
+  name: testinfra
+  lint:
+    name: flake8
+scenario:
+  name: default  # optional
+  create_sequence:
+    - create
+    - prepare
+  check_sequence:
+    - destroy
+    - dependency
+    - create
+    - prepare
+    - converge
+    - check
+    - destroy
+  converge_sequence:
+    - dependency
+    - create
+    - prepare
+    - converge
+  destroy_sequence:
+    - cleanup
+    - destroy
+  test_sequence:
+    - destroy
+    - dependency
+    - syntax
+    - create
+    - prepare
+    - converge
+    - idempotence
+    - side_effect
+    - verify
+    - cleanup
+    - destroy

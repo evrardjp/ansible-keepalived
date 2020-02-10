@@ -1,0 +1,52 @@
+---
+- name: Ubuntu nodes need python installed to run ansible
+  hosts: all:!keepalived4:!keepalived6
+  gather_facts: no
+  tasks:
+    - name: Install python2
+      raw: sudo apt-get update && sudo apt install -y python python-apt; sudo locale-gen en_GB.UTF-8
+      changed_when: false
+
+- hosts: all
+  # please comment order: sorted for 2.3 and below
+  order: sorted
+  gather_facts: yes
+  become: true
+  become_method: sudo
+  pre_tasks:
+    - name: Define the nics to set up
+      set_fact:
+        vrrp_nic: "{{ ((ansible_interfaces | reject('equalto','lo')) | difference([ansible_default_ipv4.interface]))[0] | string }}"
+    - name: Ensure the vrrp nics are up
+      shell: ip link set dev {{ vrrp_nic }} up || ifconfig {{ vrrp_nic }} up || true
+      changed_when: false
+    - name: Display the configuration
+      debug:
+        var: keepalived_instances
+  roles:
+    - ansible-keepalived
+  post_tasks:
+    - name: Wait a few seconds to ensure that network connectivity is up
+      wait_for:
+        timeout: 12
+    - name: Ensure the facts are up to date
+      setup:
+        gather_subset: network
+    - name: Ensure the first node is master
+      assert:
+        that:
+          - "'ipv4_secondaries' in ansible_{{ vrrp_nic }}"
+          - "ansible_{{ vrrp_nic }}['ipv4_secondaries'][0]['address'] == '192.168.33.2'"
+      when: inventory_hostname == ansible_play_hosts[0]
+
+- name: Check if failover works
+  hosts: all
+  gather_facts: yes
+  become: true
+  become_method: sudo
+  tasks:
+    - name: Do functional tests for each server
+      include: functional-test.yml
+      with_items: "{{ ansible_play_hosts }}"
+      loop_control:
+        loop_var: master_hostname
