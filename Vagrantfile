@@ -66,7 +66,7 @@ Vagrant.configure(2) do |config|
       # Vagrant works serially and provision machines
       # serially. Each of them is unaware of the others.
       # Therefore, we should start provisioning only on last machine
-      if boxopts[:name] == "keepalived5"
+      if boxopts[:name] == "keepalived6"
         config.vm.provision :ansible do |ansible|
           ansible.playbook = "tests/deploy.yml"
           ansible.extra_vars = "tests/keepalived_haproxy_combined_example.yml"

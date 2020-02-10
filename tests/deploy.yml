@@ -1,6 +1,6 @@
 ---
 - name: Ubuntu nodes need python installed to run ansible
-  hosts: all:!keepalived4
+  hosts: all:!keepalived4:!keepalived6
   gather_facts: no
   tasks:
     - name: Install python2
