@@ -21,11 +21,7 @@
 
 - name: Ensure SELinux packages are installed
   yum:
-    name:
-      - libselinux
-      - libselinux-devel
-      - checkpolicy
-      - policycoreutils-python
+    name: "{{ keepalived_selinux_packages }}"
     state: present
   when:
     - '"keepalived_ping" not in selinux_modules.stdout'
