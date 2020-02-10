@@ -25,6 +25,7 @@
     state: present
   when:
     - '"keepalived_ping" not in selinux_modules.stdout'
+    - keepalived_selinux_packages is defined
 
 - include: keepalived_selinux_compile.yml
   when:
