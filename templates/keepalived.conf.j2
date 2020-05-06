@@ -85,7 +85,7 @@ vrrp_track_file {{ name }} {
   file "{{ details.file }}"
   weight {{ details.weight | default(1) }} # multiply with weight in file (default: 1, i.e. literal value from file)
   {% if details.init_file | default(false) %}
-  init_file{% if details.init_file_value is defined %} {{ details.init_file_value }}{% endif %}{% if details.init_file_overwrite | default(false) %} overwrite{% endfor %}
+  init_file{% if details.init_file_value is defined %} {{ details.init_file_value }}{% endif %}{% if details.init_file_overwrite | default(false) %} overwrite{% endif %}
   {% endif %}
 }
 {% endfor %}
