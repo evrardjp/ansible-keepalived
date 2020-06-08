@@ -33,7 +33,18 @@ boxes = [
         :name => "keepalived6",
         :eth1 => "192.168.33.16",
         :image => "centos/8",
-    }
+    },
+    {
+        :name => "keepalived7",
+        :eth1 => "192.168.33.17",
+        :image => "ubuntu/bionic64",
+    },
+    {
+        :name => "keepalived8",
+        :eth1 => "192.168.33.18",
+        :image => "ubuntu/focal64",
+    },
+
 ]
 
 # Gather all the keys for the ssh connections
@@ -66,7 +77,7 @@ Vagrant.configure(2) do |config|
       # Vagrant works serially and provision machines
       # serially. Each of them is unaware of the others.
       # Therefore, we should start provisioning only on last machine
-      if boxopts[:name] == "keepalived6"
+      if boxopts[:name] == "keepalived8"
         config.vm.provision :ansible do |ansible|
           ansible.playbook = "tests/deploy.yml"
           ansible.extra_vars = "tests/keepalived_haproxy_combined_example.yml"
