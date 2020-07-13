@@ -47,7 +47,7 @@
 
 - name: Ensure python-apt or python3-apt is installed
   apt:
-    name: "python{{ansible_python_interpreter|regex_search('3$')}}-apt"
+    name: "python{{ansible_python_interpreter|default('')|regex_search('3$')}}-apt"
     state: present
   when:
     - ansible_pkg_mgr == 'apt'
