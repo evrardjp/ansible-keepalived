@@ -45,9 +45,9 @@
   tags:
     - keepalived-repo
 
-- name: Ensure python apt is installed
+- name: Ensure python-apt or python3-apt is installed
   apt:
-    name: python-apt
+    name: "python{{ansible_python_interpreter|regex_search('3$')}}-apt"
     state: present
   when:
     - ansible_pkg_mgr == 'apt'
