@@ -61,6 +61,10 @@ keepalived_bind_on_non_local: False
 # After=network-online.target
 keepalived_systemd_overrides: True
 
+# Whether to add systemd option Restart=allways
+# It depends on bool keepalived_systemd_overrides, so to add both must be True
+keepalived_systemd_override_service_restart: False
+
 # Set location of keepalived daemon options file path
 # For Debian based systems it's usually /etc/default/keepalived
 # For RedHat based systems it's usually /etc/sysconfig/keepalived
