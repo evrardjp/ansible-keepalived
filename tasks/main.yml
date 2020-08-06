@@ -226,6 +226,17 @@
     - ansible_service_mgr == 'systemd'
     - keepalived_systemd_overrides | bool
 
+- name: Apply keepalived override to restart service allways
+  ini_file:
+    path: /etc/systemd/system/keepalived.service.d/override.conf
+    section: 'Service'
+    option: "Restart"
+    value: 'always'
+  when:
+    - ansible_service_mgr == 'systemd'
+    - keepalived_systemd_overrides | bool
+    - keepalived_systemd_override_service_restart | bool
+
 - name: Remove keepalived overrides
   file:
     path: /etc/systemd/system/keepalived.service.d/override.conf
