@@ -87,6 +87,9 @@ vrrp_instance {{ name }} {
   {% if instance.advert_int is defined %}
   advert_int {{ instance.advert_int }}
   {% endif %}
+  {% if instance.dont_track_primary is defined and instance.dont_track_primary | bool %}
+  dont_track_primary                               # Override VRRP RFC dont_track_primary default
+  {% endif %}
   {% if instance.authentication_password is defined %}
   authentication {
     auth_type PASS
