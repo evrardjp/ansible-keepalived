@@ -202,6 +202,7 @@
   service:
     name: "{{ keepalived_service_name }}"
     enabled: "yes"
+    masked: "{{ (ansible_service_mgr is defined and ansible_service_mgr == 'systemd') | ternary('no', omit) }}"
 
 - name: Make directory for keepalived's systemd overrides
   file:
