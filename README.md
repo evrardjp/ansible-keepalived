@@ -8,6 +8,13 @@ Requirements
 
 No fancy requirements. Only package and file management in the role.
 
+Starting with this role version 4.0.0, the following minimum OS versions are required:
+- Ubuntu: 15.04 or above
+- Debian: Jessie or above
+- CentOS: 7 or above
+
+For older OSes, please use a previous version of this role.
+
 Role Variables
 --------------
 

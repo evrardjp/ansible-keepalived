@@ -203,7 +203,6 @@
     path: /etc/systemd/system/keepalived.service.d/
     state: directory
   when:
-    - ansible_service_mgr == 'systemd'
     - keepalived_systemd_overrides | bool
 
 - name: Apply keepalived override to start after network is up
@@ -218,7 +217,6 @@
     - 'Wants'
     - 'After'
   when:
-    - ansible_service_mgr == 'systemd'
     - keepalived_systemd_overrides | bool
   notify:
     - restart keepalived
@@ -230,7 +228,6 @@
     option: "Restart"
     value: 'always'
   when:
-    - ansible_service_mgr == 'systemd'
     - keepalived_systemd_overrides | bool
     - keepalived_systemd_override_service_restart | bool
   notify:
@@ -241,14 +238,7 @@
     path: /etc/systemd/system/keepalived.service.d/override.conf
     state: absent
   when:
-    - ansible_service_mgr == 'systemd'
     - not (keepalived_systemd_overrides | bool)
-
-- name: Ensuring keepalived is enabled
-  service:
-    name: "{{ keepalived_service_name }}"
-    enabled: "yes"
-  when: ansible_service_mgr != 'systemd'
 
 # Until  https://github.com/ansible/ansible/pull/72337 is fixed, we need to not use
 # the service/systemd module.
@@ -257,7 +247,7 @@
 #    daemon_reload: yes
 #    name: "{{ keepalived_service_name }}"
 #    enabled: "yes"
-#    masked: "{{ (ansible_service_mgr is defined and ansible_service_mgr == 'systemd') | ternary('no', omit) }}"
+#    masked: "no"
 #
 
 # Reload systemd is necessary if new packages, or changes of overrides.
@@ -273,17 +263,14 @@
   register: isenabled
   changed_when: (isenabled.stdout == "disabled" or isenabled.stdout == "masked") and isenabled.rc != 0
   failed_when: (isenabled.stdout != "disabled" and isenabled.stdout != "masked") and isenabled.rc != 0
-  when: ansible_service_mgr == 'systemd'
 
 - name: Unmask keepalived if necessary
   command: "systemctl unmask {{ keepalived_service_name }}"
   when:
     - isenabled is changed
     - isenabled.stdout == "masked"
-    - ansible_service_mgr == 'systemd'
 
 - name: ensure keepalived is enabled
   command: "systemctl enable {{ keepalived_service_name }} --now"
   when:
     - isenabled is changed
-    - ansible_service_mgr == 'systemd'

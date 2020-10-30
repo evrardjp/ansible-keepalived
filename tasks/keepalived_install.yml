@@ -20,19 +20,7 @@
   register: check_if_present
   check_mode: yes
 
-- name: Prevent keepalived from starting on install (upstart)
-  copy:
-    dest: "{{ prevent_start_file }}"
-    content: "{{ prevent_start_file_content }}"
-  when:
-    - ansible_os_family | lower == 'debian'
-    - check_if_present is changed
-    - ansible_service_mgr is defined
-    - ansible_service_mgr != 'systemd'
-  tags:
-    - keepalived-prevent-start
-
-- name: Prevent keepalived from starting on install (systemd)
+- name: Prevent keepalived from starting on install on debian based OS
   file:
     state: link
     src: "/dev/null"
@@ -40,8 +28,6 @@
   when:
     - ansible_os_family | lower == 'debian'
     - check_if_present is changed
-    - ansible_service_mgr is defined
-    - ansible_service_mgr == 'systemd'
   tags:
     - keepalived-prevent-start
 

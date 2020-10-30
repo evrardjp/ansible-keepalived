@@ -25,8 +25,9 @@ galaxy_info:
     - 8
   - name: Ubuntu
     versions:
-    - trusty
     - xenial
+    - bionic
+    - focal
   - name: opensuse
     versions:
     - all
