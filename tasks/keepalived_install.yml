@@ -13,47 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Add the keepalived through ppa
-  apt_key:
-    id: "{{ keepalived_ppa_keyid }}"
-    keyserver: "{{ keepalived_ppa_keyserver }}"
-    state: present
-  when:
-    - ansible_pkg_mgr == 'apt'
-    - keepalived_ubuntu_src == "ppa"
-  tags:
-    - keepalived-apt-keys
-
-- name: Add Ubuntu Cloud Archive keyring
-  apt:
-    pkg: ubuntu-cloud-keyring
-    state: "{{ keepalived_package_state }}"
-  when:
-    - ansible_pkg_mgr == 'apt'
-    - keepalived_ubuntu_src == "uca"
-  tags:
-    - keepalived-apt-keys
-
-- name: Add the keepalived apt repository
-  apt_repository:
-    repo: "{{ (keepalived_ubuntu_src == 'ppa') | ternary(keepalived_ppa_repo, keepalived_uca_repo) }}"
-    update_cache: True
-    state: present
-  when:
-    - ansible_pkg_mgr == 'apt'
-    - keepalived_ubuntu_src != "native"
-  tags:
-    - keepalived-repo
-
-- name: Ensure python apt is installed
-  apt:
-    name: python-apt
-    state: present
-  when:
-    - ansible_pkg_mgr == 'apt'
-  tags:
-    - keepalived-apt-packages
-
 - name: Check if keepalived is already installed
   package:
     name: "{{ keepalived_package_name }}"

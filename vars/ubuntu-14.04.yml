@@ -23,16 +23,6 @@ keepalived_config_file_path: "/etc/keepalived/keepalived.conf"
 # Ubuntu native package uses different location.
 _keepalived_daemon_options_file_path: "/etc/sysconfig/keepalived"
 
-## Repo details for keepalived ppa
-keepalived_ppa_repo: "ppa:keepalived/stable"
-keepalived_ppa_keyid: "7C33BDC6"
-keepalived_ppa_keyserver: "keyserver.ubuntu.com"
-
-## Repo details for keepalived uca
-keepalived_uca_repo: "deb {{ keepalived_uca_apt_repo_url }} {{ keepalived_uca_repo_dist }} main"
-keepalived_uca_repo_dist: "{{ ansible_lsb.codename }}-updates/{{ keepalived_uca_openstack_release }}"
-keepalived_uca_openstack_release: mitaka
-
 ## Prevent start on install
 prevent_start_file: "/etc/init/keepalived.override"
 prevent_start_file_content: "manual"

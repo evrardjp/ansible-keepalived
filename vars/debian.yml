@@ -18,8 +18,6 @@ keepalived_package_name: "keepalived"
 keepalived_service_name: "keepalived"
 keepalived_config_file_path: "/etc/keepalived/keepalived.conf"
 _keepalived_daemon_options_file_path: "/etc/default/keepalived"
-# Debian is WIP, and only native packages from the distribution are supported for now.
-keepalived_ubuntu_src: "native" #no support of ppas under debian -> forced source to be native
 
 ## Prevent start on install
 prevent_start_file: "/etc/systemd/system/keepalived.service"
