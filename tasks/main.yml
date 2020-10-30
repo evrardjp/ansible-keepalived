@@ -227,7 +227,7 @@
     - ansible_service_mgr == 'systemd'
     - keepalived_systemd_overrides | bool
   notify:
-    - systemctl daemon-reload
+    - restart keepalived
 
 - name: Apply keepalived override to restart service allways
   ini_file:
@@ -240,7 +240,7 @@
     - keepalived_systemd_overrides | bool
     - keepalived_systemd_override_service_restart | bool
   notify:
-    - systemctl daemon-reload
+    - restart keepalived
 
 - name: Remove keepalived overrides
   file:
@@ -250,4 +250,4 @@
     - ansible_service_mgr == 'systemd'
     - not (keepalived_systemd_overrides | bool)
   notify:
-    - systemctl daemon-reload
+    - restart keepalived

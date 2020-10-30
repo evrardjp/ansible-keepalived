@@ -13,11 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: systemctl daemon-reload
-  systemd:
-    daemon_reload: true
-
 - name: restart keepalived
   service:
     name: "{{ keepalived_service_name }}"
     state: restarted
+    daemon_reload: yes
