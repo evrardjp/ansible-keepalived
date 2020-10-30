@@ -24,10 +24,6 @@
   tags:
     - always
 
-- include: keepalived_install.yml
-  tags:
-    - keepalived-install
-
 - include: keepalived_selinux.yml
   when:
     - keepalived_selinux_compile_rules | length > 0
@@ -35,6 +31,25 @@
     - ansible_selinux.status == "enabled"
   tags:
     - keepalived-config
+
+- name: install keepalived
+  package:
+    name: "{{ keepalived_package_name }}"
+    state: "{{ keepalived_package_state }}"
+    update_cache: "{{ (ansible_pkg_mgr == 'apt') | ternary('yes', omit) }}"
+    cache_valid_time: "{{ (ansible_pkg_mgr == 'apt') | ternary(cache_timeout, omit) }}"
+  tags:
+    - keepalived-apt-packages
+    - keepalived-packages
+  notify:
+    - restart keepalived
+
+- name: Ensure no new "samples" folder appeared
+  file:
+    path: /etc/keepalived/samples/
+    state: absent
+  when:
+    - ansible_os_family | lower == 'debian'
 
 - name: Allow consuming apps to bind on non local addresses
   sysctl:

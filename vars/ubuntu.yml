@@ -13,20 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#Standard names and paths for ubuntu 16.04
 keepalived_package_name: "keepalived"
 keepalived_service_name: "keepalived.service"
 keepalived_config_file_path: "/etc/keepalived/keepalived.conf"
-
-# As native repo has more fresh version of keepalived package,
-# daemon file path is the default one.
-# PPA package uses different location and file structure,
-# like redhat.
 _keepalived_daemon_options_file_path: "/etc/default/keepalived"
-
-## Prevent start on install
-prevent_start_file: "/etc/systemd/system/keepalived.service"
-prevent_start_file_content: false
 
 # Packages for Selinux
 keepalived_selinux_packages: []
