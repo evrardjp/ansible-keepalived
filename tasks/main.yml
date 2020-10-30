@@ -223,7 +223,7 @@
   notify:
     - restart keepalived
 
-- name: Apply keepalived override to restart service allways
+- name: Apply keepalived override to restart service always
   ini_file:
     path: /etc/systemd/system/keepalived.service.d/override.conf
     section: 'Service'
