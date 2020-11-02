@@ -13,8 +13,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Until  https://github.com/ansible/ansible/pull/72337 is solved and
+# backported to previous branches, we should rely on command to do service reload
+# else, testing is broken.
 - name: restart keepalived
-  service:
-    name: "{{ keepalived_service_name }}"
-    state: restarted
-    daemon_reload: yes
+  command: "systemctl restart {{ keepalived_service_name }}"
+  tags:
+    - skip_ansible_lint
+#- name: restart keepalived
+#  service:
+#    name: "{{ keepalived_service_name }}"
+#    state: restarted
