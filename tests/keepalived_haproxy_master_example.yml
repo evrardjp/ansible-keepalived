@@ -105,7 +105,7 @@ keepalived_instances:
     #  - eth1
     #  - eth2
     vips:
-      - "{{keepalived_internal_vip_cidr}} dev eth1"
+      - "{{ keepalived_internal_vip_cidr }} dev eth1"
 
 # Uncomment and adjust to make use of keepalived's virtual_server functions.
 #keepalived_virtual_servers:
