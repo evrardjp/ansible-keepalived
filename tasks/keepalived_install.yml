@@ -92,6 +92,8 @@
     state: "{{ keepalived_package_state }}"
     update_cache: "{{ (ansible_pkg_mgr == 'apt') | ternary('yes', omit) }}"
     cache_valid_time: "{{ (ansible_pkg_mgr == 'apt') | ternary(cache_timeout, omit) }}"
+  notify:
+    - restart keepalived
   tags:
     - keepalived-apt-packages
 
