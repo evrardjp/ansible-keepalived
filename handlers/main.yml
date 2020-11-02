@@ -13,7 +13,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# https://github.com/ansible/ansible/pull/72337 is forcing us to use command instead.
+# please revert back to service whenever possible.
 - name: restart keepalived
-  service:
-    name: "{{ keepalived_service_name }}"
-    state: restarted
+  command: "systemctl restart {{ keepalived_service_name }}"
+  tags:
+    - skip_ansible_lint
+
+#- name: restart keepalived
+#  service:
+#    name: "{{ keepalived_service_name }}"
+#    state: restarted
