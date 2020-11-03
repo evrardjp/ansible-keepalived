@@ -68,6 +68,7 @@
   template:
     src: keepalived.conf.j2
     dest: "{{ keepalived_config_file_path }}"
+    mode: "0640"
   tags:
     - keepalived-config
   notify:
@@ -217,6 +218,7 @@
   file:
     path: /etc/systemd/system/keepalived.service.d/
     state: directory
+    mode: "0755"
   when:
     - keepalived_systemd_overrides | bool
 
@@ -242,6 +244,7 @@
     section: 'Service'
     option: "Restart"
     value: 'always'
+    mode: '0644'
   when:
     - keepalived_systemd_overrides | bool
     - keepalived_systemd_override_service_restart | bool
@@ -278,14 +281,20 @@
   register: isenabled
   changed_when: (isenabled.stdout == "disabled" or isenabled.stdout == "masked") and isenabled.rc != 0
   failed_when: (isenabled.stdout != "disabled" and isenabled.stdout != "masked") and isenabled.rc != 0
+  tags:
+    - skip_ansible_lint
 
 - name: Unmask keepalived if necessary
   command: "systemctl unmask {{ keepalived_service_name }}"
   when:
     - isenabled is changed
     - isenabled.stdout == "masked"
+  tags:
+    - skip_ansible_lint
 
 - name: ensure keepalived is enabled
   command: "systemctl enable {{ keepalived_service_name }} --now"
   when:
     - isenabled is changed
+  tags:
+    - skip_ansible_lint

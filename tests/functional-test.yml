@@ -13,11 +13,14 @@
 - name: The VRRP state needs to adapt the topo change
   wait_for:
     timeout: 8
-- setup:
+- name: Gather network addresses for checking master/backup state
+  setup:
     gather_subset: network
-- debug:
+- name: Show all ip addresses for node
+  debug:
     var: ansible_all_ipv4_addresses
-- assert:
+- name: Ensure the master IP address is on this node
+  assert:
     that:
       - "'192.168.33.2' in ansible_all_ipv4_addresses"
   when: inventory_hostname == master_hostname

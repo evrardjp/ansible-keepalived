@@ -74,7 +74,7 @@ keepalived_instances:
     # master should have the same password).
     #authentication_password: "your_password"
     vips:
-      - "{{keepalived_external_vip_cidr}} dev eth0"
+      - "{{ keepalived_external_vip_cidr }} dev eth0"
     # Optional Scripts for tracking the current status of the keepalived instance
     #track_scripts:
     #  - haproxy_check_script

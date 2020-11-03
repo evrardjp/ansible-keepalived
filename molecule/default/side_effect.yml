@@ -42,4 +42,3 @@
       wait_for:
         timeout: 8
       when: inventory_hostname == ansible_play_hosts[0]
-
