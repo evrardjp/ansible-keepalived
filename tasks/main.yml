@@ -270,13 +270,19 @@
 - name: Check if keepalived is enabled
   shell: "systemctl daemon-reload && systemctl is-enabled {{ keepalived_service_name }}"
   register: isenabled
-  changed_when: isenabled.stdout == "disabled" and isenabled.rc != 0
-  failed_when: isenabled.stdout != "disabled" and isenabled.rc != 0
+  changed_when: isenabled.stdout == "disabled" or isenabled.stdout == "masked"
+  failed_when: (isenabled.stdout != "disabled" or isenabled.stdout != "masked") and isenabled.rc != 0
   when: ansible_service_mgr == 'systemd'
 
+- name: Unmask keepalived if necessary
+  command: "systemctl unmask {{ keepalived_service_name }}"
+  when:
+    - isenabled is changed
+    - isenabled.stdout == "masked"
+    - ansible_service_mgr == 'systemd'
+  
 - name: ensure keepalived is enabled
   command: "systemctl enable {{ keepalived_service_name }} --now"
-  changed_when: true
   when:
     - isenabled is changed
     - ansible_service_mgr == 'systemd'
