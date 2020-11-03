@@ -17,7 +17,7 @@
 # backported to previous branches, we should rely on command to do service reload
 # else, testing is broken.
 - name: restart keepalived
-  command: "systemctl restart {{ keepalived_service_name }}"
+  shell: "systemctl restart {{ keepalived_service_name }} || service {{ keepalived_service_name }} restart"
   tags:
     - skip_ansible_lint
 #- name: restart keepalived

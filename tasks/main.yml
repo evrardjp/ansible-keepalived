@@ -244,6 +244,12 @@
     - ansible_service_mgr == 'systemd'
     - not (keepalived_systemd_overrides | bool)
 
+- name: Ensuring keepalived is enabled
+  service:
+    name: "{{ keepalived_service_name }}"
+    enabled: "yes"
+  when: ansible_service_mgr != 'systemd'
+
 # Until  https://github.com/ansible/ansible/pull/72337 is fixed, we need to not use
 # the service/systemd module.
 #- name: Ensuring keepalived is enabled
