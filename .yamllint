@@ -31,3 +31,5 @@ rules:
     type: unix
   trailing-spaces: disable
   truthy: disable
+ignore:
+  .tox/
