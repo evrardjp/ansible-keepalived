@@ -113,12 +113,3 @@
     - check_if_present is changed
   tags:
     - keepalived-prevent-start
-
-- name: "Systemd daemon_reload"
-  command: systemctl daemon-reload
-  changed_when: check_if_present is changed
-  when:
-    - ansible_service_mgr is defined
-    - ansible_service_mgr == 'systemd'
-  tags:
-    - skip_ansible_lint
