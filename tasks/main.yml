@@ -254,6 +254,7 @@
 # the service/systemd module.
 #- name: Ensuring keepalived is enabled
 #  service:
+#    daemon_reload: yes
 #    name: "{{ keepalived_service_name }}"
 #    enabled: "yes"
 #    masked: "{{ (ansible_service_mgr is defined and ansible_service_mgr == 'systemd') | ternary('no', omit) }}"
