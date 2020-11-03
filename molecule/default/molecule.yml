@@ -14,18 +14,6 @@ provisioner:
   options:
     v: True
   log: True
-  inventory:
-    host_vars:
-      keepalived-centos7:
-        test: a
-      keepalived-centos8:
-        test: a
-      keepalived-xenial:
-        test: a
-      keepalived-bionic:
-        test: a
-      keepalived-focal:
-        test: a
 platforms:
   - name: keepalived-centos7
     ## Do not use pre_build_image, instead build it from the Dockerfile.j2
