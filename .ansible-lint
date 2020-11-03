@@ -1,0 +1,7 @@
+# Rule 106 was added long after this role has been created.
+# The ansible-lint removes the prefix "ansible-role-*" for this test, and not the "ansible-" prefix.
+# Any role in the form of "ansible-*" is broken with this in.
+# Instead of renaming my role and breaking the world, I will just ignore that lint test.
+skip_list:
+  - '106' # Role name {} does not match ``^[a-z][a-z0-9_]+$`` pattern
+

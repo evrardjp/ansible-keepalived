@@ -1,8 +1,8 @@
 ---
-#lint: |
-#  set -e
-#  yamllint .
-#  ansible-lint
+lint: |
+  set -e
+  yamllint .
+  ansible-lint
 dependency:
   name: galaxy
 driver:
@@ -68,4 +68,3 @@ platforms:
     command: /lib/systemd/systemd
     volumes:
     - /sys/fs/cgroup:/sys/fs/cgroup:ro
-
