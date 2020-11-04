@@ -30,6 +30,8 @@ The main variables are:
 * keepalived_bind_on_non_local: This variable (defaulted to "False") determines whether the system that host keepalived will allow its apps to bind on non-local addresses. If you set it to true, this allows apps to bind (and start) even if they don't currently have the VIP for example.
 
 Please check the examples for more explanations on how these dicts must be configured.
+You can find an example playbook in this README, and other examples in `tests/`, including
+examples on the variables configuration.
 
 Other editable variables are listed in the defaults/main.yml. Please read the explanation there if you want to override them.
 An example of a notification script is also given, in the files folder.
