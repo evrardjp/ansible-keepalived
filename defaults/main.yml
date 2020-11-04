@@ -13,31 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# keepalived_ubuntu_src should be either "uca", "ppa" or "native":
-# "ppa" will ensure that keepalived ppa source is installed (recommended)
-# "uca" will ensure that the Ubuntu Cloud Archive is installed (good enough)
-# "native" will not ensure any external repository is set
-#  and use what's available (not recommended, unless you defined one of the
-#  above on your hosts)
-# Please see vars/ for information about these repositories
-# TODO(evrardjp), 2017-11:to remove the conditional
-# Remove the deprecation conditional and provide a good unconditional
-# default:
-#keepalived_ubuntu_src: "uca"
-keepalived_ubuntu_src: "{{ (keepalived_uca_enable is defined and (keepalived_uca_enable | bool)) | ternary('uca','ppa') }}"
-
-# If using UCA, you may want to point with your local mirror of UCA.
-keepalived_uca_apt_repo_url: "http://ubuntu-cloud.archive.canonical.com/ubuntu"
-
 # If running keepalived with SELinux, you could need to compile your
 # rules. Please override this list with path to files to compile.
 keepalived_selinux_compile_rules:
   - keepalived_ping
   - keepalived_setpgid
 
-# TODO(evrardjp), 2017-11:
-# Remove the deprecation conditional and provide a good unconditional
-# default:
 #keepalived_package_state: "latest"
 keepalived_package_state: "{{ ( (keepalived_use_latest_stable | default(true)) | bool) | ternary('latest','present') }}"
 
@@ -61,7 +42,7 @@ keepalived_bind_on_non_local: False
 # After=network-online.target
 keepalived_systemd_overrides: True
 
-# Whether to add systemd option Restart=allways
+# Whether to add systemd option Restart=always
 # It depends on bool keepalived_systemd_overrides, so to add both must be True
 keepalived_systemd_override_service_restart: False
 

@@ -1,0 +1,58 @@
+---
+lint: |
+  set -e
+  yamllint .
+  ansible-lint -vv --exclude=.tox
+dependency:
+  name: galaxy
+driver:
+  name: docker
+verifier:
+  name: ansible
+provisioner:
+  name: ansible
+  options:
+    v: True
+  log: True
+platforms:
+  - name: keepalived-centos7
+    ## Do not use pre_build_image, instead build it from the Dockerfile.j2
+    #pre_build_image: yes
+    #image: centos:7
+    ## The Dockerfile.j2 will build image from https://github.com/ericsysmin/docker-ansible-images/
+    image: centos-7
+    privileged: true
+    command: /sbin/init
+    volumes:
+    - /sys/fs/cgroup:/sys/fs/cgroup:ro
+
+  - name: keepalived-centos8
+    #pre_build_image: yes
+    #image: centos:8
+    image: centos-8
+    privileged: true
+    command: /sbin/init
+    volumes:
+    - /sys/fs/cgroup:/sys/fs/cgroup:ro
+
+  - name: keepalived-xenial
+    image: ubuntu-16.04
+    privileged: true
+    command: /lib/systemd/systemd
+    volumes:
+    - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    service_manager: systemd
+
+  - name: keepalived-bionic
+    image: ubuntu-18.04
+    privileged: true
+    command: /lib/systemd/systemd
+    volumes:
+    - /sys/fs/cgroup:/sys/fs/cgroup:ro
+
+  - name: keepalived-focal
+    image: ubuntu-20.04
+    privileged: true
+    command: /lib/systemd/systemd
+    volumes:
+    - /sys/fs/cgroup:/sys/fs/cgroup:ro

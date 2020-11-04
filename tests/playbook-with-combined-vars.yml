@@ -1,0 +1,27 @@
+---
+# This is a standalone playbook to install keepalived
+# on all nodes, having the first node the master, and
+# the rest of nodes as fallback. It is showing an
+# example of service, haproxy, to work with it.
+# In your own environment, you should probably
+# have your own group/host vars to define the content
+# of keepalived_haproxy_combined_example.yml.
+# Please note that keepalived_haproxy_combined_example.yml
+# relies on calculations to have a single var file.
+# You don't need that, it's just for convenience.
+# To see a simpler example (with more detailed variables)
+# check the other playbook: playbook-with-fine-grained-vars.yml
+- name: Install keepalived
+  hosts: all
+  order: sorted
+  vars:
+    # All nodes will broadcast vrrp on eth0
+    # You should probably use group/host vars instead.
+    vrrp_nic: eth0
+  tasks:
+  - name: Include a single (combined) var file for all nodes
+    include_vars: "keepalived_haproxy_combined_example.yml"
+
+  - name: "Include ansible-keepalived"
+    include_role:
+      name: "ansible-keepalived"
