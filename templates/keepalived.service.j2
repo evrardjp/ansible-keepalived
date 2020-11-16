@@ -1,0 +1,23 @@
+#jinja2: lstrip_blocks: True
+[Unit]
+Description=LVS and VRRP High Availability Monitor
+After=network-online.target
+Wants=network-online.target
+ConditionFileNotEmpty={{ keepalived_config_file_path }}
+
+[Service]
+PIDFile={{ keepalived_snap_systemd_pid_file }}
+EnvironmentFile=-{{ keepalived_daemon_options_file_path }}
+ExecStart=/snap/bin/keepalived \
+    {{ keepalived_snap_systemd_options }} \
+    --pid={{ keepalived_snap_systemd_pid_file }} \
+    {% if ansible_facts['os_family'] == "RedHat" %}
+    $KEEPALIVED_OPTIONS \
+    {% elif ansible_facts['os_family'] == "Debian" %}
+    $DAEMON_ARGS
+    {% endif %}
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target

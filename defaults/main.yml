@@ -19,6 +19,13 @@ keepalived_selinux_compile_rules:
   - keepalived_ping
   - keepalived_setpgid
 
+keepalived_snap: false
+keepalived_snap_channel: stable
+keepalived_snap_daemon_enabled: false
+keepalived_snap_systemd_service: true
+keepalived_snap_systemd_options: --dont-fork --log-console
+keepalived_snap_systemd_pid_file: /run/keepalived.pid
+
 #keepalived_package_state: "latest"
 keepalived_package_state: "{{ ( (keepalived_use_latest_stable | default(true)) | bool) | ternary('latest','present') }}"
 
