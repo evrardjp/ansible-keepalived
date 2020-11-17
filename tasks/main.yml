@@ -105,6 +105,16 @@
       when:
         - not keepalived_snap_daemon_enabled | bool
 
+    - name: Configure keepalived service if snapd
+      template:
+        src: keepalived.service.j2
+        dest: /etc/systemd/system/keepalived.service
+        mode: 0644
+      when:
+        - keepalived_snap_systemd_service | bool
+      notify:
+        - restart keepalived
+
   tags:
     - keepalived-snap
   when:
@@ -130,19 +140,6 @@
     mode: "0640"
   tags:
     - keepalived-config
-  notify:
-    - restart keepalived
-
-- name: Configure keepalived service if snapd
-  template:
-    src: keepalived.service.j2
-    dest: /etc/systemd/system/keepalived.service
-    mode: 0644
-  tags:
-    - keepalived-config
-  when:
-    - keepalived_snap | bool
-    - keepalived_snap_systemd_service | bool
   notify:
     - restart keepalived
 
