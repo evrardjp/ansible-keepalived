@@ -45,6 +45,41 @@
     set_fact:
       vrrp_nic: "{{ ((ansible_interfaces | reject('equalto','lo')) | difference([ansible_default_ipv4.interface]))[0] | string }}"
 
+  - name: Install snapd and fuse
+    package:
+      name: "{{ item }}"
+      state: present
+      update_cache: "{{ (ansible_pkg_mgr == 'apt') | ternary('yes', omit) }}"
+      cache_valid_time: "{{ (ansible_pkg_mgr == 'apt') | ternary(cache_timeout, omit) }}"
+    loop:
+      - snapd
+      - fuse
+
+  - name: Ensure snapd.service is enabled and running
+    ansible.builtin.systemd:
+      name: snapd.service
+      enabled: true
+      masked: false
+      state: started
+
+  - name: Ensure snap links
+    ansible.builtin.file:
+      src: /var/lib/snapd/snap
+      dest: /snap
+      owner: root
+      group: root
+      state: link
+    when:
+      - ansible_facts["os_family"] == "RedHat"
+
+  - name: Ensure snap core
+    community.general.snap:
+      name: core
+    # snap core may result in a weird error that resolves when repeating the action
+    retries: 3
+    register: snapd_core
+    until: snapd_core is succeeded
+
   - name: Include keepalived vars
     include_vars: "../../tests/keepalived_haproxy_combined_example.yml"
 
