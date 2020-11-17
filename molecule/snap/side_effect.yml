@@ -1,0 +1,44 @@
+---
+# Node1 is master, let's make any other node master, see if everything is fine
+- hosts: all
+  order: sorted
+  vars:
+    vrrp_ip: 192.168.33.2
+  tasks:
+    - name: Define vrrp nic
+      set_fact:
+        vrrp_nic: "{{ ((ansible_interfaces | reject('equalto','lo')) | difference([ansible_default_ipv4.interface]))[0] | string }}"
+
+    - name: Disable current master node
+      command: ip link set dev {{ vrrp_nic }} down
+      when: inventory_hostname == ansible_play_hosts[0]
+
+    - name: Wait for topology change
+      wait_for:
+        timeout: 8
+      when: inventory_hostname == ansible_play_hosts[0]
+
+    - name: Refresh facts for ip addresses on all nodes
+      setup:
+        gather_subset: network
+
+    - name: Compare all the hosts IPs with the vrrp_ip
+      set_fact:
+        is_there_master_ip_somewhere: "{{ ansible_play_hosts_all | map('extract', hostvars, 'ansible_all_ipv4_addresses') | flatten | intersect([vrrp_ip]) }}"
+      run_once: True
+
+    - name: Fail if no one has the vrrp_ip
+      assert:
+        that:
+          is_there_master_ip_somewhere | length > 0
+      run_once: True
+
+    # Check master is back online is done on verify
+    - name: Restore network connectivity on the initial master node
+      command: ip link set dev {{ vrrp_nic }} up
+      when: inventory_hostname == ansible_play_hosts[0]
+
+    - name: Wait for topology change
+      wait_for:
+        timeout: 8
+      when: inventory_hostname == ansible_play_hosts[0]

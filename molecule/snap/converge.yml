@@ -1,0 +1,55 @@
+---
+- name: Converge
+  hosts: all
+  # sorted is necessary to reliably know which one will be the first master node
+  order: sorted
+  serial:
+    - "1"
+    - "100%"
+  tasks:
+  - name: Apt update and install rsync, ping, iproute
+    apt:
+      update_cache: yes
+      name:
+        - rsync
+        - inetutils-ping
+        - iproute2
+      state: present
+    when: ansible_os_family == "Debian"
+
+  - name: Yum install iproute to fix undefined ansible_default_ipv4.address
+    yum:
+      name: iproute
+      state: present
+    when:
+      - ansible_distribution == "CentOS"
+      - ansible_distribution_major_version == "7"
+
+  - name: Add a container to a network, leaving existing containers connected
+    delegate_to: localhost
+    community.general.docker_network:
+      name: keepalived-network
+      connected:
+        - "{{ inventory_hostname }}"
+      appends: yes
+
+  - name: Re-collect network facts required after installation iproute
+    setup:
+      gather_subset: network
+
+  - name: Show ansible_interfaces
+    debug:
+      var: ansible_interfaces
+
+  - name: Define vrrp nic
+    set_fact:
+      vrrp_nic: "{{ ((ansible_interfaces | reject('equalto','lo')) | difference([ansible_default_ipv4.interface]))[0] | string }}"
+
+  - name: Include keepalived vars
+    include_vars: "../../tests/keepalived_haproxy_combined_example.yml"
+
+  - name: "Include ansible-keepalived"
+    include_role:
+      name: "ansible-keepalived"
+    vars:
+      keepalived_snap: true

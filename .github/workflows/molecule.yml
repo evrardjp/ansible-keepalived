@@ -8,6 +8,7 @@ jobs:
       max-parallel: 2
       matrix:
         ansible: ["2.9", "latest"]
+        scenario: ["default", "snap"]
     steps:
       - uses: actions/checkout@v2
       - name: Install dependencies
@@ -15,5 +16,7 @@ jobs:
           sudo apt remove ansible
           sudo apt install tox
       - name: Test with molecule using tox
+        env:
+          MOLECULE_SCENARIO: ${{ matrix.scenario }}
         run: |
-          sudo -H -E tox -e ansible-${{ matrix.ansible }}
+          sudo -H -E tox -e ansible-${{ matrix.ansible }}-${{ matrix.scenario }}
