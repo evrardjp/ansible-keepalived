@@ -10,10 +10,13 @@ driver:
 verifier:
   name: ansible
 provisioner:
+  env:
+    ANSIBLE_STDOUT_CALLBACK: yaml
   name: ansible
   options:
-    v: True
-  log: True
+    v: true
+    diff: true
+  log: true
 platforms:
   - name: keepalived-centos7
     ## Do not use pre_build_image, instead build it from the Dockerfile.j2
