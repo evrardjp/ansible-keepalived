@@ -50,7 +50,7 @@
       name: "{{ item }}"
       state: present
       update_cache: "{{ (ansible_pkg_mgr == 'apt') | ternary('yes', omit) }}"
-      cache_valid_time: "{{ (ansible_pkg_mgr == 'apt') | ternary(cache_timeout, omit) }}"
+      cache_valid_time: "{{ (ansible_pkg_mgr == 'apt') | ternary(600, omit) }}"
     loop:
       - snapd
       - fuse

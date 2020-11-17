@@ -2,3 +2,4 @@ molecule-docker
 molecule
 ansible-lint
 yamllint
+jmespath

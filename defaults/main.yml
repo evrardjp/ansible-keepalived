@@ -21,6 +21,8 @@ keepalived_selinux_compile_rules:
 
 keepalived_snap: false
 keepalived_snap_channel: stable
+keepalived_snap_snapd_service: snapd.service
+keepalived_snap_snapd_socket: /run/snapd.socket
 keepalived_snap_daemon_enabled: false
 keepalived_snap_systemd_service: true
 keepalived_snap_systemd_options: --dont-fork --log-console
