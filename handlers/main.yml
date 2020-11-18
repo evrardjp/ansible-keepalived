@@ -24,3 +24,11 @@
 #  service:
 #    name: "{{ keepalived_service_name }}"
 #    state: restarted
+- name: reload keepalived
+  command: "systemctl reload {{ keepalived_service_name }}"
+  tags:
+    - skip_ansible_lint
+#- name: reload keepalived
+#  service:
+#    name: "{{ keepalived_service_name }}"
+#    state: reloaded

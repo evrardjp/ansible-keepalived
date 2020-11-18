@@ -72,7 +72,7 @@
   tags:
     - keepalived-config
   notify:
-    - restart keepalived
+    - reload keepalived
 
 - name: Check that daemon options file exists
   stat:
@@ -104,7 +104,7 @@
   tags:
     - keepalived-config
   notify:
-    - restart keepalived
+    - reload keepalived
 
 - name: Dropping the general notification scripts
   copy:
@@ -116,7 +116,7 @@
   tags:
     - keepalived-config
   notify:
-    - restart keepalived
+    - reload keepalived
 
 - name: Dropping the notification scripts for switching to master
   copy:
@@ -128,7 +128,7 @@
   tags:
     - keepalived-config
   notify:
-    - restart keepalived
+    - reload keepalived
 
 - name: Dropping the notification scripts for switching to backup
   copy:
@@ -140,7 +140,7 @@
   tags:
     - keepalived-config
   notify:
-    - restart keepalived
+    - reload keepalived
 
 - name: Dropping the notification scripts for failures
   copy:
@@ -152,7 +152,7 @@
   tags:
     - keepalived-config
   notify:
-    - restart keepalived
+    - reload keepalived
 
 - name: Dropping the general notification scripts (instances)
   copy:
@@ -164,7 +164,7 @@
   tags:
     - keepalived-config
   notify:
-    - restart keepalived
+    - reload keepalived
 
 - name: Dropping the notification scripts for switching to master (instances)
   copy:
@@ -176,7 +176,7 @@
   tags:
     - keepalived-config
   notify:
-    - restart keepalived
+    - reload keepalived
 
 - name: Dropping the notification scripts for switching to backup (instances)
   copy:
@@ -188,7 +188,7 @@
   tags:
     - keepalived-config
   notify:
-    - restart keepalived
+    - reload keepalived
 
 - name: Dropping the notification scripts for stopping vrrp (instances)
   copy:
@@ -200,7 +200,7 @@
   tags:
     - keepalived-config
   notify:
-    - restart keepalived
+    - reload keepalived
 
 - name: Dropping the notification scripts for failures (instances)
   copy:
@@ -212,7 +212,7 @@
   tags:
     - keepalived-config
   notify:
-    - restart keepalived
+    - reload keepalived
 
 - name: Make directory for keepalived's systemd overrides
   file:
