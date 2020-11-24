@@ -78,6 +78,9 @@ vrrp_instance {{ name }} {
   state {{ instance.state }}
   virtual_router_id {{ instance.virtual_router_id }}
   priority {{ instance.priority }}
+  {% if instance.use_vmac is defined and instance.use_vmac | bool %}
+  use_vmac                                         # Use virtual MAC address
+  {% endif %}
   {% if instance.nopreempt is defined and instance.nopreempt | bool %}
   nopreempt                                        # Override VRRP RFC preemption default
   {% endif %}
