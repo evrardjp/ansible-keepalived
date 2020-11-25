@@ -68,6 +68,8 @@ keepalived_instances:
     priority: 100
     #Optional, VRRP Advert interval in seconds 
     #advert_int: 1
+    # Please set this if you want to use a virtual MAC address.
+    #use_vmac: true
     # Please set this if you want to use authentication in your VRRP
     # instance. If more than 8 characters, it will be truncated.
     # The password must be the same per router_id (so backup and
