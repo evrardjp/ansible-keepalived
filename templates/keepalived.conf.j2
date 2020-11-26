@@ -164,6 +164,9 @@ vrrp_instance {{ name }} {
   {% if instance.notify_stop is defined %}
   notify_stop "{{ instance.notify_stop }}"
   {% endif %}
+  {% if instance.smtp_alert is defined and instance.smtp_alert | bool %}
+  smtp_alert # Send email notification during state transition
+  {% endif %}
 }
 {% endfor %}
 
