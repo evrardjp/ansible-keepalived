@@ -34,6 +34,8 @@ keepalived_sync_groups:
     # Their deployment and configuration are like the notify_script
     #notify_master:
     #src_notify_master:
+    #notify_master_rx_lower_pri:
+    #src_notify_master_rx_lower_pri:
     #notify_backup:
     #src_notify_backup:
     #notify_fault:

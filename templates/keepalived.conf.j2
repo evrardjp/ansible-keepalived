@@ -36,6 +36,9 @@ vrrp_sync_group {{ name }} {
   {% if sync_group.notify_master is defined %}
   notify_master "{{ sync_group.notify_master }}"
   {% endif %}
+  {% if sync_group.notify_master_rx_lower_pri is defined %}
+  notify_master_rx_lower_pri "{{ sync_group.notify_master_rx_lower_pri }}"
+  {% endif %}
   {% if sync_group.notify_backup is defined %}
   notify_backup "{{ sync_group.notify_backup }}"
   {% endif %}
@@ -154,6 +157,9 @@ vrrp_instance {{ name }} {
   {% endif %}
   {% if instance.notify_master is defined %}
   notify_master "{{ instance.notify_master }}"
+  {% endif %}
+  {% if instance.notify_master_rx_lower_pri is defined %}
+  notify_master_rx_lower_pri "{{ instance.notify_master_rx_lower_pri }}"
   {% endif %}
   {% if instance.notify_backup is defined %}
   notify_backup "{{ instance.notify_backup }}"

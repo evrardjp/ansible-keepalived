@@ -34,6 +34,8 @@ keepalived_sync_groups:
     # Their deployment and configuration are like the notify_script
     #notify_master:
     #src_notify_master:
+    #notify_master_rx_lower_pri:
+    #src_notify_master_rx_lower_pri:
     #notify_backup:
     #src_notify_backup:
     #notify_fault:
@@ -66,7 +68,7 @@ keepalived_instances:
     state: MASTER
     virtual_router_id: 10
     priority: 100
-    #Optional, VRRP Advert interval in seconds 
+    #Optional, VRRP Advert interval in seconds
     #advert_int: 1
     # Please set this if you want to use a virtual MAC address.
     #use_vmac: true
@@ -165,7 +167,7 @@ keepalived_instances:
 #            bindto: '10.0.0.2'
 #            # Optional, fwmark to mark all outgoing checker packets with
 #            fwmark: 2
-#            # Optional, random delay to start the initial check    
+#            # Optional, random delay to start the initial check
 #            warmup: 2
 #        http_get:
 #          - url_path: '/'
@@ -182,7 +184,7 @@ keepalived_instances:
 #            bindto: '10.0.0.2'
 #            # Optional, Optional fwmark to mark all outgoing checker packets with
 #            fwmark: 2
-#            # Optional random delay to start the initial check    
+#            # Optional random delay to start the initial check
 #            warmup: 2
 #        tcp_checks:
 #            #Port to connect to
@@ -199,7 +201,7 @@ keepalived_instances:
 #            bindto: '10.0.0.2'
 #            # Optional, fwmark to mark all outgoing checker packets with
 #            fwmark: 2
-#            # Optional, random delay to start the initial check    
+#            # Optional, random delay to start the initial check
 #            warmup: 2
 #        dns_checks:
 #            # IP to connect to
@@ -221,7 +223,7 @@ keepalived_instances:
 #
 #
 # # Define Keepalived Virtual Server Groups
-# 
+#
 #keepalived_virtual_server_groups:
 #  - name: server_group_1
 #    # Multiple VIPs (configured in keepalived_instances) are allowed, incl. IP Ranges
