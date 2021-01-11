@@ -32,29 +32,153 @@
   tags:
     - keepalived-config
 
-- name: install keepalived
-  package:
-    name: "{{ keepalived_package_name }}"
-    state: "{{ keepalived_package_state }}"
-    update_cache: "{{ (ansible_pkg_mgr == 'apt') | ternary('yes', omit) }}"
-    cache_valid_time: "{{ (ansible_pkg_mgr == 'apt') | ternary(cache_timeout, omit) }}"
-  tags:
-    - keepalived-apt-packages
-    - keepalived-packages
-  notify:
-    - restart keepalived
+- name: Install keepalived with packages
+  block:
+    - name: install keepalived
+      package:
+        name: "{{ keepalived_package_name }}"
+        state: "{{ keepalived_package_state }}"
+        update_cache: "{{ (ansible_pkg_mgr == 'apt') | ternary('yes', omit) }}"
+        cache_valid_time: "{{ (ansible_pkg_mgr == 'apt') | ternary(cache_timeout, omit) }}"
+      tags:
+        - keepalived-apt-packages
+        - keepalived-packages
+      notify:
+        - restart keepalived
 
-- name: Ensure no new "samples" folder appeared
-  file:
-    path: /etc/keepalived/samples/
-    state: absent
+    - name: Ensure no new "samples" folder appeared
+      file:
+        path: /etc/keepalived/samples/
+        state: absent
+      when:
+        - ansible_os_family | lower == 'debian'
   when:
-    - ansible_os_family | lower == 'debian'
+    - not keepalived_snap | bool
+
+- name: Install keepalived with snap
+  block:
+    - name: Ensure snapd.service is enabled and running
+      ansible.builtin.service:
+        name: "{{ keepalived_snap_snapd_service }}"
+        enabled: true
+        state: started
+
+    - name: Check snap core and keepalived are installed
+      ansible.builtin.uri:
+        unix_socket: "{{ keepalived_snap_snapd_socket }}"
+        url: "http://localhost/v2/snaps/{{ item }}"
+        method: GET
+        return_content: true
+        status_code:
+          - 200
+          - 404
+      register: chk_snaps
+      loop:
+        - core
+        - keepalived
+
+    - name: Install snap core and keepalived
+      ansible.builtin.uri:
+        unix_socket: "{{ keepalived_snap_snapd_socket }}"
+        url: "http://localhost/v2/snaps/{{ item.json.result.value }}"
+        method: POST
+        body:
+          action: install
+          classic: "{{ classic }}"
+        body_format: json
+        return_content: true
+        status_code: 202
+      vars:
+        classic: "{{ (item.json.result.value == 'keepalived') | ternary(true, false) }}"
+      register: install_snaps
+      when:
+        - item.status == 404
+      loop: "{{ chk_snaps.results }}"
+
+    - name: Wait for snap core and keepalived to be installed
+      ansible.builtin.uri:
+        unix_socket: "{{ keepalived_snap_snapd_socket }}"
+        url: "http://localhost/v2/changes/{{ item.json.change }}"
+        method: GET
+        return_content: true
+      failed_when: change_snaps.json.status == "Error"
+      register: change_snaps
+      until: change_snaps.json.result.ready
+      retries: 5
+      delay: 10
+      when:
+        - item is not skipped
+      loop: "{{ install_snaps.results }}"
+
+    - name: Check keepalived snap daemon disabled
+      ansible.builtin.uri:
+        unix_socket: "{{ keepalived_snap_snapd_socket }}"
+        url: "http://localhost/v2/apps?select=service&names=keepalived"
+        method: GET
+        return_content: true
+      register: chk_keepalived_snap_daemon
+
+    - name: Disable keepalived snap daemon via API
+      ansible.builtin.uri:
+        unix_socket: "{{ keepalived_snap_snapd_socket }}"
+        url: http://localhost/v2/apps
+        method: POST
+        body:
+          names:
+            - keepalived
+          action: stop
+          disable: true
+        status_code: 202
+        body_format: json
+        return_content: true
+      register: stop_disable_keepalived_snap_daemon
+      changed_when:
+        (chk_keepalived_snap_daemon.json |
+          community.general.json_query("result[?name == 'daemon' && snap == 'keepalived'].enabled | [0]") |
+          ternary(true, false, false)) or
+        (chk_keepalived_snap_daemon.json |
+          community.general.json_query("result[?name == 'daemon' && snap == 'keepalived'].active | [0]") |
+          ternary(true, false, false))
+      when:
+        (chk_keepalived_snap_daemon.json |
+          community.general.json_query("result[?name == 'daemon' && snap == 'keepalived'].enabled | [0]") |
+          ternary(true, false, false)) or
+        (chk_keepalived_snap_daemon.json |
+          community.general.json_query("result[?name == 'daemon' && snap == 'keepalived'].active | [0]") |
+          ternary(true, false, false))
+
+    - name: Wait for keepalived snap daemon to be disabled
+      ansible.builtin.uri:
+        unix_socket: "{{ keepalived_snap_snapd_socket }}"
+        url: "http://localhost/v2/changes/{{ stop_disable_keepalived_snap_daemon.json.change }}"
+        method: GET
+        return_content: true
+      failed_when: stop_disable_snap.json.status == "Error"
+      register: stop_disable_snap
+      until: stop_disable_snap.json.result.ready
+      retries: 5
+      delay: 10
+      when: stop_disable_keepalived_snap_daemon is not skipped
+
+    - name: Configure keepalived service if snapd
+      template:
+        src: keepalived-snap.service.j2
+        dest: /etc/systemd/system/keepalived.service
+        mode: 0644
+      when:
+        - keepalived_snap_systemd_service | bool
+      notify:
+        - restart keepalived
+
+  tags:
+    - keepalived-snap
+  when:
+    - keepalived_snap | bool
 
 - name: Allow consuming apps to bind on non local addresses
   sysctl:
     name: "{{ item }}"
-    value: 1
+    value: "1"
     sysctl_set: yes
     state: present
   when: keepalived_bind_on_non_local | bool
@@ -245,6 +369,7 @@
     mode: "0755"
   when:
     - keepalived_systemd_overrides | bool
+    - not keepalived_snap | bool
 
 - name: Apply keepalived override to start after network is up
   ini_file:
@@ -259,6 +384,7 @@
     - 'After'
   when:
     - keepalived_systemd_overrides | bool
+    - not keepalived_snap | bool
   notify:
     - restart keepalived
 
