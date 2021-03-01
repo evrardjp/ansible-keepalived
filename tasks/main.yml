@@ -53,14 +53,18 @@
 
 - name: Allow consuming apps to bind on non local addresses
   sysctl:
-    name: "{{ item }}"
-    value: 1
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
     sysctl_set: yes
     state: present
   when: keepalived_bind_on_non_local | bool
   with_items:
-    - "net.ipv4.ip_nonlocal_bind"
-    - "net.ipv6.ip_nonlocal_bind"
+    - name: "net.ipv4.ip_nonlocal_bind"
+      value: 1
+    - name: "net.ipv6.ip_nonlocal_bind"
+      value: 1
+    - name: "net.ipv4.tcp_retries2"
+      value: "{{ keepalived_sysctl_tcp_retries }}"
   tags:
     - keepalived-install
 
