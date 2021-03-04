@@ -134,18 +134,6 @@
   notify:
     - reload keepalived
 
-- name: Dropping the notification scripts for lower priority master case
-  copy:
-    src: "{{ item.value.src_notify_master_rx_lower_pri }}"
-    dest: "{{ item.value.notify_master_rx_lower_pri }}"
-    mode: "0755"
-  with_dict: "{{ keepalived_sync_groups }}"
-  when: item.value.src_notify_master_rx_lower_pri is defined
-  tags:
-    - keepalived-config
-  notify:
-    - reload keepalived
-
 - name: Dropping the notification scripts for switching to backup
   copy:
     src: "{{ item.value.src_notify_backup }}"
