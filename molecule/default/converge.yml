@@ -27,7 +27,7 @@
 
   - name: Add a container to a network, leaving existing containers connected
     delegate_to: localhost
-    community.general.docker_network:
+    docker_network:
       name: keepalived-network
       connected:
         - "{{ inventory_hostname }}"
