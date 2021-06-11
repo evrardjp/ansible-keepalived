@@ -44,6 +44,16 @@
   notify:
     - restart keepalived
 
+- name: install keepalived scripts dependencies
+  package:
+    name: "{{ keepalived_scripts_packages }}"
+    state: "{{ keepalived_package_state }}"
+  tags:
+    - keepalived-apt-packages
+    - keepalived-packages
+  when:
+    - keepalived_scripts_packages|length > 0
+
 - name: Ensure no new "samples" folder appeared
   file:
     path: /etc/keepalived/samples/
