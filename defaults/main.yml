@@ -22,6 +22,9 @@ keepalived_selinux_compile_rules:
 #keepalived_package_state: "latest"
 keepalived_package_state: "{{ ( (keepalived_use_latest_stable | default(true)) | bool) | ternary('latest','present') }}"
 
+# Keepalived scripts may rely upon additional packages.
+keepalived_scripts_packages: []
+
 #This is the expiration time of your package manager cache.
 #When expired, this role will require to update the package manger cache.
 #This variable will be removed when the ansible upstream bugs will be fixed.

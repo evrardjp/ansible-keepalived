@@ -32,9 +32,9 @@
   tags:
     - keepalived-config
 
-- name: install keepalived
+- name: install keepalived package(s)
   package:
-    name: "{{ keepalived_package_name }}"
+    name: "{{ [keepalived_package_name] + keepalived_scripts_packages }}"
     state: "{{ keepalived_package_state }}"
     update_cache: "{{ (ansible_pkg_mgr == 'apt') | ternary('yes', omit) }}"
     cache_valid_time: "{{ (ansible_pkg_mgr == 'apt') | ternary(cache_timeout, omit) }}"
