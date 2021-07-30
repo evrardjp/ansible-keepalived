@@ -16,6 +16,9 @@
       {% if tcp_check.bindto is defined and tcp_check.bindto %}
       bindto {{ tcp_check.bindto }}
       {% endif %}
+      {% if tcp_check.bind_if is defined and tcp_check.bind_if %}
+      bind_if {{ tcp_check.bind_if }}
+      {% endif %}
       {% if tcp_check.bind_port is defined and tcp_check.bind_port %}
       bind_port {{ tcp_check.bind_port }}
       {% endif %}
@@ -54,8 +57,40 @@
     HTTP_GET {
       url {
         path {{ http_check.url_path }}
+        {% if http_check.url_digest is defined and http_check.url_digest %}
         digest {{ http_check.url_digest }}
+        {% endif %}
+        {% if http_check.status_code is defined and http_check.status_code %}
+        status_code {{ http_check.status_code }}
+        {% endif %}
+        {% if http_check.virtualhost is defined and http_check.virtualhost %}
+        virtualhost {{ http_check.virtualhost }}
+        {% endif %}
+        {% if http_check.regex is defined and http_check.regex %}
+        regex {{ http_check.regex }}
+        {% endif %}
+        {% if http_check.regex_no_match is defined %}
+        regex_no_match
+        {% endif %}
+        {% if http_check.regex_options is defined and http_check.regex_options %}
+        regex_options {{ http_check.regex_options }}
+        {% endif %}
+        {% if http_check.regex_stack is defined and http_check.regex_stack %}
+        regex_stack {{ http_check.regex_stack }}
+        {% endif %}
+        {% if http_check.regex_min_offset is defined and http_check.regex_min_offset %}
+        regex_min_offset {{ http_check.regex_min_offset }}
+        {% endif %}
+        {% if http_check.regex_max_offset is defined and http_check.regex_max_offset %}
+        regex_max_offset {{ http_check.regex_max_offset }}
+        {% endif %}
       }
+      {% if http_check.http_protocol is defined and http_check.http_protocol %}
+      http_protocol {{ http_check.http_protocol }}
+      {% endif %}
+      {% if http_check.fast_recovery is defined and http_check.fast_recovery %}
+      fast_recovery {{ http_check.fast_recovery }}
+      {% endif %}
       connect_timeout {{ http_check.connect_timeout | default('3') }}
       nb_get_retry {{ http_check.nb_get_retry | default('3') }}
       delay_before_retry {{ http_check.delay_before_retry | default('2') }}
@@ -67,6 +102,9 @@
       {% endif %}
       {% if http_check.bindto is defined and http_check.bindto %}
       bindto {{ http_check.bindto }}
+      {% endif %}
+      {% if http_check.bind_if is defined and http_check.bind_if %}
+      bind_if {{ http_check.bind_if }}
       {% endif %}
       {% if http_check.fwmark is defined and http_check.fwmark %}
       fwmark {{ http_check.fwmark }}
@@ -82,8 +120,43 @@
     SSL_GET {
       url {
         path {{ ssl_check.url_path }}
+        {% if ssl_check.url_digest is defined and ssl_check.url_digest %}
         digest {{ ssl_check.url_digest }}
+        {% endif %}
+        {% if ssl_check.status_code is defined and ssl_check.status_code %}
+        status_code {{ ssl_check.status_code }}
+        {% endif %}
+        {% if ssl_check.virtualhost is defined and ssl_check.virtualhost %}
+        virtualhost {{ ssl_check.virtualhost }}
+        {% endif %}
+        {% if ssl_check.regex is defined and ssl_check.regex %}
+        regex {{ ssl_check.regex }}
+        {% endif %}
+        {% if ssl_check.regex_no_match is defined %}
+        regex_no_match
+        {% endif %}
+        {% if ssl_check.regex_options is defined and ssl_check.regex_options %}
+        regex_options {{ ssl_check.regex_options }}
+        {% endif %}
+        {% if ssl_check.regex_stack is defined and ssl_check.regex_stack %}
+        regex_stack {{ ssl_check.regex_stack }}
+        {% endif %}
+        {% if ssl_check.regex_min_offset is defined and ssl_check.regex_min_offset %}
+        regex_min_offset {{ ssl_check.regex_min_offset }}
+        {% endif %}
+        {% if ssl_check.regex_max_offset is defined and ssl_check.regex_max_offset %}
+        regex_max_offset {{ ssl_check.regex_max_offset }}
+        {% endif %}
       }
+      {% if ssl_check.http_protocol is defined and ssl_check.http_protocol %}
+      http_protocol {{ ssl_check.http_protocol }}
+      {% endif %}
+      {% if ssl_check.enable_sni is defined and ssl_check.enable_sni %}
+      enable_sni {{ ssl_check.enable_sni }}
+      {% endif %}
+      {% if ssl_check.fast_recovery is defined and ssl_check.fast_recovery %}
+      fast_recovery {{ ssl_check.fast_recovery }}
+      {% endif %}
       connect_timeout {{ ssl_check.connect_timeout | default('3') }}
       nb_get_retry {{ ssl_check.nb_get_retry | default('3') }}
       delay_before_retry {{ ssl_check.delay_before_retry | default('2') }}
@@ -95,6 +168,9 @@
       {% endif %}
       {% if ssl_check.bindto is defined and ssl_check.bindto %}
       bindto {{ ssl_check.bindto }}
+      {% endif %}
+      {% if ssl_check.bind_if is defined and ssl_check.bind_if %}
+      bind_if {{ ssl_check.bind_if }}
       {% endif %}
       {% if ssl_check.fwmark is defined and ssl_check.fwmark %}
       fwmark {{ ssl_check.fwmark }}
@@ -115,6 +191,9 @@
       {% if dns_check.bindto is defined and dns_check.bindto %}
       bindto {{ dns_check.bindto }}
       {% endif %}
+      {% if dns_check.bind_if is defined and dns_check.bind_if %}
+      bind_if {{ dns_check.bind_if }}
+      {% endif %}
       {% if dns_check.bind_port is defined and dns_check.bind_port %}
       bind_port {{ dns_check.bind_port }}
       {% endif %}
@@ -132,6 +211,176 @@
       {% endif %}
       {% if dns_check.name is defined and dns_check.name %}
       name {{ dns_check.name }}
+      {% endif %}
+    }
+    {% endfor %}
+    {% endif %}
+    {% if rserver.smtp_checks is defined %}
+    {% for smtp_check in rserver.smtp_checks %}
+    SMTP_CHECK {
+      connect_port {{ smtp_check.connect_port }}
+      connect_timeout {{ smtp_check.connect_timeout | default('5') }}
+      {% if smtp_check.connect_ip is defined and smtp_check.connect_ip %}
+      connect_ip {{ smtp_check.connect_ip }}
+      {% endif %}
+      {% if smtp_check.retry is defined and smtp_check.retry | int %}
+      retry {{ smtp_check.retry }}
+      {% endif %}
+      {% if smtp_check.delay_before_retry is defined and smtp_check.delay_before_retry | int %}
+      delay_before_retry {{ smtp_check.delay_before_retry }}
+      {% endif %}
+      {% if smtp_check.bindto is defined and smtp_check.bindto %}
+      bindto {{ smtp_check.bindto }}
+      {% endif %}
+      {% if smtp_check.bind_if is defined and smtp_check.bind_if %}
+      bind_if {{ smtp_check.bind_if }}
+      {% endif %}
+      {% if smtp_check.bind_port is defined and smtp_check.bind_port %}
+      bind_port {{ smtp_check.bind_port }}
+      {% endif %}
+      {% if smtp_check.fwmark is defined and smtp_check.fwmark %}
+      fwmark {{ smtp_check.fwmark }}
+      {% endif %}
+      {% if smtp_check.warmup is defined and smtp_check.warmup %}
+      warmup {{ smtp_check.warmup }}
+      {% endif %}
+      {% if smtp_check.helo_name is defined and smtp_check.helo_name %}
+      helo_name {{ smtp_check.helo_name }}
+      {% endif %}
+    }
+    {% endfor %}
+    {% endif %}
+    {% if rserver.bfd_checks is defined %}
+    {% for bfd_check in rserver.bfd_checks %}
+    BFD_CHECK {
+      connect_port {{ bfd_check.connect_port }}
+      connect_timeout {{ bfd_check.connect_timeout | default('5') }}
+      {% if bfd_check.connect_ip is defined and bfd_check.connect_ip %}
+      connect_ip {{ bfd_check.connect_ip }}
+      {% endif %}
+      {% if bfd_check.retry is defined and bfd_check.retry | int %}
+      retry {{ bfd_check.retry }}
+      {% endif %}
+      {% if bfd_check.delay_before_retry is defined and bfd_check.delay_before_retry | int %}
+      delay_before_retry {{ bfd_check.delay_before_retry }}
+      {% endif %}
+      {% if bfd_check.bindto is defined and bfd_check.bindto %}
+      bindto {{ bfd_check.bindto }}
+      {% endif %}
+      {% if bfd_check.bind_if is defined and bfd_check.bind_if %}
+      bind_if {{ bfd_check.bind_if }}
+      {% endif %}
+      {% if bfd_check.bind_port is defined and bfd_check.bind_port %}
+      bind_port {{ bfd_check.bind_port }}
+      {% endif %}
+      {% if bfd_check.fwmark is defined and bfd_check.fwmark %}
+      fwmark {{ bfd_check.fwmark }}
+      {% endif %}
+      {% if bfd_check.warmup is defined and bfd_check.warmup %}
+      warmup {{ bfd_check.warmup }}
+      {% endif %}
+      {% if bfd_check.name is defined and bfd_check.name %}
+      name {{ bfd_check.name }}
+      {% endif %}
+    }
+    {% endfor %}
+    {% endif %}
+    {% if rserver.ping_checks is defined %}
+    {% for ping_check in rserver.ping_checks %}
+    PING_CHECK {
+      connect_port {{ ping_check.connect_port }}
+      connect_timeout {{ ping_check.connect_timeout | default('5') }}
+      {% if ping_check.connect_ip is defined and ping_check.connect_ip %}
+      connect_ip {{ ping_check.connect_ip }}
+      {% endif %}
+      {% if ping_check.retry is defined and ping_check.retry | int %}
+      retry {{ ping_check.retry }}
+      {% endif %}
+      {% if ping_check.delay_before_retry is defined and ping_check.delay_before_retry | int %}
+      delay_before_retry {{ ping_check.delay_before_retry }}
+      {% endif %}
+      {% if ping_check.bindto is defined and ping_check.bindto %}
+      bindto {{ ping_check.bindto }}
+      {% endif %}
+      {% if ping_check.bind_if is defined and ping_check.bind_if %}
+      bind_if {{ ping_check.bind_if }}
+      {% endif %}
+      {% if ping_check.bind_port is defined and ping_check.bind_port %}
+      bind_port {{ ping_check.bind_port }}
+      {% endif %}
+      {% if ping_check.fwmark is defined and ping_check.fwmark %}
+      fwmark {{ ping_check.fwmark }}
+      {% endif %}
+      {% if ping_check.warmup is defined and ping_check.warmup %}
+      warmup {{ ping_check.warmup }}
+      {% endif %}
+    }
+    {% endfor %}
+    {% endif %}
+    {% if rserver.udp_checks is defined %}
+    {% for udp_check in rserver.udp_checks %}
+    UDP_CHECK {
+      connect_port {{ udp_check.connect_port }}
+      connect_timeout {{ udp_check.connect_timeout | default('5') }}
+      {% if udp_check.connect_ip is defined and udp_check.connect_ip %}
+      connect_ip {{ udp_check.connect_ip }}
+      {% endif %}
+      {% if udp_check.retry is defined and udp_check.retry | int %}
+      retry {{ udp_check.retry }}
+      {% endif %}
+      {% if udp_check.delay_before_retry is defined and udp_check.delay_before_retry | int %}
+      delay_before_retry {{ udp_check.delay_before_retry }}
+      {% endif %}
+      {% if udp_check.bindto is defined and udp_check.bindto %}
+      bindto {{ udp_check.bindto }}
+      {% endif %}
+      {% if udp_check.bind_if is defined and udp_check.bind_if %}
+      bind_if {{ udp_check.bind_if }}
+      {% endif %}
+      {% if udp_check.bind_port is defined and udp_check.bind_port %}
+      bind_port {{ udp_check.bind_port }}
+      {% endif %}
+      {% if udp_check.fwmark is defined and udp_check.fwmark %}
+      fwmark {{ udp_check.fwmark }}
+      {% endif %}
+      {% if udp_check.warmup is defined and udp_check.warmup %}
+      warmup {{ udp_check.warmup }}
+      {% endif %}
+      {% if udp_check.payload is defined and udp_check.payload %}
+      payload {{ udp_check.payload }}
+      {% endif %}
+      {% if udp_check.require_reply is defined and udp_check.require_reply %}
+      require_reply {{ udp_check.require_reply }}
+      {% endif %}
+      {% if udp_check.min_reply_length is defined and udp_check.min_reply_length %}
+      min_reply_length {{ udp_check.min_reply_length }}
+      {% endif %}
+      {% if udp_check.max_reply_length is defined and udp_check.max_reply_length %}
+      max_reply_length {{ udp_check.max_reply_length }}
+      {% endif %}
+    }
+    {% endfor %}
+    {% endif %}
+    {% if rserver.file_checks is defined %}
+    {% for file_check in rserver.file_checks %}
+    FILE_CHECK {
+      {% if file_check.retry is defined and file_check.retry | int %}
+      retry {{ file_check.retry }}
+      {% endif %}
+      {% if file_check.delay_before_retry is defined and file_check.delay_before_retry | int %}
+      delay_before_retry {{ file_check.delay_before_retry }}
+      {% endif %}
+      {% if file_check.warmup is defined and file_check.warmup %}
+      warmup {{ file_check.warmup }}
+      {% endif %}
+      {% if file_check.track_file is defined and file_check.track_file %}
+      track_file {{ file_check.track_file }}
+      {% endif %}
+      {% if file_check.dynamic is defined %}
+      dynamic
+      {% endif %}
+      {% if file_check.weight is defined and file_check.weight %}
+      weight {{ file_check.weight }}
       {% endif %}
     }
     {% endfor %}
