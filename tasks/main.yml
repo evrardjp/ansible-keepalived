@@ -51,7 +51,20 @@
   when:
     - ansible_os_family | lower == 'debian'
 
-- name: Allow consuming apps to bind on non local addresses
+- name: Get IPv6 enabled state
+  slurp:
+    src: /sys/module/ipv6/parameters/disable
+  register: _ipv6_disabled
+  tags:
+    - keepalived-install
+
+- name: Check if IPv6 is enabled
+  set_fact:
+    ipv6_enabled: "{{ not _ipv6_disabled.failed and '0' in (_ipv6_disabled.content | b64decode) }}"
+  tags:
+    - keepalived-install
+
+- name: Allow consuming apps to bind on non local addresses for IPv4
   sysctl:
     name: "{{ item.name }}"
     value: "{{ item.value }}"
@@ -61,10 +74,22 @@
   with_items:
     - name: "net.ipv4.ip_nonlocal_bind"
       value: 1
-    - name: "net.ipv6.ip_nonlocal_bind"
-      value: 1
     - name: "net.ipv4.tcp_retries2"
       value: "{{ keepalived_sysctl_tcp_retries }}"
+  tags:
+    - keepalived-install
+
+- name: Allow consuming apps to bind on non local addresses for IPv6
+  sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    sysctl_set: yes
+    state: present
+  when: keepalived_bind_on_non_local | bool
+        and ipv6_enabled
+  with_items:
+    - name: "net.ipv6.ip_nonlocal_bind"
+      value: 1
   tags:
     - keepalived-install
 
