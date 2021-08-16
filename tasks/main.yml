@@ -22,7 +22,10 @@
     - "{{ ansible_distribution | lower }}.yml"
     - "{{ ansible_os_family | lower }}.yml"
   tags:
-    - always
+    - keepalived-apt-packages
+    - keepalived-config
+    - keepalived-install
+    - keepalived-packages
 
 - include: keepalived_selinux.yml
   when:
