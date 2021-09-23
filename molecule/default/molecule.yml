@@ -20,23 +20,39 @@ platforms:
     #pre_build_image: yes
     #image: centos:7
     ## The Dockerfile.j2 will build image from https://github.com/ericsysmin/docker-ansible-images/
-    image: centos-7
+    # Jeff geerling now has images, I trust those more than ericsysmin can use them.
+    pre_build_image: yes
+    image: geerlingguy/docker-centos7-ansible
     privileged: true
     command: /sbin/init
     volumes:
     - /sys/fs/cgroup:/sys/fs/cgroup:ro
 
   - name: keepalived-centos8
-    #pre_build_image: yes
-    #image: centos:8
-    image: centos-8
+    pre_build_image: yes
+    image: geerlingguy/docker-centos8-ansible:latest
     privileged: true
     command: /sbin/init
+    tmpfs:
+      - /run
+      - /tmp
     volumes:
     - /sys/fs/cgroup:/sys/fs/cgroup:ro
 
+  # - name: keepalived-rockylinux8
+  #   pre_build_image: yes
+  #   image: geerlingguy/docker-rockylinux8-ansible:latest
+  #   privileged: true
+  #   command: /sbin/init
+  #   tmpfs:
+  #     - /run
+  #     - /tmp
+  #   volumes:
+  #   - /sys/fs/cgroup:/sys/fs/cgroup:ro
+
   - name: keepalived-xenial
-    image: ubuntu-16.04
+    pre_build_image: yes
+    image: geerlingguy/docker-ubuntu1604-ansible:latest
     privileged: true
     command: /lib/systemd/systemd
     volumes:
@@ -44,14 +60,16 @@ platforms:
     service_manager: systemd
 
   - name: keepalived-bionic
-    image: ubuntu-18.04
+    pre_build_image: yes
+    image: geerlingguy/docker-ubuntu1804-ansible:latest
     privileged: true
     command: /lib/systemd/systemd
     volumes:
     - /sys/fs/cgroup:/sys/fs/cgroup:ro
 
   - name: keepalived-focal
-    image: ubuntu-20.04
+    pre_build_image: yes
+    image: geerlingguy/docker-ubuntu2004-ansible:latest
     privileged: true
     command: /lib/systemd/systemd
     volumes:
