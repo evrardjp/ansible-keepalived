@@ -81,6 +81,9 @@ vrrp_instance {{ name }} {
   {% if instance.use_vmac is defined and instance.use_vmac | bool %}
   use_vmac                                         # Use virtual MAC address
   {% endif %}
+  {% if instance.vmac_xmit_base is defined and instance.vmac_xmit_base | bool %}
+  vmac_xmit_base                                   # Use physical MAC address for communication
+  {% endif %}
   {% if instance.nopreempt is defined and instance.nopreempt | bool %}
   nopreempt                                        # Override VRRP RFC preemption default
   {% endif %}
