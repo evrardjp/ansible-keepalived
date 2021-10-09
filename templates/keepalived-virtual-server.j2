@@ -7,6 +7,9 @@
   {% endif %}
   lvs_sched {{ vserver.lvs_sched | default ('rr') }}
   lvs_method {{ vserver.lvs_method | default ('DR') }}
+  {% if vserver.persistence_timeout is defined %}
+  persistence_timeout {{ vserver.persistence_timeout }}
+  {% endif %}
   protocol {{ vserver.protocol | default ('TCP') }}
   {% if vserver.ha_suspend is defined and vserver.ha_suspend %}
   ha_suspend
