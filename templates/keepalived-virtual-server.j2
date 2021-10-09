@@ -1,5 +1,7 @@
 {# extra spaces are needed for backward compatibility #}
-  ip_family {{ vserver.ip_family | default('inet') }}
+  {% if vserver.ip_family is defined %}
+  ip_family {{ vserver.ip_family | default('inet', true) }}
+  {% endif %}
   {% if vserver.delay_loop is defined %}
   delay_loop {{ vserver.delay_loop }}
   {% endif %}
