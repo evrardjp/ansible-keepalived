@@ -23,6 +23,26 @@ global_defs {
 }
 {% endif %}
 
+{% if keepalived_scripts is defined %}
+{% for name, details in keepalived_scripts.items() %}
+vrrp_script {{ name }} {
+  script "{{ details.check_script }}"
+  interval {{ details.interval | default(5) }}   # checking every {{ details.interval | default(5) }} seconds (default: 5 seconds)
+  fall {{ details.fall | default(3) }}           # require {{ details.fall | default(3) }} failures for KO (default: 3)
+  rise {{ details.rise | default(6) }}           # require {{ details.rise | default(6) }} successes for OK (default: 6)
+  {% if details.weight is defined %}
+  weight {{ details.weight | default(0) }}       # adjust priority by this weight, (default: 0)
+  {% endif %}
+  {% if details.timeout is defined %}
+  timeout {{ details.timeout }}                  # allow scripts like ping to succeed, before timing out
+  {% endif %}
+  {% if details.user is defined %}
+  user {{ details.user }}                        # user/group names to run script under.
+  {% endif %}
+}
+{% endfor %}
+{% endif %}
+
 {% for name, sync_group in keepalived_sync_groups.items() %}
 vrrp_sync_group {{ name }} {
   group {
@@ -51,26 +71,6 @@ vrrp_sync_group {{ name }} {
   {% endif %}
 }
 {% endfor %}
-
-{% if keepalived_scripts is defined %}
-{% for name, details in keepalived_scripts.items() %}
-vrrp_script {{ name }} {
-  script "{{ details.check_script }}"
-  interval {{ details.interval | default(5) }}   # checking every {{ details.interval | default(5) }} seconds (default: 5 seconds)
-  fall {{ details.fall | default(3) }}           # require {{ details.fall | default(3) }} failures for KO (default: 3)
-  rise {{ details.rise | default(6) }}           # require {{ details.rise | default(6) }} successes for OK (default: 6)
-  {% if details.weight is defined %}
-  weight {{ details.weight | default(0) }}       # adjust priority by this weight, (default: 0)
-  {% endif %}
-  {% if details.timeout is defined %}
-  timeout {{ details.timeout }}                  # allow scripts like ping to succeed, before timing out
-  {% endif %}
-  {% if details.user is defined %}
-  user {{ details.user }}                        # user/group names to run script under.
-  {% endif %}
-}
-{% endfor %}
-{% endif %}
 
 {% for name, instance in keepalived_instances.items() %}
 vrrp_instance {{ name }} {
