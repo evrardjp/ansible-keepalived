@@ -7,7 +7,7 @@ jobs:
     strategy:
       max-parallel: 2
       matrix:
-        ansible: ["2.9", "latest"]
+        ansible: ["2.10", "latest"]
     steps:
       - uses: actions/checkout@v2
       - name: Install dependencies

@@ -18,7 +18,7 @@ galaxy_info:
   author: evrardjp
   description:  This role installs and configure keepalived based on a variable file
   license: Apache
-  min_ansible_version: 2.4
+  min_ansible_version: 2.10
   platforms:
   - name: EL
     versions:
