@@ -2,7 +2,7 @@
 lint: |
   set -e
   yamllint .
-  ansible-lint -vv --exclude=.tox
+  ansible-lint -v --exclude=.tox
 dependency:
   name: galaxy
 driver:
