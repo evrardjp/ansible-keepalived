@@ -39,16 +39,16 @@ platforms:
     volumes:
     - /sys/fs/cgroup:/sys/fs/cgroup:ro
 
-  - name: keepalived-rockylinux8
-    pre_build_image: yes
-    image: geerlingguy/docker-rockylinux8-ansible:latest
-    privileged: true
-    command: /sbin/init
-    tmpfs:
-      - /run
-      - /tmp
-    volumes:
-    - /sys/fs/cgroup:/sys/fs/cgroup:ro
+#  - name: keepalived-rockylinux8
+#    pre_build_image: yes
+#    image: geerlingguy/docker-rockylinux8-ansible:latest
+#    privileged: true
+#    command: /sbin/init
+#    tmpfs:
+#      - /run
+#      - /tmp
+#    volumes:
+#    - /sys/fs/cgroup:/sys/fs/cgroup:ro
 
   - name: keepalived-xenial
     pre_build_image: yes
