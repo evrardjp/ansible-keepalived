@@ -26,7 +26,8 @@
   when:
     - '"keepalived_ping" not in selinux_modules.stdout'
 
-- include: keepalived_selinux_compile.yml
+- include_tasks:
+    file: keepalived_selinux_compile.yml
   when:
     - selinux_policy_name not in selinux_modules.stdout
   with_items: "{{ keepalived_selinux_compile_rules }}"

@@ -24,7 +24,8 @@
   tags:
     - always
 
-- include: keepalived_selinux.yml
+- include_tasks:
+    file: keepalived_selinux.yml
   when:
     - keepalived_selinux_compile_rules | length > 0
     - ansible_selinux.status is defined
