@@ -186,6 +186,9 @@ virtual_server {{ vserver.ip }} {{ vserver.port }} {
     {% include './templates/keepalived-real-server.j2' %}
     {% include './templates/keepalived-checks.j2' %}
   }
+  {% if vserver.sorry_server is defined %}
+  sorry_server {{ vserver.sorry_server.ip }} {{ vserver.sorry_server.port }}
+  {% endif %}
   {% endfor %}
 
 }
