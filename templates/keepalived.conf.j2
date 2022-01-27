@@ -62,6 +62,9 @@ vrrp_sync_group {{ name }} {
   {% if sync_group.notify_fault is defined %}
   notify_fault "{{ sync_group.notify_fault }}"
   {% endif %}
+  {% if sync_group.global_tracking is defined and sync_group.global_tracking | bool %}
+  global_tracking                                # All VRRP share the same tracking config.
+  {% endif %}
   {% if sync_group.track_scripts is defined %}
   track_script {
     {% for track_script in sync_group.track_scripts %}
