@@ -23,35 +23,6 @@ global_defs {
 }
 {% endif %}
 
-{% for name, sync_group in keepalived_sync_groups.items() %}
-vrrp_sync_group {{ name }} {
-  group {
-    {% for instance in sync_group.instances %}
-    {{ instance }}
-    {% endfor %}
-  }
-  {% if sync_group.notify_script is defined %}
-  notify "{{ sync_group.notify_script }}"
-  {% endif %}
-  {% if sync_group.notify_master is defined %}
-  notify_master "{{ sync_group.notify_master }}"
-  {% endif %}
-  {% if sync_group.notify_backup is defined %}
-  notify_backup "{{ sync_group.notify_backup }}"
-  {% endif %}
-  {% if sync_group.notify_fault is defined %}
-  notify_fault "{{ sync_group.notify_fault }}"
-  {% endif %}
-  {% if sync_group.track_scripts is defined %}
-  track_script {
-    {% for track_script in sync_group.track_scripts %}
-    {{ track_script }}
-    {% endfor %}
-  }
-  {% endif %}
-}
-{% endfor %}
-
 {% if keepalived_scripts is defined %}
 {% for name, details in keepalived_scripts.items() %}
 vrrp_script {{ name }} {
@@ -71,6 +42,38 @@ vrrp_script {{ name }} {
 }
 {% endfor %}
 {% endif %}
+
+{% for name, sync_group in keepalived_sync_groups.items() %}
+vrrp_sync_group {{ name }} {
+  group {
+    {% for instance in sync_group.instances %}
+    {{ instance }}
+    {% endfor %}
+  }
+  {% if sync_group.notify_script is defined %}
+  notify "{{ sync_group.notify_script }}"
+  {% endif %}
+  {% if sync_group.notify_master is defined %}
+  notify_master "{{ sync_group.notify_master }}"
+  {% endif %}
+  {% if sync_group.notify_backup is defined %}
+  notify_backup "{{ sync_group.notify_backup }}"
+  {% endif %}
+  {% if sync_group.notify_fault is defined %}
+  notify_fault "{{ sync_group.notify_fault }}"
+  {% endif %}
+  {% if sync_group.global_tracking is defined and sync_group.global_tracking | bool %}
+  global_tracking                                # All VRRP share the same tracking config.
+  {% endif %}
+  {% if sync_group.track_scripts is defined %}
+  track_script {
+    {% for track_script in sync_group.track_scripts %}
+    {{ track_script }}
+    {% endfor %}
+  }
+  {% endif %}
+}
+{% endfor %}
 
 {% for name, instance in keepalived_instances.items() %}
 vrrp_instance {{ name }} {
@@ -96,6 +99,10 @@ vrrp_instance {{ name }} {
   {% if instance.dont_track_primary is defined and instance.dont_track_primary | bool %}
   dont_track_primary                               # Override VRRP RFC dont_track_primary default
   {% endif %}
+  {% if instance.native_ipv6 is defined and instance.native_ipv6 | bool %}
+  native_ipv6
+  {% endif %}
+
   {% if instance.authentication_password is defined %}
   authentication {
     auth_type PASS
