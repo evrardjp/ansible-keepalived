@@ -341,7 +341,7 @@
   tags:
     - skip_ansible_lint
 
-- name: run all notified handlers to run at this point
+- name: run all notified handlers at this point
   meta: flush_handlers
 
 - name: ensure keepalived is started
