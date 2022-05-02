@@ -14,6 +14,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 -#}
+{% if keepalived_show_ansible_managed|bool %}
+#
+# {{ ansible_managed }}
+#
+{% endif %}
 
 {% if keepalived_global_defs is defined %}
 global_defs {

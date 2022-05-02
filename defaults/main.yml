@@ -13,6 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Wheter to add {{ ansible_managed }} information on top of keepalived.conf
+keepalived_show_ansible_managed: false
+
 # If running keepalived with SELinux, you could need to compile your
 # rules. Please override this list with path to files to compile.
 keepalived_selinux_compile_rules:
