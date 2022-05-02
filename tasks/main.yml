@@ -340,3 +340,11 @@
     - isenabled is changed
   tags:
     - skip_ansible_lint
+
+- name: run all notified handlers to run at this point
+  meta: flush_handlers
+
+- name: ensure keepalived is started
+  ansible.builtin.service:
+    name: "{{ keepalived_service_name }}"
+    state: started
