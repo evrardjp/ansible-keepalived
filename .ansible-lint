@@ -4,3 +4,4 @@
 # Instead of renaming my role and breaking the world, I will just ignore that lint test.
 skip_list:
   - '106' # Role name {} does not match ``^[a-z][a-z0-9_]+$`` pattern
+  - 'fqcn-builtins'
