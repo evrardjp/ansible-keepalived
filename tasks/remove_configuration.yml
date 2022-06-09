@@ -11,6 +11,17 @@
   notify:
     - reload keepalived
 
+- name: Remove keepalived track file
+  ansible.builtin.file:
+    path: "{{ keepalived_config_directory_path }}/track_files/{{ item.key }}.conf"
+    state: absent
+  when:
+    - keepalived_track_files is defined
+    - item.value.state | d('present') == 'absent'
+  loop: "{{ keepalived_track_files | dict2items }}"
+  notify:
+    - reload keepalived
+
 - name: Remove keepalived sync_groups
   ansible.builtin.file:
     path: "{{ keepalived_config_directory_path }}/sync_groups/{{ item.key }}.conf"

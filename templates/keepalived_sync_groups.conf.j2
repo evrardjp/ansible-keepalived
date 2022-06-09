@@ -48,4 +48,11 @@ vrrp_sync_group {{ name }} {
     {% endfor %}
   }
   {% endif %}
+  {% if sync_group.track_files is defined %}
+  track_file {
+    {% for track_file in sync_group.track_files %}
+    {{ track_file }}
+    {% endfor %}
+  }
+  {% endif %}
 }

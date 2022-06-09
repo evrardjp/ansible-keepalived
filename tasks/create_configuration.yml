@@ -20,6 +20,18 @@
   notify:
     - reload keepalived
 
+- name: Configure keepalived track files
+  ansible.builtin.template:
+    src: keepalived_track_files.conf.j2
+    dest: "{{ keepalived_config_directory_path }}/track_files/{{ item.key }}.conf"
+    mode: "0640"
+  when:
+    - keepalived_track_files is defined
+    - item.value.state | d('present') == 'present'
+  loop: "{{ keepalived_track_files | dict2items }}"
+  notify:
+    - reload keepalived
+
 - name: Configure keepalived sync_groups
   ansible.builtin.template:
     src: keepalived_sync_groups.conf.j2

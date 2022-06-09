@@ -103,6 +103,7 @@
   loop:
     - "{{ keepalived_config_directory_path }}"
     - "{{ keepalived_config_directory_path }}/scripts"
+    - "{{ keepalived_config_directory_path }}/track_files"
     - "{{ keepalived_config_directory_path }}/sync_groups"
     - "{{ keepalived_config_directory_path }}/instances"
     - "{{ keepalived_config_directory_path }}/groups"

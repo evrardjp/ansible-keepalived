@@ -103,6 +103,13 @@ vrrp_instance {{ name }} {
     {% endfor %}
   }
   {% endif %}
+  {% if instance.track_files is defined %}
+  track_file {
+    {% for track_file in instance.track_files %}
+    {{ track_file }}
+    {% endfor %}
+  }
+  {% endif %}
 
   {% if instance.track_interfaces is defined %}
   track_interface {
