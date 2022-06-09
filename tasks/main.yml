@@ -148,12 +148,6 @@
   tags:
     - keepalived-config
 
-- name: remove additional files
-  ansible.builtin.include_tasks:
-    file: remove_files.yml
-  tags:
-    - keepalived-config
-
 - name: Make directory for keepalived's systemd overrides
   ansible.builtin.file:
     path: /etc/systemd/system/keepalived.service.d/
