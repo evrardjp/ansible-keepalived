@@ -26,8 +26,9 @@ global_defs {
 }
 {% endif %}
 
-include /etc/keepalived/scripts/*.conf
-include /etc/keepalived/sync_groups/*.conf
-include /etc/keepalived/instances/*.conf
-include /etc/keepalived/groups/*.conf
-include /etc/keepalived/services/*.conf
+include {{ keepalived_config_directory_path }}/scripts/*.conf
+include {{ keepalived_config_directory_path }}/track_files/*.conf
+include {{ keepalived_config_directory_path }}/sync_groups/*.conf
+include {{ keepalived_config_directory_path }}/instances/*.conf
+include {{ keepalived_config_directory_path }}/groups/*.conf
+include {{ keepalived_config_directory_path }}/services/*.conf

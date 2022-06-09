@@ -16,7 +16,7 @@
         var: ansible_facts
         verbosity: 3
 
-    - name: Get presend instance configurations
+    - name: Get present instance configurations
       ansible.builtin.command: "ls -la {{ keepalived_config_directory_path }}/instances/"
       changed_when: false
       register: dir_out

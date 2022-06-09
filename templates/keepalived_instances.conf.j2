@@ -96,6 +96,7 @@ vrrp_instance {{ name }} {
   {% endfor %}
   }
   {% endif %}
+
   {% if instance.track_scripts is defined %}
   track_script {
     {% for track_script in instance.track_scripts %}
@@ -110,7 +111,6 @@ vrrp_instance {{ name }} {
     {% endfor %}
   }
   {% endif %}
-
   {% if instance.track_interfaces is defined %}
   track_interface {
     {% for track_interface in instance.track_interfaces %}
