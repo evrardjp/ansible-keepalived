@@ -45,10 +45,12 @@ vrrp_instance {{ name }} {
   {% if instance.dont_track_primary is defined and instance.dont_track_primary | bool %}
   dont_track_primary                               # Override VRRP RFC dont_track_primary default
   {% endif %}
-  {% if instance.accept is defined and instance.accept | bool %}
+  {% if instance.accept is defined %}
+  {% if instance.accept | bool %}
   accept
   {% else %}
   no_accept
+  {% endif %}
   {% endif %}
   {% if instance.native_ipv6 is defined and instance.native_ipv6 | bool %}
   native_ipv6
