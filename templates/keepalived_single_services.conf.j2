@@ -18,16 +18,19 @@
 {{ ansible_managed | comment }}
 {% endif %}
 
-{% if keepalived_global_defs is defined %}
-global_defs {
-{% for def in keepalived_global_defs %}
-  {{ def }}
-{% endfor %}
-}
-{% endif %}
+{# keepalived_virtual_servers without groups #}
+{% set vserver = item %}
+virtual_server {{ vserver.ip }} {{ vserver.port }} {
+  {% include './templates/keepalived-virtual-server.j2' %}
 
-include /etc/keepalived/scripts/*.conf
-include /etc/keepalived/sync_groups/*.conf
-include /etc/keepalived/instances/*.conf
-include /etc/keepalived/groups/*.conf
-include /etc/keepalived/services/*.conf
+  {% for rserver in vserver.real_servers %}
+  real_server {{ rserver.ip }} {{ rserver.port }} {
+    {% include './templates/keepalived-real-server.j2' %}
+    {% include './templates/keepalived-checks.j2' %}
+  }
+  {% endfor %}
+  {% if vserver.sorry_server is defined %}
+  sorry_server {{ vserver.sorry_server.ip }} {{ vserver.sorry_server.port }}
+  {% endif %}
+
+}

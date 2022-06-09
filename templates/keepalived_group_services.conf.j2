@@ -1,4 +1,5 @@
----
+#jinja2: lstrip_blocks: True
+{#
 # Copyright 2015, Jean-Philippe Evrard <jean-philippe@evrard.me>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,12 +13,20 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+-#}
+{% if keepalived_show_ansible_managed|bool %}
+{{ ansible_managed | comment }}
+{% endif %}
 
-keepalived_package_name: "keepalived"
-keepalived_service_name: "keepalived.service"
-keepalived_config_directory_path: "/etc/keepalived"
-keepalived_config_base_file: "keepalived.conf"
-_keepalived_daemon_options_file_path: "/etc/default/keepalived"
-
-# Packages for Selinux
-keepalived_selinux_packages: []
+{% set vserver_group = item %}
+virtual_server group {{ vserver_group.name }} {
+  {# set variable to prevent duplicate code for the same task #}
+  {% set vserver = vserver_group %}
+  {% include './templates/keepalived-virtual-server.j2' %}
+  {% for rserver in vserver_group.real_servers %}
+  real_server {{ rserver.ip }} {{ rserver.port }} {
+    {% include './templates/keepalived-real-server.j2' %}
+    {% include './templates/keepalived-checks.j2' %}
+  }
+  {% endfor %}
+}

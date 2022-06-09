@@ -4,7 +4,7 @@
   tasks:
   - name: Create a network with custom IPAM config
     delegate_to: localhost
-    docker_network:
+    community.general.docker_network:
       name: keepalived-network
       ipam_config:
         - subnet: 192.168.33.0/24

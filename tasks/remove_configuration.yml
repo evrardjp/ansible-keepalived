@@ -1,0 +1,67 @@
+---
+
+- name: Remove keepalived script
+  ansible.builtin.file:
+    path: "{{ keepalived_config_directory_path }}/scripts/{{ item.key }}.conf"
+    state: absent
+  when:
+    - keepalived_scripts is defined
+    - item.value.state | d('present') == 'absent'
+  loop: "{{ keepalived_scripts | dict2items }}"
+  notify:
+    - reload keepalived
+
+- name: Remove keepalived sync_groups
+  ansible.builtin.file:
+    path: "{{ keepalived_config_directory_path }}/sync_groups/{{ item.key }}.conf"
+    state: absent
+  when:
+    - keepalived_sync_groups is defined
+    - item.value.state | d('present') == 'absent'
+  loop: "{{ keepalived_sync_groups | dict2items }}"
+  notify:
+    - reload keepalived
+
+- name: Remove keepalived instances
+  ansible.builtin.file:
+    path: "{{ keepalived_config_directory_path }}/instances/{{ item.key }}.conf"
+    state: absent
+  when:
+    - keepalived_instances is defined
+    - item.value.state | d('present') == 'absent'
+  loop: "{{ keepalived_instances | dict2items }}"
+  notify:
+    - reload keepalived
+
+- name: Remove keepalived service groups
+  ansible.builtin.file:
+    path: "{{ keepalived_config_directory_path }}/groups/{{ item.name }}.conf"
+    state: absent
+  when:
+    - keepalived_virtual_server_groups is defined
+    - item.name.state | d('present') == 'absent'
+  loop: "{{ keepalived_virtual_server_groups }}"
+  notify:
+    - reload keepalived
+
+- name: Remove keepalived single services
+  ansible.builtin.file:
+    path: "{{ keepalived_config_directory_path }}/services/single_{{ item.ip | replace('.', '_') }}.conf"
+    state: absent
+  when:
+    - keepalived_virtual_servers is defined
+    - item.ip.state | d('present') == 'absent'
+  loop: "{{ keepalived_virtual_servers }}"
+  notify:
+    - reload keepalived
+
+- name: Remove keepalived group services
+  ansible.builtin.file:
+    path: "{{ keepalived_config_directory_path }}/services/group_{{ item.name }}.conf"
+    state: absent
+  when:
+    - keepalived_virtual_server_groups is defined
+    - item.name.state | d('present') == 'absent'
+  loop: "{{ keepalived_virtual_server_groups }}"
+  notify:
+    - reload keepalived

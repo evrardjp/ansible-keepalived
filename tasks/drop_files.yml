@@ -1,0 +1,111 @@
+---
+
+- name: Dropping the tracking scripts
+  ansible.builtin.copy:
+    src: "{{ item.value.src_check_script }}"
+    dest: "{{ item.value.dest_check_script | default(item.value.check_script) }}"
+    mode: "0755"
+  loop: "{{ keepalived_scripts | dict2items | default('{}') }}"
+  when: item.value.src_check_script is defined
+  notify:
+    - reload keepalived
+
+- name: Dropping the general notification scripts
+  ansible.builtin.copy:
+    src: "{{ item.value.src_notify_script }}"
+    dest: "{{ item.value.notify_script }}"
+    mode: "0755"
+  loop: "{{ keepalived_sync_groups | dict2items }}"
+  when: item.value.src_notify_script is defined
+  notify:
+    - reload keepalived
+
+- name: Dropping the notification scripts for switching to master
+  ansible.builtin.copy:
+    src: "{{ item.value.src_notify_master }}"
+    dest: "{{ item.value.notify_master }}"
+    mode: "0755"
+  loop: "{{ keepalived_sync_groups | dict2items }}"
+  when: item.value.src_notify_master is defined
+  notify:
+    - reload keepalived
+
+- name: Dropping the notification scripts for switching to backup
+  ansible.builtin.copy:
+    src: "{{ item.value.src_notify_backup }}"
+    dest: "{{ item.value.notify_backup }}"
+    mode: "0755"
+  loop: "{{ keepalived_sync_groups | dict2items }}"
+  when: item.value.src_notify_backup is defined
+  notify:
+    - reload keepalived
+
+- name: Dropping the notification scripts for failures
+  ansible.builtin.copy:
+    src: "{{ item.value.src_notify_fault }}"
+    dest: "{{ item.value.notify_fault }}"
+    mode: "0755"
+  loop: "{{ keepalived_sync_groups | dict2items }}"
+  when: item.value.src_notify_fault is defined
+  notify:
+    - reload keepalived
+
+- name: Dropping the general notification scripts (instances)
+  ansible.builtin.copy:
+    src: "{{ item.value.src_notify_script }}"
+    dest: "{{ item.value.notify_script }}"
+    mode: "0755"
+  loop: "{{ keepalived_instances | dict2items }}"
+  when: item.value.src_notify_script is defined
+  notify:
+    - reload keepalived
+
+- name: Dropping the notification scripts for switching to master (instances)
+  ansible.builtin.copy:
+    src: "{{ item.value.src_notify_master }}"
+    dest: "{{ item.value.notify_master }}"
+    mode: "0755"
+  loop: "{{ keepalived_instances | dict2items }}"
+  when: item.value.src_notify_master is defined
+  notify:
+    - reload keepalived
+
+- name: Dropping the notification scripts for lower priority master case (instances)
+  ansible.builtin.copy:
+    src: "{{ item.value.src_notify_master_rx_lower_pri }}"
+    dest: "{{ item.value.notify_master_rx_lower_pri }}"
+    mode: "0755"
+  loop: "{{ keepalived_instances | dict2items }}"
+  when: item.value.src_notify_master_rx_lower_pri is defined
+  notify:
+    - reload keepalived
+
+- name: Dropping the notification scripts for switching to backup (instances)
+  ansible.builtin.copy:
+    src: "{{ item.value.src_notify_backup }}"
+    dest: "{{ item.value.notify_backup }}"
+    mode: "0755"
+  loop: "{{ keepalived_instances | dict2items }}"
+  when: item.value.src_notify_backup is defined
+  notify:
+    - reload keepalived
+
+- name: Dropping the notification scripts for stopping vrrp (instances)
+  ansible.builtin.copy:
+    src: "{{ item.value.src_notify_stop }}"
+    dest: "{{ item.value.notify_stop }}"
+    mode: "0755"
+  loop: "{{ keepalived_instances | dict2items }}"
+  when: item.value.src_notify_stop is defined
+  notify:
+    - reload keepalived
+
+- name: Dropping the notification scripts for failures (instances)
+  ansible.builtin.copy:
+    src: "{{ item.value.src_notify_fault }}"
+    dest: "{{ item.value.notify_fault }}"
+    mode: "0755"
+  loop: "{{ keepalived_instances | dict2items }}"
+  when: item.value.src_notify_fault is defined
+  notify:
+    - reload keepalived

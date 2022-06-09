@@ -1,5 +1,6 @@
----
-# Copyright 2021, Sherwin Daganato <sherwin@daganato.com>
+#jinja2: lstrip_blocks: True
+{#
+# Copyright 2015, Jean-Philippe Evrard <jean-philippe@evrard.me>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,15 +13,17 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+-#}
+{% if keepalived_show_ansible_managed|bool %}
+{{ ansible_managed | comment }}
+{% endif %}
 
-keepalived_package_name: "keepalived"
-keepalived_service_name: "keepalived"
-keepalived_config_directory_path: "/etc/keepalived"
-keepalived_config_base_file: "keepalived.conf"
-_keepalived_daemon_options_file_path: "/etc/sysconfig/keepalived"
-
-# Packages for Selinux
-keepalived_selinux_packages:
-  - python3-policycoreutils
-  - libselinux
-  - libselinux-devel
+{% set vserver_group = item %}
+virtual_server_group {{ vserver_group.name }} {
+  {% for vserver_group_vip in vserver_group.vips %}
+  {{ vserver_group_vip.ip }} {{ vserver_group_vip.port }}
+  {% endfor %}
+  {% if vserver_group.fwmark is defined %}
+  fwmark {{ vserver_group.fwmark }}
+  {% endif %}
+}

@@ -8,7 +8,7 @@
     - "100%"
   tasks:
   - name: Apt update and install rsync, ping, iproute
-    apt:
+    ansible.builtin.package:
       update_cache: yes
       name:
         - rsync
@@ -18,7 +18,7 @@
     when: ansible_os_family == "Debian"
 
   - name: Yum install iproute to fix undefined ansible_default_ipv4.address
-    yum:
+    ansible.builtin.package:
       name: iproute
       state: present
     when:
@@ -27,7 +27,7 @@
 
   - name: Add a container to a network, leaving existing containers connected
     delegate_to: localhost
-    docker_network:
+    community.general.docker_network:
       name: keepalived-network
       connected:
         - "{{ inventory_hostname }}"
@@ -38,16 +38,27 @@
       gather_subset: network
 
   - name: Show ansible_interfaces
-    debug:
+    ansible.builtin.debug:
       var: ansible_interfaces
 
   - name: Define vrrp nic
-    set_fact:
+    ansible.builtin.set_fact:
       vrrp_nic: "{{ ((ansible_interfaces | reject('equalto','lo')) | difference([ansible_default_ipv4.interface]))[0] | string }}"
 
   - name: Include keepalived vars
-    include_vars: "../../tests/keepalived_haproxy_combined_example.yml"
+    ansible.builtin.include_vars: "../../tests/keepalived_haproxy_combined_example.yml"
 
-  - name: "Include ansible-keepalived"
-    include_role:
-      name: "ansible-keepalived"
+  - name: Include ansible-keepalived
+    ansible.builtin.include_role:
+      name: ansible-keepalived
+
+  - name: half way done
+    ansible.builtin.debug:
+      msg: "--- --- --- --- UPDATE CONFIGURATION --- --- --- ---" 
+
+  - name: Include keepalived edit vars
+    ansible.builtin.include_vars: "../../tests/keepalived_haproxy_combined_edit_example.yml"
+
+  - name: Include ansible-keepalived
+    ansible.builtin.include_role:
+      name: ansible-keepalived

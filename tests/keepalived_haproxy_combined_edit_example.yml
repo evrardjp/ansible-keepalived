@@ -1,5 +1,5 @@
 ---
-# Copyright 2021, Sherwin Daganato <sherwin@daganato.com>
+# Copyright 2017, Jean-Philippe Evrard <jean-philippe@evrard.me>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,14 +13,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-keepalived_package_name: "keepalived"
-keepalived_service_name: "keepalived"
-keepalived_config_directory_path: "/etc/keepalived"
-keepalived_config_base_file: "keepalived.conf"
-_keepalived_daemon_options_file_path: "/etc/sysconfig/keepalived"
-
-# Packages for Selinux
-keepalived_selinux_packages:
-  - python3-policycoreutils
-  - libselinux
-  - libselinux-devel
+keepalived_sync_groups:
+  haproxy:
+    instances:
+      - int
+keepalived_instances:
+  internal:
+    state: absent
+  int:
+    interface: "{{ vrrp_nic }}"
+    state: "{{ (groups['all'].index(inventory_hostname) == 0) | ternary('MASTER','BACKUP') }}"
+    virtual_router_id: 42
+    priority: "{{ (groups['all']|length - groups['all'].index(inventory_hostname)) * 250 // (groups['all']|length) }}"
+    vips:
+      - "192.168.33.2/24 dev {{ vrrp_nic }}"

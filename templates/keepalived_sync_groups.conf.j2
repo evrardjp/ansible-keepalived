@@ -1,0 +1,51 @@
+#jinja2: lstrip_blocks: True
+{#
+# Copyright 2015, Jean-Philippe Evrard <jean-philippe@evrard.me>
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+-#}
+{% if keepalived_show_ansible_managed|bool %}
+{{ ansible_managed | comment }}
+{% endif %}
+
+{% set name = item.key %}
+{% set sync_group = item.value %}
+vrrp_sync_group {{ name }} {
+  group {
+    {% for instance in sync_group.instances %}
+    {{ instance }}
+    {% endfor %}
+  }
+  {% if sync_group.notify_script is defined %}
+  notify "{{ sync_group.notify_script }}"
+  {% endif %}
+  {% if sync_group.notify_master is defined %}
+  notify_master "{{ sync_group.notify_master }}"
+  {% endif %}
+  {% if sync_group.notify_backup is defined %}
+  notify_backup "{{ sync_group.notify_backup }}"
+  {% endif %}
+  {% if sync_group.notify_fault is defined %}
+  notify_fault "{{ sync_group.notify_fault }}"
+  {% endif %}
+  {% if sync_group.global_tracking is defined and sync_group.global_tracking | bool %}
+  global_tracking                                # All VRRP share the same tracking config.
+  {% endif %}
+  {% if sync_group.track_scripts is defined %}
+  track_script {
+    {% for track_script in sync_group.track_scripts %}
+    {{ track_script }}
+    {% endfor %}
+  }
+  {% endif %}
+}

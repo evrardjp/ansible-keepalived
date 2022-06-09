@@ -8,17 +8,23 @@
   gather_facts: yes
   tasks:
     - name: Define vrrp nic
-      set_fact:
+      ansible.builtin.set_fact:
         vrrp_nic: "{{ ((ansible_interfaces | reject('equalto','lo')) | difference([ansible_default_ipv4.interface]))[0] | string }}"
 
     - name: Show ansible facts
-      debug:
+      ansible.builtin.debug:
         var: ansible_facts
         verbosity: 3
 
+    - name: Get presend instance configurations
+      ansible.builtin.command: "ls -la {{ keepalived_config_directory_path }}/instances/"
+      changed_when: false
+      register: dir_out
+
     - name: Ensure the first node is master
-      assert:
+      ansible.builtin.assert:
         that:
           - "'ipv4_secondaries' in ansible_{{ vrrp_nic }}"
           - "ansible_{{ vrrp_nic }}['ipv4_secondaries'][0]['address'] == '192.168.33.2'"
+          - dir_out.stdout_lines == 'int.conf'
       when: inventory_hostname == ansible_play_hosts[0]
