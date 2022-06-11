@@ -72,3 +72,7 @@ keepalived_daemon_options_file_path: "{{ _keepalived_daemon_options_file_path }}
 #keepalived_daemon_default_options_overrides:
 #  - "DAEMON_ARGS='--snmp'"
 keepalived_daemon_default_options_overrides: []
+
+# Remove all keepalived configurations
+# Clears entire {{ keepalived_config_directory_path }}
+keepalived_flush_configuration: False
