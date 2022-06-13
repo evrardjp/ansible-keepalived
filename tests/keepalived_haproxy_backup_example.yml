@@ -106,7 +106,7 @@ keepalived_instances:
 # Uncomment and adjust to make use of keepalived's virtual_server functions.
 #keepalived_virtual_servers:
 #  # Example with recycled {{ keepalived_internal_vip_cidr }}
-#  - ip: "{{ keepalived_internal_vip_cidr | ipaddr('address') }}"
+#  - ip: "{{ keepalived_internal_vip_cidr | ansible.netcommon.ipaddr('address') }}"
 #    port: '53'
 #    protocol: 'UDP'
 #    lvs_method: 'NAT'
