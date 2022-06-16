@@ -46,6 +46,18 @@ vrrp_script {{ name }} {
 {% endfor %}
 {% endif %}
 
+{% if keepalived_track_files is defined %}
+{% for name, details in keepalived_track_files.items() %}
+vrrp_track_file {{ name }} {
+  file "{{ details.file }}"
+  weight {{ details.weight | default(1) }} # multiply with weight in file (default: 1, i.e. literal value from file)
+  {% if details.init_file | default(false) | bool %}
+  init_file {% if details.init_file_value is defined %}{{ details.init_file_value }}{% endif %}{% if details.init_file_overwrite | default(false) | bool %}overwrite{% endif %}
+  {% endif %}
+}
+{% endfor %}
+{% endif %}
+
 {% for name, sync_group in keepalived_sync_groups.items() %}
 vrrp_sync_group {{ name }} {
   group {
@@ -72,6 +84,13 @@ vrrp_sync_group {{ name }} {
   track_script {
     {% for track_script in sync_group.track_scripts %}
     {{ track_script }}
+    {% endfor %}
+  }
+  {% endif %}
+  {% if sync_group.track_files is defined %}
+  track_file {
+    {% for track_file in sync_group.track_files %}
+    {{ track_file }}
     {% endfor %}
   }
   {% endif %}
@@ -153,7 +172,13 @@ vrrp_instance {{ name }} {
     {% endfor %}
   }
   {% endif %}
-
+  {% if instance.track_files is defined %}
+  track_file {
+    {% for track_file in instance.track_files %}
+    {{ track_file }}
+    {% endfor %}
+  }
+  {% endif %}
   {% if instance.track_interfaces is defined %}
   track_interface {
     {% for track_interface in instance.track_interfaces %}
