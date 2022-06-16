@@ -128,7 +128,7 @@
 - name: Dropping the tracking scripts
   ansible.builtin.copy:
     src: "{{ item.value.src_check_script }}"
-    dest: "{{ item.value.dest_check_script|default(item.value.check_script) }}"
+    dest: "{{ item.value.dest_check_script | default(item.value.check_script) }}"
     mode: "0755"
   loop: "{{ keepalived_sync_groups | dict2items | default('{}') }}"
   when: item.value.src_check_script is defined

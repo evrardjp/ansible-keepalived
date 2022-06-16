@@ -46,8 +46,9 @@
       vrrp_nic: "{{ ((ansible_interfaces | reject('equalto','lo')) | difference([ansible_default_ipv4.interface]))[0] | string }}"
 
   - name: Include keepalived vars
-    ansible.builtin.include_vars: "../../tests/keepalived_haproxy_combined_example.yml"
+    ansible.builtin.include_vars:
+      file: ../../tests/keepalived_haproxy_combined_example.yml
 
-  - name: "Include ansible-keepalived"
+  - name: Include ansible-keepalived
     ansible.builtin.include_role:
-      name: "ansible-keepalived"
+      name: ansible-keepalived
