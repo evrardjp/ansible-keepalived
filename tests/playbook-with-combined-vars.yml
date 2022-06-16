@@ -20,8 +20,8 @@
     vrrp_nic: eth0
   tasks:
   - name: Include a single (combined) var file for all nodes
-    include_vars: "keepalived_haproxy_combined_example.yml"
+    ansible.builtin.include_vars: "keepalived_haproxy_combined_example.yml"
 
   - name: "Include ansible-keepalived"
-    include_role:
+    ansible.builtin.include_role:
       name: "ansible-keepalived"

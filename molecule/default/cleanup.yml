@@ -5,6 +5,6 @@
   tasks:
   - name: Create a network with custom IPAM config
     delegate_to: localhost
-    docker_network:
+    community.general.docker_network:
       name: keepalived-network
       state: absent
