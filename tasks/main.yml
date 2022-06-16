@@ -73,7 +73,7 @@
     sysctl_set: yes
     state: present
   when: keepalived_bind_on_non_local | bool
-  with_items:
+  loop:
     - name: "net.ipv4.ip_nonlocal_bind"
       value: 1
     - name: "net.ipv4.tcp_retries2"
@@ -89,7 +89,7 @@
     state: present
   when: keepalived_bind_on_non_local | bool
         and ipv6_enabled
-  with_items:
+  loop:
     - name: "net.ipv6.ip_nonlocal_bind"
       value: 1
   tags:
@@ -118,7 +118,7 @@
     regexp: "^{{ item.split('=')[0] }}"
     dest: "{{ keepalived_daemon_options_file_path }}"
     state: present
-  with_items: "{{ keepalived_daemon_default_options_overrides }}"
+  loop: "{{ keepalived_daemon_default_options_overrides }}"
   when: keepalived_daemon_options_file.stat.exists
   tags:
     - keepalived-config
@@ -130,7 +130,7 @@
     src: "{{ item.value.src_check_script }}"
     dest: "{{ item.value.dest_check_script|default(item.value.check_script) }}"
     mode: "0755"
-  with_dict: "{{ keepalived_scripts | default('{}') }}"
+  loop: "{{ keepalived_sync_groups | dict2items | default('{}') }}"
   when: item.value.src_check_script is defined
   tags:
     - keepalived-config
@@ -142,7 +142,7 @@
     src: "{{ item.value.src_notify_script }}"
     dest: "{{ item.value.notify_script }}"
     mode: "0755"
-  with_dict: "{{ keepalived_sync_groups }}"
+  loop: "{{ keepalived_sync_groups | dict2items }}"
   when: item.value.src_notify_script is defined
   tags:
     - keepalived-config
@@ -154,7 +154,7 @@
     src: "{{ item.value.src_notify_master }}"
     dest: "{{ item.value.notify_master }}"
     mode: "0755"
-  with_dict: "{{ keepalived_sync_groups }}"
+  loop: "{{ keepalived_sync_groups | dict2items }}"
   when: item.value.src_notify_master is defined
   tags:
     - keepalived-config
@@ -166,7 +166,7 @@
     src: "{{ item.value.src_notify_backup }}"
     dest: "{{ item.value.notify_backup }}"
     mode: "0755"
-  with_dict: "{{ keepalived_sync_groups }}"
+  loop: "{{ keepalived_sync_groups | dict2items }}"
   when: item.value.src_notify_backup is defined
   tags:
     - keepalived-config
@@ -178,7 +178,7 @@
     src: "{{ item.value.src_notify_fault }}"
     dest: "{{ item.value.notify_fault }}"
     mode: "0755"
-  with_dict: "{{ keepalived_sync_groups }}"
+  loop: "{{ keepalived_sync_groups | dict2items }}"
   when: item.value.src_notify_fault is defined
   tags:
     - keepalived-config
@@ -190,7 +190,7 @@
     src: "{{ item.value.src_notify_script }}"
     dest: "{{ item.value.notify_script }}"
     mode: "0755"
-  with_dict: "{{ keepalived_instances }}"
+  loop: "{{ keepalived_instances | dict2items }}"
   when: item.value.src_notify_script is defined
   tags:
     - keepalived-config
@@ -202,7 +202,7 @@
     src: "{{ item.value.src_notify_master }}"
     dest: "{{ item.value.notify_master }}"
     mode: "0755"
-  with_dict: "{{ keepalived_instances }}"
+  loop: "{{ keepalived_instances | dict2items }}"
   when: item.value.src_notify_master is defined
   tags:
     - keepalived-config
@@ -214,7 +214,7 @@
     src: "{{ item.value.src_notify_master_rx_lower_pri }}"
     dest: "{{ item.value.notify_master_rx_lower_pri }}"
     mode: "0755"
-  with_dict: "{{ keepalived_instances }}"
+  loop: "{{ keepalived_instances | dict2items }}"
   when: item.value.src_notify_master_rx_lower_pri is defined
   tags:
     - keepalived-config
@@ -226,7 +226,7 @@
     src: "{{ item.value.src_notify_backup }}"
     dest: "{{ item.value.notify_backup }}"
     mode: "0755"
-  with_dict: "{{ keepalived_instances }}"
+  loop: "{{ keepalived_instances | dict2items }}"
   when: item.value.src_notify_backup is defined
   tags:
     - keepalived-config
@@ -238,7 +238,7 @@
     src: "{{ item.value.src_notify_stop }}"
     dest: "{{ item.value.notify_stop }}"
     mode: "0755"
-  with_dict: "{{ keepalived_instances }}"
+  loop: "{{ keepalived_instances | dict2items }}"
   when: item.value.src_notify_stop is defined
   tags:
     - keepalived-config
@@ -250,7 +250,7 @@
     src: "{{ item.value.src_notify_fault }}"
     dest: "{{ item.value.notify_fault }}"
     mode: "0755"
-  with_dict: "{{ keepalived_instances }}"
+  loop: "{{ keepalived_instances | dict2items }}"
   when: item.value.src_notify_fault is defined
   tags:
     - keepalived-config
@@ -273,7 +273,7 @@
     option: "{{ item }}"
     value: 'network-online.target'
     mode: '0644'
-  with_items:
+  loop:
     - 'Wants'
     - 'After'
   when:

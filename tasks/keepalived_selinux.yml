@@ -31,6 +31,6 @@
     file: keepalived_selinux_compile.yml
   when:
     - selinux_policy_name not in selinux_modules.stdout
-  with_items: "{{ keepalived_selinux_compile_rules }}"
+  loop: "{{ keepalived_selinux_compile_rules }}"
   loop_control:
     loop_var: selinux_policy_name

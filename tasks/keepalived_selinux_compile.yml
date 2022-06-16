@@ -32,7 +32,7 @@
   args:
     creates: "/etc/selinux/targeted/active/modules/400/{{ selinux_policy_name }}/cil"
     chdir: "/tmp/ansible-keepalived-selinux-{{ selinux_policy_name }}"
-  with_items:
+  loop:
     - checkmodule -M -m -o {{ selinux_policy_name }}.mod {{ selinux_policy_name }}.te
     - semodule_package -o {{ selinux_policy_name }}.pp -m {{ selinux_policy_name }}.mod
     - semodule -i {{ selinux_policy_name }}.pp
