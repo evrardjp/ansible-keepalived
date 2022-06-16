@@ -26,7 +26,8 @@
   when:
     - '"keepalived_ping" not in selinux_modules.stdout'
 
-- ansible.builtin.include_tasks:
+- name: Compile SELinux rules
+  ansible.builtin.include_tasks:
     file: keepalived_selinux_compile.yml
   when:
     - selinux_policy_name not in selinux_modules.stdout

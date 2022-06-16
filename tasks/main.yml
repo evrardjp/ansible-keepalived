@@ -24,7 +24,8 @@
   tags:
     - always
 
-- ansible.builtin.include_tasks:
+- name: configure SELinux
+  ansible.builtin.include_tasks:
     file: keepalived_selinux.yml
   when:
     - keepalived_selinux_compile_rules | length > 0
