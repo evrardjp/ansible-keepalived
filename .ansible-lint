@@ -4,3 +4,6 @@
 # Instead of renaming my role and breaking the world, I will just ignore that lint test.
 skip_list:
   - '106' # Role name {} does not match ``^[a-z][a-z0-9_]+$`` pattern
+
+warn_list:  # or 'skip_list' to silence them completely
+  - experimental  # all rules tagged as experimental
