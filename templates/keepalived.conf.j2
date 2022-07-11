@@ -110,8 +110,8 @@ vrrp_instance {{ name }} {
 
   {% if instance.authentication_password is defined %}
   authentication {
-    auth_type PASS
-    auth_pass {{instance.authentication_password}}
+    auth_type {{ instance.authentication_type | default('PASS') }}
+    auth_pass {{ instance.authentication_password }}
   }
   {% endif %}
   {% if instance.unicast_src_ip is defined and instance.unicast_peers|length > 0 %}
