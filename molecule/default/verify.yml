@@ -8,16 +8,16 @@
   gather_facts: yes
   tasks:
     - name: Define vrrp nic
-      set_fact:
+      ansible.builtin.set_fact:
         vrrp_nic: "{{ ((ansible_interfaces | reject('equalto','lo')) | difference([ansible_default_ipv4.interface]))[0] | string }}"
 
     - name: Show ansible facts
-      debug:
+      ansible.builtin.debug:
         var: ansible_facts
         verbosity: 3
 
     - name: Ensure the first node is master
-      assert:
+      ansible.builtin.assert:
         that:
           - "'ipv4_secondaries' in ansible_{{ vrrp_nic }}"
           - "ansible_{{ vrrp_nic }}['ipv4_secondaries'][0]['address'] == '192.168.33.2'"

@@ -14,13 +14,13 @@
 # limitations under the License.
 
 - name: Create directory for compiling SELinux role
-  file:
+  ansible.builtin.file:
     path: "/tmp/ansible-keepalived-selinux-{{ selinux_policy_name }}"
     state: directory
     mode: '0755'
 
 - name: Deploy SELinux policy source file
-  copy:
+  ansible.builtin.copy:
     src: "{{ selinux_policy_name }}.te"
     dest: "/tmp/ansible-keepalived-selinux-{{ selinux_policy_name }}/{{ selinux_policy_name }}.te"
     owner: root
@@ -28,16 +28,16 @@
     mode: "0755"
 
 - name: Compile and load SELinux module
-  command: "{{ item }}"
+  ansible.builtin.command: "{{ item }}"
   args:
     creates: "/etc/selinux/targeted/active/modules/400/{{ selinux_policy_name }}/cil"
     chdir: "/tmp/ansible-keepalived-selinux-{{ selinux_policy_name }}"
-  with_items:
+  loop:
     - checkmodule -M -m -o {{ selinux_policy_name }}.mod {{ selinux_policy_name }}.te
     - semodule_package -o {{ selinux_policy_name }}.pp -m {{ selinux_policy_name }}.mod
     - semodule -i {{ selinux_policy_name }}.pp
 
 - name: Remove temporary directory
-  file:
+  ansible.builtin.file:
     path: "/tmp/ansible-keepalived-selinux-{{ selinux_policy_name }}"
     state: absent

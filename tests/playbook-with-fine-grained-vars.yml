@@ -4,11 +4,12 @@
   # You can define the equivalent of the include_vars there.
   tasks:
   - name: Include the variables for the master configuration
-    include_vars: "keepalived_haproxy_master_example.yml"
+    ansible.builtin.include_vars:
+      file: keepalived_haproxy_master_example.yml
 
-  - name: "Include ansible-keepalived"
-    include_role:
-      name: "ansible-keepalived"
+  - name: Include ansible-keepalived
+    ansible.builtin.include_role:
+      name: ansible-keepalived
 
 - name: Install keepalived on the rest of the nodes for haproxy use
   hosts: all:!master_node
@@ -17,8 +18,9 @@
   # host instead of include_vars, but hey, this is just an example.
   tasks:
   - name: Include the var file for all the other nodes
-    include_vars: "keepalived_haproxy_backup_example.yml"
+    ansible.builtin.include_vars:
+      file: keepalived_haproxy_backup_example.yml
 
-  - name: "Include ansible-keepalived"
-    include_role:
-      name: "ansible-keepalived"
+  - name: Include ansible-keepalived
+    ansible.builtin.include_role:
+      name: ansible-keepalived

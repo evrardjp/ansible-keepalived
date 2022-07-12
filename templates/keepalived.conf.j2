@@ -15,9 +15,7 @@
 # limitations under the License.
 -#}
 {% if keepalived_show_ansible_managed|bool %}
-#
-# {{ ansible_managed }}
-#
+{{ ansible_managed | comment }}
 {% endif %}
 
 {% if keepalived_global_defs is defined %}
