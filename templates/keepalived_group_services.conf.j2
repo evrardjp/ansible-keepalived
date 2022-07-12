@@ -14,43 +14,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 -#}
-{% if keepalived_show_ansible_managed|bool %}
+{% if keepalived_show_ansible_managed | bool %}
 {{ ansible_managed | comment }}
 {% endif %}
 
-{% if keepalived_global_defs is defined %}
-global_defs {
-{% for def in keepalived_global_defs %}
-  {{ def }}
-{% endfor %}
-}
-{% endif %}
-
-{% if keepalived_virtual_servers is defined %}
-{% for vserver in keepalived_virtual_servers %}
-virtual_server {{ vserver.ip }} {{ vserver.port }} {
+{% set vserver_group = item %}
+virtual_server group {{ vserver_group.name }} {
+  {# set variable to prevent duplicate code for the same task #}
+  {% set vserver = vserver_group %}
   {% include './templates/keepalived-virtual-server.j2' %}
-
-  {% for rserver in vserver.real_servers %}
+  {% for rserver in vserver_group.real_servers %}
   real_server {{ rserver.ip }} {{ rserver.port }} {
     {% include './templates/keepalived-real-server.j2' %}
     {% include './templates/keepalived-checks.j2' %}
   }
   {% endfor %}
-  {% if vserver.sorry_server is defined %}
-  sorry_server {{ vserver.sorry_server.ip }} {{ vserver.sorry_server.port }}
-  {% endif %}
-
-}
-{% endfor %}
-{% endif %}
-{% if keepalived_virtual_server_groups is defined %}
-{% for vserver_group in keepalived_virtual_server_groups %}
-virtual_server_group {{ vserver_group.name }} {
-  {% for vserver_group_vip in vserver_group.vips %}
-  {{ vserver_group_vip.ip }} {{ vserver_group_vip.port }}
-  {% endfor %}
-  {% if vserver_group.fwmark is defined %}
-  fwmark {{ vserver_group.fwmark }}
-  {% endif %}
 }
