@@ -26,3 +26,15 @@
   - name: Include ansible-keepalived
     ansible.builtin.include_role:
       name: ansible-keepalived
+
+  - name: half way done
+    ansible.builtin.debug:
+      msg: "--- --- --- --- UPDATE CONFIGURATION --- --- --- ---"
+
+  - name: Include a single (combined) edit var file for all nodes
+    ansible.builtin.include_vars:
+      file: keepalived_haproxy_combined_edit_example.yml
+
+  - name: Include ansible-keepalived
+    ansible.builtin.include_role:
+      name: ansible-keepalived
