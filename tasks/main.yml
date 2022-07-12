@@ -95,15 +95,27 @@
   tags:
     - keepalived-install
 
-- name: Configure keepalived
-  ansible.builtin.template:
-    src: keepalived.conf.j2
-    dest: "{{ keepalived_config_file_path }}"
-    mode: "0640"
+- name: Create configuration directories if they do not exist
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+    - "{{ keepalived_config_directory_path }}"
+    - "{{ keepalived_config_directory_path }}/scripts"
+    - "{{ keepalived_config_directory_path }}/track_files"
+    - "{{ keepalived_config_directory_path }}/sync_groups"
+    - "{{ keepalived_config_directory_path }}/instances"
+    - "{{ keepalived_config_directory_path }}/groups"
+    - "{{ keepalived_config_directory_path }}/services"
   tags:
     - keepalived-config
-  notify:
-    - reload keepalived
+
+- name: Create keepalived configuration snippets
+  ansible.builtin.include_tasks:
+    file: create_configuration.yml
+  tags:
+    - keepalived-config
 
 - name: Check that daemon options file exists
   ansible.builtin.stat:

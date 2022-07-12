@@ -16,7 +16,8 @@
 # Standard names and paths for CentOS 7
 keepalived_package_name: "keepalived"
 keepalived_service_name: "keepalived"
-keepalived_config_file_path: "/etc/keepalived/keepalived.conf"
+keepalived_config_directory_path: "/etc/keepalived"
+keepalived_config_base_file: "keepalived.conf"
 _keepalived_daemon_options_file_path: "/etc/sysconfig/keepalived"
 
 keepalived_selinux_packages:
