@@ -95,6 +95,22 @@
   tags:
     - keepalived-install
 
+- name: Get keepalived directory listing
+  ansible.builtin.find:
+    path: "{{ keepalived_config_directory_path }}"
+    file_type: any
+  register: keepalived_content_result
+  when: keepalived_purge_configuration | bool
+
+- name: Remove keepalived directory content
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: absent
+  when: keepalived_purge_configuration | bool
+  loop_control:
+    label: "{{ item.path }}"
+  loop: "{{ keepalived_content_result.files }}"
+
 - name: Create configuration directories if they do not exist
   ansible.builtin.file:
     path: "{{ item }}"
