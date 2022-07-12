@@ -117,6 +117,12 @@
   tags:
     - keepalived-config
 
+- name: Remove keepalived configuration snippets
+  ansible.builtin.include_tasks:
+    file: remove_configuration.yml
+  tags:
+    - keepalived-config
+
 - name: Check that daemon options file exists
   ansible.builtin.stat:
     path: "{{ keepalived_daemon_options_file_path }}"
