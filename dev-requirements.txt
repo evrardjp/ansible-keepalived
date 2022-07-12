@@ -1,5 +1,5 @@
 molecule-docker
 molecule
 molecule[docker]
-ansible-lint
+ansible-lint<=5.4.0
 yamllint
