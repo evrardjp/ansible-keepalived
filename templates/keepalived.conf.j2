@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 -#}
-{% if keepalived_show_ansible_managed|bool %}
+{% if keepalived_show_ansible_managed | bool %}
 {{ ansible_managed | comment }}
 {% endif %}
 
@@ -25,3 +25,10 @@ global_defs {
 {% endfor %}
 }
 {% endif %}
+
+include {{ keepalived_config_directory_path }}/scripts/*.conf
+include {{ keepalived_config_directory_path }}/track_files/*.conf
+include {{ keepalived_config_directory_path }}/sync_groups/*.conf
+include {{ keepalived_config_directory_path }}/instances/*.conf
+include {{ keepalived_config_directory_path }}/groups/*.conf
+include {{ keepalived_config_directory_path }}/services/*.conf
