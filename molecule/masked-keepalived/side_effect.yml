@@ -1,0 +1,17 @@
+---
+- name: Side effect playbook
+  hosts: all
+  tasks:
+  - name: Stop the service to throw a wrench in the plan
+    ansible.builtin.command: "systemctl stop keepalived.service"
+    tags:
+      - skip_ansible_lint
+
+  - name: Now mask the service to really throw a wrench in the plan
+    ansible.builtin.command: "systemctl mask keepalived.service"
+    tags:
+      - skip_ansible_lint
+
+  - name: Include ansible-keepalived
+    ansible.builtin.include_role:
+      name: ansible-keepalived
