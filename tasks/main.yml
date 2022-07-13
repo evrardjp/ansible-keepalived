@@ -78,6 +78,8 @@
       value: 1
     - name: "net.ipv4.tcp_retries2"
       value: "{{ keepalived_sysctl_tcp_retries }}"
+  notify:
+    - restart keepalived
   tags:
     - keepalived-install
 
@@ -92,6 +94,8 @@
   loop:
     - name: "net.ipv6.ip_nonlocal_bind"
       value: 1
+  notify:
+    - restart keepalived
   tags:
     - keepalived-install
 
@@ -301,43 +305,11 @@
   when:
     - not (keepalived_systemd_overrides | bool)
 
-# Until  https://github.com/ansible/ansible/pull/72337 is fixed, we need to not use
-# the service/systemd module.
-#- name: Ensuring keepalived is enabled
-#  service:
-#    daemon_reload: yes
-#    name: "{{ keepalived_service_name }}"
-#    enabled: "yes"
-#    masked: "no"
-#
-
-# Reload systemd is necessary if new packages, or changes of overrides.
-# Because there is no notify on those tasks, and that the notify would be happening after the
-# task to ensure keepalived is enabled, move it to an unconditional task here.
-# When the bug above is fixed with the service/systemd module, ensure everything is
-# done in a single handler, tackling the daemon-reloads and the restart of the service,
-# plus a single task, handling the daemon-reload and ensuring the service is enabled
-# on the first install (the changes in systemd files would have to trigger the
-# handler to restart the service).
-- name: Check if keepalived is enabled
-  ansible.builtin.shell: "systemctl daemon-reload && systemctl is-enabled {{ keepalived_service_name }}"
-  register: isenabled
-  changed_when: (isenabled.stdout == "disabled" or isenabled.stdout == "masked") and isenabled.rc != 0
-  failed_when: (isenabled.stdout != "disabled" and isenabled.stdout != "masked") and isenabled.rc != 0
-  tags:
-    - skip_ansible_lint
-
-- name: Unmask keepalived if necessary
-  ansible.builtin.command: "systemctl unmask {{ keepalived_service_name }}"
-  when:
-    - isenabled is changed
-    - isenabled.stdout == "masked"
-  tags:
-    - skip_ansible_lint
-
-- name: ensure keepalived is enabled
-  ansible.builtin.command: "systemctl enable {{ keepalived_service_name }} --now"
-  when:
-    - isenabled is changed
-  tags:
-    - skip_ansible_lint
+- name: Ensuring keepalived is enabled and started
+  ansible.builtin.service:
+    daemon_reload: yes
+    name: "{{ keepalived_service_name }}"
+    state: "started"
+    enabled: "yes"
+    masked: "no"
+  register: _servicestart

@@ -1,0 +1,9 @@
+---
+- name: Side effect playbook
+  hosts: all
+  tasks:
+  - name: Stop the service to throw a wrench in the plan
+    ansible.builtin.copy:
+      content: ""
+      dest: /etc/keepalived/keepalived.conf
+      mode: 0640

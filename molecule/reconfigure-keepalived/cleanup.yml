@@ -1,0 +1,10 @@
+---
+- name: Cleanup molecule reconfigure-keepalived scenario
+  hosts: all[0]
+  gather_facts: no
+  tasks:
+  - name: Remove reconfigure keepalived docker network
+    delegate_to: localhost
+    community.docker.docker_network:
+      name: reconfigure-keepalived-network
+      state: absent

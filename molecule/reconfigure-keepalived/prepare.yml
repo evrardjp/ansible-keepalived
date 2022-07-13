@@ -1,0 +1,12 @@
+---
+- name: Prepare molecule instance
+  hosts: all[0]
+  tasks:
+  - name: Create a keepalived network for this scenario
+    delegate_to: localhost
+    community.docker.docker_network:
+      name: reconfigure-keepalived-network
+      ipam_config:
+        - subnet: 192.168.121.0/24
+          gateway: 192.168.121.254
+          iprange: 192.168.121.0/26
