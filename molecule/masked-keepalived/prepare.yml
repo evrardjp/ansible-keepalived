@@ -1,0 +1,12 @@
+---
+- name: Prepare molecule instance
+  hosts: all[0]
+  tasks:
+  - name: Create a masked keepalived network
+    delegate_to: localhost
+    community.docker.docker_network:
+      name: masked-keepalived-network
+      ipam_config:
+        - subnet: 192.168.120.0/24
+          gateway: 192.168.120.254
+          iprange: 192.168.120.0/26
