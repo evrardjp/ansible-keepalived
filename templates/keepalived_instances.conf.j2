@@ -22,7 +22,9 @@
 {% set instance = item.value %}
 vrrp_instance {{ name }} {
   interface {{ instance.interface }}
+{% if instance.state in ['MASTER', 'BACKUP'] %}
   state {{ instance.state }}
+{% endif %}
   virtual_router_id {{ instance.virtual_router_id }}
   priority {{ instance.priority }}
   {% if instance.use_vmac is defined and instance.use_vmac | bool %}
