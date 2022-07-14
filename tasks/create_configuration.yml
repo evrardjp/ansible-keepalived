@@ -8,27 +8,6 @@
   notify:
     - reload keepalived
 
-# older versions of keepalived will fail to start
-# if the 'include /some/path/*.wildcard' directive references an empty directory
-# this is especially the case on RHEL 7 deviates.
-- name: Create artificial empty configuration
-  ansible.builtin.file:
-    path: "{{ item }}"
-    state: touch
-    mode: '0755'
-  loop:
-    - "{{ keepalived_config_directory_path }}/scripts/empty.conf"
-    - "{{ keepalived_config_directory_path }}/track_files/empty.conf"
-    - "{{ keepalived_config_directory_path }}/sync_groups/empty.conf"
-    - "{{ keepalived_config_directory_path }}/instances/empty.conf"
-    - "{{ keepalived_config_directory_path }}/groups/empty.conf"
-    - "{{ keepalived_config_directory_path }}/services/empty.conf"
-  when:
-    - ansible_os_family == "RedHat"
-    - ansible_distribution_major_version == "7"
-  notify:
-    - reload keepalived
-
 - name: Configure keepalived script
   ansible.builtin.template:
     src: keepalived_script.conf.j2
