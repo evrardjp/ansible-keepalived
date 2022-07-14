@@ -14,27 +14,28 @@
 # limitations under the License.
 
 galaxy_info:
-  role_name: keepalived
-  author: evrardjp
-  description:  This role installs and configure keepalived based on a variable file
-  license: Apache
-  min_ansible_version: 2.10
+  role_name: "keepalived"
+  author: "evrardjp"
+  description: "This role installs and configure keepalived based on a simple dict"
+
+  license: "Apache-2.0"
+
+  min_ansible_version: "2.10"
+
   platforms:
-  - name: EL
+  - name: "EL"
     versions:
-    - 7
-    - 8
-  - name: Ubuntu
+    - "7"
+    - "8"
+  - name: "Ubuntu"
     versions:
-    - xenial
-    - bionic
-    - focal
-  - name: opensuse
-    versions:
-    - all
-  - name: Debian
-    versions:
-    - stretch
+    - "xenial"
+    - "bionic"
+    - "focal"
+  - name: "Debian"
   galaxy_tags:
-  - clustering
+  - "clustering"
+  - "networking"
+  - "system"
+
 dependencies: []
