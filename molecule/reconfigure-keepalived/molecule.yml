@@ -1,0 +1,20 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+verifier:
+  name: ansible
+provisioner:
+  name: ansible
+  options:
+    v: True
+  log: True
+platforms:
+  - name: reconfigure-keepalived-focal
+    pre_build_image: yes
+    image: geerlingguy/docker-ubuntu2004-ansible:latest
+    privileged: true
+    command: /lib/systemd/systemd
+    volumes:
+    - /sys/fs/cgroup:/sys/fs/cgroup:ro

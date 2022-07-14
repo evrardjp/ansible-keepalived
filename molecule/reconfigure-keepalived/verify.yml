@@ -1,0 +1,19 @@
+---
+# This ensures that keepalived is started
+
+- name: Verify
+  hosts: all[0]
+  order: sorted
+  gather_facts: yes
+  tasks:
+    - name: Include ansible-keepalived
+      ansible.builtin.include_role:
+        name: ansible-keepalived
+
+    - name: Flush handlers
+      ansible.builtin.meta: flush_handlers
+
+    - name: Ensure keepalived is started
+      ansible.builtin.assert:
+        that:
+          - "_servicereload is changed"

@@ -1,0 +1,48 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+  - name: Apt update and install rsync, ping, iproute
+    ansible.builtin.package:
+      update_cache: yes
+      name:
+        - rsync
+        - inetutils-ping
+        - iproute2
+      state: present
+    when: ansible_os_family == "Debian"
+
+  - name: Add a container to a network, leaving existing containers connected
+    delegate_to: localhost
+    community.docker.docker_network:
+      name: reconfigure-keepalived-network
+      connected:
+        - "{{ inventory_hostname }}"
+      appends: yes
+
+  - name: Re-collect network facts required after installation iproute
+    ansible.builtin.setup:
+      gather_subset: network
+
+  - name: Show ansible_interfaces
+    ansible.builtin.debug:
+      var: ansible_interfaces
+
+  - name: Define vrrp nic
+    ansible.builtin.set_fact:
+      vrrp_nic: "{{ ((ansible_interfaces | reject('equalto','lo')) | difference([ansible_default_ipv4.interface]))[0] | string }}"
+
+  - name: Define keepalived config
+    ansible.builtin.set_fact:
+      keepalived_instances:
+        internal:
+          interface: "{{ vrrp_nic }}"
+          state: "MASTER"
+          virtual_router_id: 120
+          priority: 150
+          vips:
+            - "192.168.121.2/24 dev {{ vrrp_nic }}"
+
+  - name: Include ansible-keepalived
+    ansible.builtin.include_role:
+      name: ansible-keepalived
