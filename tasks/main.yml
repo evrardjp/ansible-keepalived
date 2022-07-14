@@ -46,6 +46,23 @@
   notify:
     - restart keepalived
 
+# Can't use package facts, as it won't be parsed
+# properly by version test on debian/ubuntu.
+# keepalived --version outputs on stderr
+# First line of stderr is similar to 'keepalived v1.0.4 (date)'
+- name: Output keepalived version
+  ansible.builtin.command: keepalived --version
+  register: _keepalived_version
+  changed_when: false
+  tags:
+    - keepalived-config
+
+- name: Set testability flag
+  ansible.builtin.set_fact:
+    keepalived_config_testable: "{{ _keepalived_version.stderr_lines[0] | regex_search('[kK]eepalived v(.*) ', '\\1') | join('.') is version('2.0.4','ge') }}"
+  tags:
+    - keepalived-config
+
 - name: Ensure no new "samples" folder appeared
   ansible.builtin.file:
     path: /etc/keepalived/samples/
@@ -104,6 +121,7 @@
     src: keepalived.conf.j2
     dest: "{{ keepalived_config_file_path }}"
     mode: "0640"
+    validate: "{{ keepalived_config_testable | ternary('keepalived --config-test -f %s', omit) }}"
   tags:
     - keepalived-config
   notify:
