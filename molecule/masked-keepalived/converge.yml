@@ -2,15 +2,18 @@
 - name: Converge
   hosts: all
   tasks:
-  - name: Apt update and install rsync, ping, iproute
+  - name: Install basic packages
     ansible.builtin.package:
-      update_cache: yes
-      name:
-        - rsync
-        - inetutils-ping
-        - iproute2
+      update_cache: "{{ ansible_os_family == 'Debian' | ternary('yes', omit) }}"
+      name: "{{ packagelist[ansible_os_family] | default([]) }}"
       state: present
-    when: ansible_os_family == "Debian"
+    vars:
+      packagelist:
+        Debian:
+          - iproute2
+        RedHat:
+          - iproute
+          - iputils
 
   - name: Add a container to a network, leaving existing containers connected
     delegate_to: localhost
