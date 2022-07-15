@@ -36,5 +36,8 @@ galaxy_info:
   - "clustering"
   - "networking"
   - "system"
+  - "vrrp"
+  - "vip"
+  - "lvs"
 
 dependencies: []
