@@ -146,11 +146,13 @@ vrrp_instance {{ name }} {
   {% endfor %}
   }
   {% endif %}
+  {% if instance.vips is defined and instance.vips | length > 0 %}
   virtual_ipaddress {
     {% for vip in instance.vips %}
     {{ vip }}
     {% endfor %}
   }
+  {% endif %}
   {% if instance.vips_excluded is defined and instance.vips_excluded | length > 0 %}
   virtual_ipaddress_excluded {
     {% for vip in instance.vips_excluded %}
