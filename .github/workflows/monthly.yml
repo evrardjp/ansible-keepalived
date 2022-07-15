@@ -1,0 +1,21 @@
+---
+name: Monthly Molecule Test
+on:
+  schedule:
+    # Run on the 10th of each month at noon.
+    - cron: '00 12 10 * *'
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ansible: ["latest"]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          sudo apt remove ansible
+          sudo apt install tox
+      - name: Test with molecule using tox
+        run: |
+          sudo -H -E tox -e ansible-${{ matrix.ansible }}
