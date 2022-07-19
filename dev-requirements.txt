@@ -1,4 +1,4 @@
-molecule-docker==1.1.0
+molecule-docker==2.0.0
 molecule==4.0.0
 molecule[docker]==4.0.0
 ansible-lint<6.4.0
