@@ -1,3 +1,5 @@
+# Ansible-latest test environment
+ansible
 molecule-docker==2.0.0
 molecule==4.0.0
 molecule[docker]==4.0.0
