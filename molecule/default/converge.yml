@@ -7,6 +7,10 @@
     - "1"
     - "100%"
   tasks:
+  - name: Show some details for debug
+    ansible.builtin.debug:
+      msg: "Family {{ ansible_os_family }} and ansible version {{ ansible_version['string'] }}"
+
   - name: Install basic packages
     ansible.builtin.package:
       update_cache: "{{ ansible_os_family == 'Debian' | ternary('yes', omit) }}"
