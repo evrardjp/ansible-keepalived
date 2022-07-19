@@ -19,6 +19,9 @@
         RedHat:
           - iproute
           - iputils
+        Rocky:
+          - iproute
+          - iputils
 
   - name: Add a container to a network, leaving existing containers connected
     delegate_to: localhost
