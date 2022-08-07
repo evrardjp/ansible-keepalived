@@ -60,6 +60,7 @@
   ansible.builtin.command: keepalived --version
   register: _keepalived_version
   changed_when: false
+  check_mode: no
   tags:
     - keepalived-config
 
