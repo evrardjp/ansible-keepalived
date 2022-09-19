@@ -163,7 +163,7 @@
     dest: "{{ item.value.notify_script }}"
     mode: "0755"
   loop: "{{ keepalived_sync_groups | dict2items }}"
-  when: item.value.src_notify_script is defined
+  when: "'src_notify_script' in item.value"
   notify:
     - reload keepalived
   tags:
@@ -175,7 +175,7 @@
     dest: "{{ item.value.notify_master }}"
     mode: "0755"
   loop: "{{ keepalived_sync_groups | dict2items }}"
-  when: item.value.src_notify_master is defined
+  when: "'src_notify_master' in item.value"
   notify:
     - reload keepalived
   tags:
@@ -187,7 +187,7 @@
     dest: "{{ item.value.notify_backup }}"
     mode: "0755"
   loop: "{{ keepalived_sync_groups | dict2items }}"
-  when: item.value.src_notify_backup is defined
+  when: "'src_notify_backup' in item.value"
   notify:
     - reload keepalived
   tags:
@@ -199,7 +199,7 @@
     dest: "{{ item.value.notify_fault }}"
     mode: "0755"
   loop: "{{ keepalived_sync_groups | dict2items }}"
-  when: item.value.src_notify_fault is defined
+  when: "'src_notify_fault' in item.value"
   notify:
     - reload keepalived
   tags:
@@ -211,7 +211,7 @@
     dest: "{{ item.value.notify_script }}"
     mode: "0755"
   loop: "{{ keepalived_instances | dict2items }}"
-  when: item.value.src_notify_script is defined
+  when: "'src_notify_script' in item.value"
   notify:
     - reload keepalived
   tags:
@@ -223,7 +223,7 @@
     dest: "{{ item.value.notify_master }}"
     mode: "0755"
   loop: "{{ keepalived_instances | dict2items }}"
-  when: item.value.src_notify_master is defined
+  when: "'src_notify_master' in item.value"
   notify:
     - reload keepalived
   tags:
@@ -235,7 +235,7 @@
     dest: "{{ item.value.notify_master_rx_lower_pri }}"
     mode: "0755"
   loop: "{{ keepalived_instances | dict2items }}"
-  when: item.value.src_notify_master_rx_lower_pri is defined
+  when: "'src_notify_master_rx_lower_pri' in item.value"
   notify:
     - reload keepalived
   tags:
@@ -247,7 +247,7 @@
     dest: "{{ item.value.notify_backup }}"
     mode: "0755"
   loop: "{{ keepalived_instances | dict2items }}"
-  when: item.value.src_notify_backup is defined
+  when: "'src_notify_backup' in item.value"
   notify:
     - reload keepalived
   tags:
@@ -259,7 +259,7 @@
     dest: "{{ item.value.notify_stop }}"
     mode: "0755"
   loop: "{{ keepalived_instances | dict2items }}"
-  when: item.value.src_notify_stop is defined
+  when: "'src_notify_stop' in item.value"
   notify:
     - reload keepalived
   tags:
@@ -271,7 +271,7 @@
     dest: "{{ item.value.notify_fault }}"
     mode: "0755"
   loop: "{{ keepalived_instances | dict2items }}"
-  when: item.value.src_notify_fault is defined
+  when: "'src_notify_fault' in item.value"
   notify:
     - reload keepalived
   tags:
