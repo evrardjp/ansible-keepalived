@@ -125,17 +125,6 @@
   tags:
     - keepalived-install
 
-- name: Configure keepalived
-  ansible.builtin.template:
-    src: keepalived.conf.j2
-    dest: "{{ keepalived_config_file_path }}"
-    mode: "0640"
-    validate: "{{ keepalived_config_testable | ternary('keepalived --config-test -f %s', omit) }}"
-  notify:
-    - reload keepalived
-  tags:
-    - keepalived-config
-
 - name: Check that daemon options file exists
   ansible.builtin.stat:
     path: "{{ keepalived_daemon_options_file_path }}"
@@ -161,8 +150,8 @@
     src: "{{ item.value.src_check_script }}"
     dest: "{{ item.value.dest_check_script | default(item.value.check_script) }}"
     mode: "0755"
-  loop: "{{ keepalived_sync_groups | dict2items | default('{}') }}"
-  when: item.value.src_check_script is defined
+  loop: "{{ keepalived_scripts | dict2items | default('{}') }}"
+  when: "'src_check_script' in item.value"
   notify:
     - reload keepalived
   tags:
@@ -283,6 +272,17 @@
     mode: "0755"
   loop: "{{ keepalived_instances | dict2items }}"
   when: item.value.src_notify_fault is defined
+  notify:
+    - reload keepalived
+  tags:
+    - keepalived-config
+
+- name: Configure keepalived
+  ansible.builtin.template:
+    src: keepalived.conf.j2
+    dest: "{{ keepalived_config_file_path }}"
+    mode: "0640"
+    validate: "{{ keepalived_config_testable | ternary('keepalived --config-test -f %s', omit) }}"
   notify:
     - reload keepalived
   tags:
