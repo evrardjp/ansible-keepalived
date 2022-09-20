@@ -25,6 +25,21 @@ keepalived_selinux_compile_rules:
 #keepalived_package_state: "latest"
 keepalived_package_state: "{{ ( (keepalived_use_latest_stable | default(true)) | bool) | ternary('latest','present') }}"
 
+# Keepalived scripts can be defined that trigger notification scripts.
+# Examples have been provided below and in the tests directory.
+# keepalived_scripts:
+  #haproxy_check_script:
+    # check_script: "/etc/keepalived/haproxy_check.sh"
+    # ##if a src_check_script is defined, it will be uploaded from src_check_script
+    # ##on the deploy host to the check_script location. If the check_script needs
+    # ##parameters, you can define the location under dest_check_script.
+    # src_check_script: "{{ playbook_dir }}/../scripts/keepalived_haproxy_check.sh"
+  #haproxy_check_script:
+    # Here is an example with a command instead of a script.
+    # Add src_check_script if you want to run a script instead of a command
+    #check_script: "killall -0 haproxy"
+keepalived_scripts: {}
+
 # Keepalived scripts may rely upon additional packages.
 keepalived_scripts_packages: []
 
