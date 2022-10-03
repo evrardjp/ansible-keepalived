@@ -1,6 +1,6 @@
 # Frozen requirements for ansible 2.10
 ansible>=2.10,<2.11
-molecule-docker==1.1.0
+molecule-docker==2.1.0
 molecule==4.0.1
 molecule[docker]==4.0.0
 ansible-lint<5.4.0
