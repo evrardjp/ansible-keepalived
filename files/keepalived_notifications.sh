@@ -17,7 +17,6 @@
 #NAME=$2
 NOW=`date "+%Y-%m-%d %H:%M:%S"`
 NEWSTATE=$3
-#OLDSTATE=$(cat /var/run/keepalived.state)
 
 echo "$NEWSTATE" > /var/run/keepalived.state
 
