@@ -13,11 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-TYPE=$1
-NAME=$2
+#TYPE=$1
+#NAME=$2
 NOW=`date "+%Y-%m-%d %H:%M:%S"`
 NEWSTATE=$3
-OLDSTATE=$(cat /var/run/keepalived.state)
 
 echo "$NEWSTATE" > /var/run/keepalived.state
 
