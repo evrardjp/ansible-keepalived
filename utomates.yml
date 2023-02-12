@@ -1,28 +1,18 @@
-Keepalived
-=========
-
+BEGIN
+GLOW7 :.docx :
 This role installs keepalived and configures it according to the variables you'll pass to the role.
-
-Requirements
-------------
-
+Requirement
 No fancy requirements. Only package and file management in the role.
-
 Starting with this role version 4.0.0, the following minimum OS versions are required:
 - Ubuntu: 15.04 or above
 - Debian: Jessie or above
 - CentOS: 7 or above
-
 For older OSes, please use a previous version of this role.
-
 Role Variables
 --------------
-
 By default, this role doesn't configure keepalived, it barely installs it. This way keepalived is fully flexible based on what you give as input.
 Examples are given in the vars folder. Don't try them immediately, they won't work! (You need to define VIPs, passwords, etc.). The examples are only a source of inspiration.
-
 The main variables are:
-
 * keepalived_instances: This is a mandatory dict. It gathers information about the vips, the prefered state (master/backup), the VRRIP IDs and priorities, the password used for authentication... This is where things like nopreempt are configured. nopreempt allows to stay in backup state (instead of preempting to configured master) on a master return of availability, after its failure. Please check the template for additional settings support, and original keepalived documentation for their configuration.
 * keepalived_sync_groups: This is an optional dict. It groups items defined in keepalived_instances, and (if desired) allow the configuration of notifications scripts per group of keepalived_instances. Notification scripts are triggered on keepalived's state change and are facultative.
 * keepalived_virtual_servers: This is an optional dict. It sets up a virtual server + port and balances traffic over real_servers given in a sub dict. Checkout the _example.yaml files in vars/ to see a sample on how to use this dict. The official documentation for keepalived's virtual_server can be found [here](https://github.com/acassen/keepalived/blob/master/doc/keepalived.conf.SYNOPSIS#L393).
