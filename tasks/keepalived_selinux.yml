@@ -24,7 +24,7 @@
     name: "{{ keepalived_selinux_packages }}"
     state: present
   when:
-    - '"keepalived_ping" not in selinux_modules.stdout'
+    - keepalived_selinux_compile_rules[0] not in selinux_modules.stdout
 
 - name: Compile SELinux rules
   ansible.builtin.include_tasks:
@@ -34,3 +34,5 @@
   loop: "{{ keepalived_selinux_compile_rules }}"
   loop_control:
     loop_var: selinux_policy_name
+  vars:
+    selinux_policy_name_basename: "{{ selinux_policy_name | basename }}"
