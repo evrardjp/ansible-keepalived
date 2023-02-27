@@ -44,16 +44,16 @@
     # - 
     keepalived_instances:
       internal:
-        interface: "{{ vrrp_nic | default('eth0') }}"
+        interface: "{{ vrrp_nic | default(ansible_default_ipv4.interface, true) }}"
         # You can also use your own variable to determine which node is master and who
         state: "{{ (groups['keepalived'].index(inventory_hostname) == 0) | ternary('MASTER','BACKUP') }}"
         virtual_router_id: 42
         # I advise you to define your own priority per node, instead of a generic all or nothing.
         # Especially if you have more than two nodes.
-        priority: "{{ inventory_hostname == groups['keepalived'][0] | ternary('250', '0') }}"
+        priority: "{{ (inventory_hostname == groups['keepalived'][0]) | ternary('250', '100') }}"
         # Do not forget to define the VIPs, and their CIDR.
         vips:
-          - "192.168.33.2/24 dev {{ vrrp_nic | default('eth0') }}"
+          - "192.168.33.2/24 dev {{ vrrp_nic | default(ansible_default_ipv4.interface, true) }}"
   tasks:
   - name: Include ansible-keepalived
     ansible.builtin.include_role:
