@@ -15,14 +15,14 @@
 
 - name: Create directory for compiling SELinux role
   ansible.builtin.file:
-    path: "/tmp/ansible-keepalived-selinux-{{ selinux_policy_name }}"
+    path: "/tmp/ansible-keepalived-selinux-{{ selinux_policy_name_basename }}"
     state: directory
     mode: '0755'
 
 - name: Deploy SELinux policy source file
   ansible.builtin.copy:
     src: "{{ selinux_policy_name }}.te"
-    dest: "/tmp/ansible-keepalived-selinux-{{ selinux_policy_name }}/{{ selinux_policy_name }}.te"
+    dest: "/tmp/ansible-keepalived-selinux-{{ selinux_policy_name_basename }}/{{ selinux_policy_name_basename }}.te"
     owner: root
     group: root
     mode: "0755"
@@ -30,14 +30,14 @@
 - name: Compile and load SELinux module
   ansible.builtin.command: "{{ item }}"
   args:
-    creates: "/etc/selinux/targeted/active/modules/400/{{ selinux_policy_name }}/cil"
-    chdir: "/tmp/ansible-keepalived-selinux-{{ selinux_policy_name }}"
+    creates: "/etc/selinux/targeted/active/modules/400/{{ selinux_policy_name_basename }}/cil"
+    chdir: "/tmp/ansible-keepalived-selinux-{{ selinux_policy_name_basename }}"
   loop:
-    - checkmodule -M -m -o {{ selinux_policy_name }}.mod {{ selinux_policy_name }}.te
-    - semodule_package -o {{ selinux_policy_name }}.pp -m {{ selinux_policy_name }}.mod
-    - semodule -i {{ selinux_policy_name }}.pp
+    - checkmodule -M -m -o {{ selinux_policy_name_basename }}.mod {{ selinux_policy_name_basename }}.te
+    - semodule_package -o {{ selinux_policy_name_basename }}.pp -m {{ selinux_policy_name_basename }}.mod
+    - semodule -i {{ selinux_policy_name_basename }}.pp
 
 - name: Remove temporary directory
   ansible.builtin.file:
-    path: "/tmp/ansible-keepalived-selinux-{{ selinux_policy_name }}"
+    path: "/tmp/ansible-keepalived-selinux-{{ selinux_policy_name_basename }}"
     state: absent
