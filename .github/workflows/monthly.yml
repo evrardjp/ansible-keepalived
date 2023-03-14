@@ -1,6 +1,6 @@
 ---
 name: Monthly Molecule Test
-on:
+on:  # yamllint disable-line rule:truthy
   schedule:
     # Run on the 10th of each month at noon.
     - cron: '00 12 10 * *'
@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ansible: ["latest"]
+        ansible: [ "latest" ]
     steps:
       - uses: actions/checkout@v2
       - name: Install dependencies

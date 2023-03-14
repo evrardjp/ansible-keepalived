@@ -1,13 +1,13 @@
 ---
 name: Molecule Test
-on: [push, pull_request]
+on: [ push, pull_request ]  # yamllint disable-line rule:truthy
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 2
       matrix:
-        ansible: ["2.10", "latest"]
+        ansible: [ "2.10", "latest" ]
     steps:
       - uses: actions/checkout@v2
       - name: Install dependencies

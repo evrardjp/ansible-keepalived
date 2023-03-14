@@ -30,28 +30,28 @@
         instances:
           - external
           - internal
-        # For each group change you can trigger scripts.
-        # notify (all changes)
-        # notify_master (master change)
-        # notify_backup (you get it...)
-        # notify_fault (on fault detection)
-        # All those scripts are commands running on the keepalived node.
-        # Be sure to include their full path.
+          # For each group change you can trigger scripts.
+          # notify (all changes)
+          # notify_master (master change)
+          # notify_backup (you get it...)
+          # notify_fault (on fault detection)
+          # All those scripts are commands running on the keepalived node.
+          # Be sure to include their full path.
 
-        # If you want to have your own script, be sure to upload it on your keepalived
-        # server.
-        # For convenience, if you set a variable src_*, the file mentioned in the 'src'
-        # will be uploaded from the deployment host to the keepalived server at the
-        # notify_script location.
-        #
-        #notify_script:
-        #src_notify_script:
-        #notify_master:
-        #src_notify_master:
-        #notify_backup:
-        #src_notify_backup:
-        #notify_fault:
-        #src_notify_fault:
+          # If you want to have your own script, be sure to upload it on your keepalived
+          # server.
+          # For convenience, if you set a variable src_*, the file mentioned in the 'src'
+          # will be uploaded from the deployment host to the keepalived server at the
+          # notify_script location.
+          #
+          # notify_script:
+          # src_notify_script:
+          # notify_master:
+          # src_notify_master:
+          # notify_backup:
+          # src_notify_backup:
+          # notify_fault:
+          # src_notify_fault:
 
     # Uncomment this to have keepalived status checking. They will run on all the hosts
     # whether it's master or backup. You can have multiple scripts.
@@ -60,19 +60,19 @@
         # Example only! If my keepalived's gateway doesn't answer to ping, I kill it.
         check_script: "ping -c 1 193.0.14.129 1>&2"
         # Interval is the time in seconds between each check
-        #interval: 10
+        # interval: 10
         # Fall is the time to mark the keepalived status as not ok. Only takes 4 errors to fall!
-        #fall: 4
+        # fall: 4
         # Rise is the time to mark the keepalived status as back to ok
-        #rise: 4
+        # rise: 4
         # Allow the check script to complete within a timeout of $timeout seconds
-        #timeout: 2
+        # timeout: 2
 
     keepalived_instances:
-      #This dict name is the same as the one above, in keepalived_sync_groups.
+      # This dict name is the same as the one above, in keepalived_sync_groups.
       external:
-        #remember you can use ansible variables here.
-        interface:  "{{ keepalived_ext_nic | default('eth0') }}"
+        # remember you can use ansible variables here.
+        interface: "{{ keepalived_ext_nic | default('eth0') }}"
         state: "{{ (groups['keepalived'].index(inventory_hostname) == 0) | ternary('MASTER','BACKUP') }}"
         virtual_router_id: "{{ keepalived_vrrp_groupid_external | default('10') }}"
 
@@ -88,22 +88,22 @@
         # The password must be the same per router_id (so backup and
         # master should have the same password).
         # Keep in mind it's mostly plaintext, and not really useful.
-        #authentication_password: "your_password"
+        # authentication_password: "your_password"
 
         vips:
           - "{{ keepalived_ext_vip_with_cidr | default('198.51.100.1/24') }} dev {{ keepalived_ext_nic | default('eth0') }}"
 
-        # Optional Scripts for tracking the current status of the keepalived instance
-        #track_scripts:
-        #  - haproxy_check_script
-        #  - pingable_check_script
-        # Optional Interfaces for tracking the link status of the interfaces listed
-        #track_interfaces:
-        #  - eth1
-        #  - eth2
+          # Optional Scripts for tracking the current status of the keepalived instance
+          # track_scripts:
+          #  - haproxy_check_script
+          #  - pingable_check_script
+          # Optional Interfaces for tracking the link status of the interfaces listed
+          # track_interfaces:
+          #  - eth1
+          #  - eth2
 
       internal:
-        interface:  "{{ keepalived_int_nic | default('eth1') }}"
+        interface: "{{ keepalived_int_nic | default('eth1') }}"
         state: "{{ (groups['keepalived'].index(inventory_hostname) == 0) | ternary('MASTER','BACKUP') }}"
         virtual_router_id: "{{ keepalived_vrrp_groupid_external | default('11') }}"
         priority: "{{ inventory_hostname == groups['keepalived'][0] | ternary('250', '0') }}"
@@ -138,6 +138,6 @@
     #              misc_dynamic: true
 
   tasks:
-  - name: Include ansible-keepalived
-    ansible.builtin.include_role:
-      name: ansible-keepalived
+    - name: Include ansible-keepalived
+      ansible.builtin.include_role:
+        name: ansible-keepalived

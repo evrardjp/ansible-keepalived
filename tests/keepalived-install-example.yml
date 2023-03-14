@@ -40,8 +40,8 @@
     #   Regardless of the password you use.
     # - Make sure the priority has at least 50 if not 100 between master and backups.
     #   Read VRRP protocol for why :)
-    #   If you are lazy, 
-    # - 
+    #   If you are lazy,
+    # -
     keepalived_instances:
       internal:
         interface: "{{ vrrp_nic | default(ansible_default_ipv4.interface, true) }}"
@@ -55,6 +55,6 @@
         vips:
           - "192.168.33.2/24 dev {{ vrrp_nic | default(ansible_default_ipv4.interface, true) }}"
   tasks:
-  - name: Include ansible-keepalived
-    ansible.builtin.include_role:
-      name: ansible-keepalived
+    - name: Include ansible-keepalived
+      ansible.builtin.include_role:
+        name: ansible-keepalived

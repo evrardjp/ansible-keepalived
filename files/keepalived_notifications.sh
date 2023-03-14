@@ -15,7 +15,7 @@
 
 #TYPE=$1
 #NAME=$2
-NOW=`date "+%Y-%m-%d %H:%M:%S"`
+NOW=$(date "+%Y-%m-%d %H:%M:%S")
 NEWSTATE=$3
 
 echo "$NEWSTATE" > /var/run/keepalived.state

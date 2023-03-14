@@ -44,7 +44,7 @@
   ansible.builtin.package:
     name: "{{ [keepalived_package_name] + keepalived_scripts_packages }}"
     state: "{{ keepalived_package_state }}"
-    update_cache: yes
+    update_cache: true
     cache_valid_time: "{{ (ansible_facts['pkg_mgr'] == 'apt') | ternary(cache_timeout, omit) }}"
   notify:
     - restart keepalived
@@ -60,7 +60,7 @@
   ansible.builtin.command: keepalived --version
   register: _keepalived_version
   changed_when: false
-  check_mode: no
+  check_mode: false
   tags:
     - keepalived-config
 
@@ -96,7 +96,7 @@
   ansible.posix.sysctl:
     name: "{{ item.name }}"
     value: "{{ item.value }}"
-    sysctl_set: yes
+    sysctl_set: true
     state: present
   when: keepalived_bind_on_non_local | bool
   loop:
@@ -113,7 +113,7 @@
   ansible.posix.sysctl:
     name: "{{ item.name }}"
     value: "{{ item.value }}"
-    sysctl_set: yes
+    sysctl_set: true
     state: present
   when: keepalived_bind_on_non_local | bool
         and ipv6_enabled
@@ -301,7 +301,7 @@
 - name: Apply keepalived override to start after network is up
   community.general.ini_file:
     path: /etc/systemd/system/keepalived.service.d/override.conf
-    create: yes
+    create: true
     section: 'Unit'
     option: "{{ item }}"
     value: 'network-online.target'
@@ -342,7 +342,7 @@
 
 - name: Ensuring keepalived is enabled and started
   ansible.builtin.service:
-    daemon_reload: yes
+    daemon_reload: true
     name: "{{ keepalived_service_name }}"
     state: "started"
     enabled: "yes"
