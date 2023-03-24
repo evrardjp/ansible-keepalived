@@ -14,3 +14,6 @@
   {% if vserver.ha_suspend is defined and vserver.ha_suspend %}
   ha_suspend
   {% endif %}
+  {% if vserver.inhibit_on_failure is defined and vserver.inhibit_on_failure %}
+  inhibit_on_failure
+  {% endif %}
