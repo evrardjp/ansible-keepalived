@@ -94,6 +94,13 @@ vrrp_sync_group {{ name }} {
     {% endfor %}
   }
   {% endif %}
+  {% if sync_group.track_interfaces is defined %}
+  track_interface {
+    {% for track_interface in sync_group.track_interfaces %}
+    {{ track_interface }}
+    {% endfor %}
+  }
+  {% endif %}
 }
 {% endfor %}
 
