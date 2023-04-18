@@ -58,6 +58,36 @@ vrrp_track_file {{ name }} {
 {% endfor %}
 {% endif %}
 
+{% if keepalived_track_processs is defined %}
+{% for name, details in keepalived_track_processs.items() %}
+vrrp_track_process {{ name }} {
+  process {{ details.process }} # see man 5 keepalived.conf for quotes handling
+  weight {{ details.weight | default(1) | int }} # multiply with weight in process (default: 1, i.e. literal value from process)
+  {% if details.param_match is defined and details.param_match in ['initial', 'partial'] %}
+  param_match {{ details.param_match }}
+  {% endif %}
+  {% if details.quorum is defined %}
+  quorum {{ details.quorum | int }}
+  {% endif %}
+  {% if details.quorum_max is defined %}
+  quorum_max {{ details.quorum_max | int }}
+  {% endif %}
+  {% if details.fork_delay is defined %}
+  fork_delay {{ details.fork_delay | int }}
+  {% endif %}
+  {% if details.terminate_delay is defined %}
+  terminate_delay {{ details.terminate_delay | int }}
+  {% endif %}
+  {% if details.delay is defined %}
+  delay {{ details.delay | int }}
+  {% endif %}
+  {% if details.full_command | default(false) | bool %}
+  full_command
+  {% endif %}
+}
+{% endfor %}
+{% endif %}
+
 {% for name, sync_group in keepalived_sync_groups.items() %}
 vrrp_sync_group {{ name }} {
   group {
@@ -98,6 +128,13 @@ vrrp_sync_group {{ name }} {
   track_interface {
     {% for track_interface in sync_group.track_interfaces %}
     {{ track_interface }}
+    {% endfor %}
+  }
+  {% endif %}
+  {% if sync_group.track_processs is defined %}
+  track_process {
+    {% for track_process in sync_group.track_processs %}
+    {{ track_process }}
     {% endfor %}
   }
   {% endif %}
@@ -199,6 +236,13 @@ vrrp_instance {{ name }} {
   track_interface {
     {% for track_interface in instance.track_interfaces %}
     {{ track_interface }}
+    {% endfor %}
+  }
+  {% endif %}
+  {% if instance.track_processs is defined %}
+  track_process {
+    {% for track_process in instance.track_processs %}
+    {{ track_process }}
     {% endfor %}
   }
   {% endif %}
