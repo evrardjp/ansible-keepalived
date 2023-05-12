@@ -63,7 +63,7 @@ vrrp_track_file {{ name }} {
 vrrp_track_process {{ name }} {
   process {{ details.process }} # see man 5 keepalived.conf for quotes handling
   weight {{ details.weight | default(1) | int }} # multiply with weight in process (default: 1, i.e. literal value from process)
-  {% if details.param_match is defined and details.param_match in ['initial', 'partial'] %}
+  {% if details.param_match is defined %}
   param_match {{ details.param_match }}
   {% endif %}
   {% if details.quorum is defined %}
