@@ -15,9 +15,9 @@
 
 - name: Get list of SELinux modules loaded
   ansible.builtin.command: semodule -l
-  changed_when: False
+  changed_when: false
   register: selinux_modules
-  check_mode: no
+  check_mode: false
 
 - name: Ensure SELinux packages are installed
   ansible.builtin.package:

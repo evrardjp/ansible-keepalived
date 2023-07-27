@@ -4,7 +4,7 @@
 - name: Verify
   hosts: all[0]
   order: sorted
-  gather_facts: yes
+  gather_facts: true
   tasks:
     - name: Populate service facts
       ansible.builtin.service_facts:

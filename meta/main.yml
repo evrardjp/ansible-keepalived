@@ -23,21 +23,21 @@ galaxy_info:
   min_ansible_version: "2.10"
 
   platforms:
-  - name: "EL"
-    versions:
-    - "8"
-  - name: "Ubuntu"
-    versions:
-    - "xenial"
-    - "bionic"
-    - "focal"
-  - name: "Debian"
+    - name: "EL"
+      versions:
+        - "8"
+    - name: "Ubuntu"
+      versions:
+        - "xenial"
+        - "bionic"
+        - "focal"
+    - name: "Debian"
   galaxy_tags:
-  - "clustering"
-  - "networking"
-  - "system"
-  - "vrrp"
-  - "vip"
-  - "lvs"
+    - "clustering"
+    - "networking"
+    - "system"
+    - "vrrp"
+    - "vip"
+    - "lvs"
 
 dependencies: []

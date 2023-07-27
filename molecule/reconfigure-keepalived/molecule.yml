@@ -8,13 +8,13 @@ verifier:
 provisioner:
   name: ansible
   options:
-    v: True
-  log: True
+    v: true
+  log: true
 platforms:
   - name: reconfigure-keepalived-focal
-    pre_build_image: yes
+    pre_build_image: true
     image: geerlingguy/docker-ubuntu2004-ansible:latest
     privileged: true
     command: /lib/systemd/systemd
     volumes:
-    - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
