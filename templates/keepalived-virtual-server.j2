@@ -7,6 +7,9 @@
   {% endif %}
   lvs_sched {{ vserver.lvs_sched | default ('rr') }}
   lvs_method {{ vserver.lvs_method | default ('DR') }}
+  {% if vserver.quorum is defined and vserver.quorum | int %}
+  quorum {{ vserver.quorum }}
+  {% endif %}
   {% if vserver.persistence_timeout is defined %}
   persistence_timeout {{ vserver.persistence_timeout }}
   {% endif %}
