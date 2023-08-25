@@ -12,6 +12,9 @@
       {% if tcp_check.retry is defined and tcp_check.retry | int %}
       retry {{ tcp_check.retry }}
       {% endif %}
+      {% if tcp_check.delay_loop is defined and tcp_check.delay_loop | int %}
+      delay_loop {{ tcp_check.delay_loop}}
+      {% endif %}
       {% if tcp_check.delay_before_retry is defined and tcp_check.delay_before_retry | int %}
       delay_before_retry {{ tcp_check.delay_before_retry }}
       {% endif %}
@@ -96,6 +99,9 @@
       connect_timeout {{ http_check.connect_timeout | default('3') }}
       nb_get_retry {{ http_check.nb_get_retry | default('3') }}
       delay_before_retry {{ http_check.delay_before_retry | default('2') }}
+      {% if http_check.delay_loop is defined and http_check.delay_loop | int %}
+      delay_loop {{ http_check.delay_loop}}
+      {% endif %}
       {% if http_check.connect_port is defined and http_check.connect_port %}
       connect_port {{ http_check.connect_port }}
       {% endif %}
@@ -162,6 +168,9 @@
       connect_timeout {{ ssl_check.connect_timeout | default('3') }}
       nb_get_retry {{ ssl_check.nb_get_retry | default('3') }}
       delay_before_retry {{ ssl_check.delay_before_retry | default('2') }}
+      {% if ssl_check.delay_loop is defined and ssl_check.delay_loop | int %}
+      delay_loop {{ ssl_check.delay_loop}}
+      {% endif %}
       {% if ssl_check.connect_port is defined and ssl_check.connect_port %}
       connect_port {{ ssl_check.connect_port }}
       {% endif %}
@@ -228,6 +237,9 @@
       {% if smtp_check.retry is defined and smtp_check.retry | int %}
       retry {{ smtp_check.retry }}
       {% endif %}
+      {% if smtp_check.delay_loop is defined and smtp_check.delay_loop | int %}
+      delay_loop {{ smtp_check.delay_loop}}
+      {% endif %}
       {% if smtp_check.delay_before_retry is defined and smtp_check.delay_before_retry | int %}
       delay_before_retry {{ smtp_check.delay_before_retry }}
       {% endif %}
@@ -263,6 +275,9 @@
       {% if bfd_check.retry is defined and bfd_check.retry | int %}
       retry {{ bfd_check.retry }}
       {% endif %}
+      {% if bfd_check.delay_loop is defined and bfd_check.delay_loop | int %}
+      delay_loop {{ bfd_check.delay_loop}}
+      {% endif %}
       {% if bfd_check.delay_before_retry is defined and bfd_check.delay_before_retry | int %}
       delay_before_retry {{ bfd_check.delay_before_retry }}
       {% endif %}
@@ -290,13 +305,18 @@
     {% if rserver.ping_checks is defined %}
     {% for ping_check in rserver.ping_checks %}
     PING_CHECK {
+      {% if ping_check.connect_port is defined and ping_check.connect_port | int %}
       connect_port {{ ping_check.connect_port }}
+      {% endif %}
       connect_timeout {{ ping_check.connect_timeout | default('5') }}
       {% if ping_check.connect_ip is defined and ping_check.connect_ip %}
       connect_ip {{ ping_check.connect_ip }}
       {% endif %}
       {% if ping_check.retry is defined and ping_check.retry | int %}
       retry {{ ping_check.retry }}
+      {% endif %}
+      {% if ping_check.delay_loop is defined and ping_check.delay_loop | int %}
+      delay_loop {{ ping_check.delay_loop}}
       {% endif %}
       {% if ping_check.delay_before_retry is defined and ping_check.delay_before_retry | int %}
       delay_before_retry {{ ping_check.delay_before_retry }}
@@ -329,6 +349,9 @@
       {% endif %}
       {% if udp_check.retry is defined and udp_check.retry | int %}
       retry {{ udp_check.retry }}
+      {% endif %}
+      {% if udp_check.delay_loop is defined and udp_check.delay_loop | int %}
+      delay_loop {{ udp_check.delay_loop}}
       {% endif %}
       {% if udp_check.delay_before_retry is defined and udp_check.delay_before_retry | int %}
       delay_before_retry {{ udp_check.delay_before_retry }}
@@ -371,6 +394,9 @@
       {% endif %}
       {% if file_check.delay_before_retry is defined and file_check.delay_before_retry | int %}
       delay_before_retry {{ file_check.delay_before_retry }}
+      {% endif %}
+      {% if file_check.delay_loop is defined and file_check.delay_loop | int %}
+      delay_loop {{ file_check.delay_loop}}
       {% endif %}
       {% if file_check.warmup is defined and file_check.warmup %}
       warmup {{ file_check.warmup }}
