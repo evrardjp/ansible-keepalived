@@ -305,7 +305,9 @@
     {% if rserver.ping_checks is defined %}
     {% for ping_check in rserver.ping_checks %}
     PING_CHECK {
-      connect_port {{ ping_check.connect_port | default(8080) }}
+      {% if ping_check.connect_port is defined and ping_check.connect_port | int %}
+      connect_port {{ ping_check.connect_port }}
+      {% endif %}
       connect_timeout {{ ping_check.connect_timeout | default('5') }}
       {% if ping_check.connect_ip is defined and ping_check.connect_ip %}
       connect_ip {{ ping_check.connect_ip }}
