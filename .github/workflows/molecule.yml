@@ -38,7 +38,6 @@ jobs:
       matrix:
         distro:
           - centos8
-          - rockylinux9
           - debian10
           - debian11
           - debian12
@@ -70,46 +69,46 @@ jobs:
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
-          MOLECULE_DISTRO: ${{ matrix.distro }}
+          MOLECULE_IMAGE: ${{ matrix.distro }}
 
       - name: Run Molecule Masked Keepalived Test
         run: molecule test --scenario-name masked-keepalived
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
-          MOLECULE_DISTRO: ${{ matrix.distro }}
+          MOLECULE_IMAGE: ${{ matrix.distro }}
 
       - name: Run Molecule Reconfigure Keepalived Test
         run: molecule test --scenario-name reconfigure-keepalived
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
-          MOLECULE_DISTRO: ${{ matrix.distro }}
+          MOLECULE_IMAGE: ${{ matrix.distro }}
 
       - name: Run Molecule Install from Source Test
         run: molecule test --scenario-name install-from-source
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
-          MOLECULE_DISTRO: ${{ matrix.distro }}
+          MOLECULE_IMAGE: ${{ matrix.distro }}
 
       - name: Run Molecule Uninstall from Source Test
         run: molecule test --scenario-name uninstall-from-source
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
-          MOLECULE_DISTRO: ${{ matrix.distro }}
+          MOLECULE_IMAGE: ${{ matrix.distro }}
 
       - name: Run Molecule Switch from Package Manager to Source Installation Test
         run: molecule test --scenario-name switch-from-pkgmgr-to-source
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
-          MOLECULE_DISTRO: ${{ matrix.distro }}
+          MOLECULE_IMAGE: ${{ matrix.distro }}
 
       - name: Run Molecule Switch from Source Installation to Package Manager Test
         run: molecule test --scenario-name switch-from-source-to-pkgmgr
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
-          MOLECULE_DISTRO: ${{ matrix.distro }}
+          MOLECULE_IMAGE: ${{ matrix.distro }}
