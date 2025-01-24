@@ -25,12 +25,12 @@
       ansible.builtin.setup:
         gather_subset: network
 
-    - name: Compare all the hosts IPs with the vrrp_ip
+    - name: Compare all the hosts IPs with the vrrp_ip # noqa: run-once[task]
       ansible.builtin.set_fact:
         is_there_master_ip_somewhere: "{{ ansible_play_hosts_all | map('extract', hostvars, 'ansible_all_ipv4_addresses') | flatten | intersect([vrrp_ip]) }}"
       run_once: True
 
-    - name: Fail if no one has the vrrp_ip
+    - name: Fail if no one has the vrrp_ip # noqa: run-once[task]
       ansible.builtin.assert:
         that:
           is_there_master_ip_somewhere | length > 0
