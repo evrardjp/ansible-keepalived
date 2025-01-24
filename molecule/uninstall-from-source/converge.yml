@@ -1,0 +1,9 @@
+---
+- name: Converge
+  hosts: all
+  vars:
+    keepalived_package_state: absent
+  tasks:
+  - name: Include ansible-keepalived
+    ansible.builtin.include_role:
+      name: evrardjp.keepalived

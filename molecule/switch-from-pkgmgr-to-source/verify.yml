@@ -1,0 +1,31 @@
+---
+- name: Verify
+  hosts: all[0]
+  gather_facts: true
+  tasks:
+    - name: Get installed Keepalived version
+      ansible.builtin.include_tasks: ../../tasks/get_installed_version.yml
+
+    - name: Verify installed version matches desired version
+      ansible.builtin.assert:
+        that:
+          - keepalived_installed
+          - keepalived_installed_version == "v2.3.2"
+
+    - name: Gather installed services
+      ansible.builtin.service_facts:
+
+    - name: Verify Keepalived services are running
+      ansible.builtin.assert:
+        that:
+          - ansible_facts.services['keepalived.service'] is defined
+          - ansible_facts.services['keepalived.service'].state == 'running'
+
+    - name: Gather package facts
+      ansible.builtin.package_facts:
+      when: keepalived_installed is defined
+
+    - name: Verify Keepalived packages are not installed
+      ansible.builtin.assert:
+        that:
+          - ansible_facts.packages['keepalived'] is not defined

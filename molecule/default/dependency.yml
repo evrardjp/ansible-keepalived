@@ -10,3 +10,5 @@
         - subnet: 192.168.33.0/24
           gateway: 192.168.33.254
           iprange: 192.168.33.0/26
+      labels:
+        owner: molecule

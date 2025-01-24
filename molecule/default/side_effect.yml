@@ -1,17 +1,20 @@
 ---
 # Node1 is master, let's make any other node master, see if everything is fine
-- hosts: all
+- name: Side Effect
+  hosts: all
   order: sorted
+  strategy: linear
   vars:
     vrrp_ip: 192.168.33.2
   tasks:
     - name: Define vrrp nic
       ansible.builtin.set_fact:
-        vrrp_nic: "{{ ((ansible_interfaces | reject('equalto','lo')) | difference([ansible_default_ipv4.interface]))[0] | string }}"
+        vrrp_nic: "{{ ((ansible_interfaces | reject('equalto', 'lo')) | difference([ansible_default_ipv4.interface]))[0] | string }}"
 
     - name: Disable current master node
       ansible.builtin.command: ip link set dev {{ vrrp_nic }} down
       when: inventory_hostname == ansible_play_hosts[0]
+      changed_when: false
 
     - name: Wait for topology change
       ansible.builtin.wait_for:

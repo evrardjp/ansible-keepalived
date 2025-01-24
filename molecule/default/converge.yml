@@ -43,14 +43,25 @@
     ansible.builtin.debug:
       var: ansible_interfaces
 
+  - name: Show ansible facts
+    ansible.builtin.debug:
+      var: ansible_facts
+
   - name: Define vrrp nic
     ansible.builtin.set_fact:
-      vrrp_nic: "{{ ((ansible_interfaces | reject('equalto','lo')) | difference([ansible_default_ipv4.interface]))[0] | string }}"
+      vrrp_nic: "{{ ((ansible_interfaces | reject('equalto', 'lo')) | difference([ansible_default_ipv4.interface]))[0] | string }}"
 
   - name: Include keepalived vars
-    ansible.builtin.include_vars:
-      file: ../../tests/keepalived_haproxy_combined_example.yml
+    ansible.builtin.set_fact:
+      keepalived_instances:
+        internal:
+          interface: "{{ vrrp_nic }}"
+          state: "{{ (groups['all'].index(inventory_hostname) == 0) | ternary('MASTER', 'BACKUP') }}"
+          virtual_router_id: 42
+          priority: "{{ (groups['all'] | length - groups['all'].index(inventory_hostname)) * 250 // (groups['all'] | length) }}"
+          vips:
+            - "192.168.33.2/24 dev {{ vrrp_nic }}"
 
   - name: Include ansible-keepalived
     ansible.builtin.include_role:
-      name: ansible-keepalived
+      name: evrardjp.keepalived

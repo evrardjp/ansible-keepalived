@@ -1,0 +1,23 @@
+---
+- name: Verify
+  hosts: all[0]
+  gather_facts: true
+  tasks:
+    - name: Check if keepalived is in PATH
+      ansible.builtin.command: which keepalived
+      changed_when: false
+      failed_when: keepalived_install_check_result.rc not in [0, 1]
+      register: keepalived_install_check_result
+
+    - name: Verify that NUT is not installed
+      ansible.builtin.assert:
+        that:
+          - keepalived_install_check_result.rc == 1
+
+    - name: Gather installed services
+      ansible.builtin.service_facts:
+
+    - name: Verify NUT services are not present
+      ansible.builtin.assert:
+        that:
+          - ansible_facts.services['keepalived.service'] is undefined

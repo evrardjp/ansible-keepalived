@@ -1,20 +1,10 @@
 ---
-- name: Side effect playbook
+- name: Converge
   hosts: all
   tasks:
-  - name: Stop the service to throw a wrench in the plan
-    ansible.builtin.command: "systemctl stop keepalived.service"
-    tags:
-      - skip_ansible_lint
-
-  - name: Now mask the service to really throw a wrench in the plan
-    ansible.builtin.command: "systemctl mask keepalived.service"
-    tags:
-      - skip_ansible_lint
-
-  - name: Re-collect network facts required after installation iproute
-    ansible.builtin.setup:
-      gather_subset: network
+  - name: Show ansible_interfaces
+    ansible.builtin.debug:
+      var: ansible_interfaces
 
   - name: Define vrrp nic
     ansible.builtin.set_fact:
@@ -22,6 +12,8 @@
 
   - name: Define keepalived config
     ansible.builtin.set_fact:
+      keepalived_install_from_source: true
+      keepalived_source_tag: v2.3.2
       keepalived_instances:
         internal:
           interface: "{{ vrrp_nic }}"
@@ -29,7 +21,7 @@
           virtual_router_id: 120
           priority: 150
           vips:
-            - "192.168.120.2/24 dev {{ vrrp_nic }}"
+            - "192.168.121.2/24 dev {{ vrrp_nic }}"
 
   - name: Include ansible-keepalived
     ansible.builtin.include_role:

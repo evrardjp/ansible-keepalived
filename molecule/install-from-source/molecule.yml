@@ -11,8 +11,8 @@ provisioner:
     v: True
   log: True
 platforms:
-  - name: keepalived-debian12
-    image: "geerlingguy/docker-${MOLECULE_IMAGE:-debian12}-ansible:latest"
+  - name: keepalived-rockylinux9
+    image: "geerlingguy/docker-${MOLECULE_IMAGE:-rockylinux9}-ansible:latest"
     command: ${MOLECULE_DOCKER_COMMAND:-""}
     pre_build_image: true
     cgroupns_mode: host

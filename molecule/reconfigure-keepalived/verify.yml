@@ -8,7 +8,7 @@
   tasks:
     - name: Include ansible-keepalived
       ansible.builtin.include_role:
-        name: ansible-keepalived
+        name: evrardjp.keepalived
 
     - name: Flush handlers
       ansible.builtin.meta: flush_handlers

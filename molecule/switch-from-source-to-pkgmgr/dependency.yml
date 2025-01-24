@@ -1,24 +1,30 @@
 ---
-- name: Converge
-  hosts: all
+- name: Prepare molecule instance
+  hosts: all[0]
   tasks:
-  - name: Install basic packages
+  - name: Create a keepalived network for this scenario
+    delegate_to: localhost
+    community.docker.docker_network:
+      name: reconfigure-keepalived-network
+      ipam_config:
+        - subnet: 192.168.121.0/24
+          gateway: 192.168.121.254
+          iprange: 192.168.121.0/26
+
+  - name: Apt update and install rsync, ping, iproute
     ansible.builtin.package:
-      update_cache: "{{ ansible_os_family == 'Debian' | ternary('yes', omit) }}"
-      name: "{{ packagelist[ansible_os_family] | default([]) }}"
+      update_cache: yes
+      name:
+        - rsync
+        - inetutils-ping
+        - iproute2
       state: present
-    vars:
-      packagelist:
-        Debian:
-          - iproute2
-        RedHat:
-          - iproute
-          - iputils
+    when: ansible_os_family == "Debian"
 
   - name: Add a container to a network, leaving existing containers connected
     delegate_to: localhost
     community.docker.docker_network:
-      name: masked-keepalived-network
+      name: reconfigure-keepalived-network
       connected:
         - "{{ inventory_hostname }}"
       appends: yes
@@ -37,6 +43,7 @@
 
   - name: Define keepalived config
     ansible.builtin.set_fact:
+      keepalived_install_from_source: true
       keepalived_instances:
         internal:
           interface: "{{ vrrp_nic }}"
@@ -44,7 +51,7 @@
           virtual_router_id: 120
           priority: 150
           vips:
-            - "192.168.120.2/24 dev {{ vrrp_nic }}"
+            - "192.168.121.2/24 dev {{ vrrp_nic }}"
 
   - name: Include ansible-keepalived
     ansible.builtin.include_role:
