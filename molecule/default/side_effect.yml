@@ -40,6 +40,7 @@
     - name: Restore network connectivity on the initial master node
       ansible.builtin.command: ip link set dev {{ vrrp_nic }} up
       when: inventory_hostname == ansible_play_hosts[0]
+      changed_when: false
 
     - name: Wait for topology change
       ansible.builtin.wait_for:
