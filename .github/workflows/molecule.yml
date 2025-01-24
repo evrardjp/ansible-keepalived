@@ -21,7 +21,7 @@ jobs:
         run: pip3 install yamllint
 
       - name: Install ansible test dependencies
-        run: ansible-galaxy install -r molecule/test_requirements.yml
+        run: ansible-galaxy install -r molecule/test_requirements.yml --force
 
       - name: Run Yamllint
         run: |
@@ -63,7 +63,7 @@ jobs:
         if: matrix.distro != 'centos8' && matrix.distro != 'debian10'  && matrix.distro != 'rockylinux9'
 
       - name: Install ansible test dependencies
-        run: ansible-galaxy install -r molecule/test_requirements.yml
+        run: ansible-galaxy install -r molecule/test_requirements.yml --force
 
       - name: Run Molecule Default test
         run: molecule test
