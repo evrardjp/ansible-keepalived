@@ -38,6 +38,67 @@ An example of a notification script is also given, in the files folder.
 
 Antoher good source of informations is the official keepalived [GIT repo](https://github.com/acassen/keepalived) where you can find a fully commented [keepalived.conf](https://github.com/acassen/keepalived/blob/master/doc/keepalived.conf.SYNOPSIS). Also various official samples are [provided](https://github.com/acassen/keepalived/tree/master/doc/samples).
 
+Installation from source
+------------------------
+
+If your package manager only provides an outdated version of Keepalived, this role is able to compile and install Keepalived from source.  
+
+The role supports the following scenarios:
+  - Compile and install Keepalived from a Git repository with a specific source tag
+  - Uninstall Keepalived after installed from source
+  - Switch from installation by a package manager to installation from source
+  - Switch from installation from source to installation by a package manager
+  - Switch from one installed version from source to a different version
+
+The follwing role variables control installation from source:
+```yaml
+# Flag indicating whether to compile and install Keepalived from source instead of a package manager
+keepalived_install_from_source: false
+# Git source repository to use when installing Keepalived from source
+keepalived_source_repository: https://github.com/acassen/keepalived.git
+# The Git tag to compile when installing Keepalived from source
+keepalived_source_tag: v2.3.2
+# Configure options
+keepalived_source_configure_options:
+    - --includedir=${prefix}/include
+    - --mandir=${prefix}/share/man
+    - --infodir=${prefix}/share/info
+    - --sysconfdir=/etc
+    - --localstatedir=/var
+    - --disable-option-checking
+    - --disable-silent-rules
+    - --runstatedir=/run
+    - --disable-maintainer-mode
+    - --disable-dependency-tracking
+    - --enable-snmp
+    - --enable-sha1
+    - --enable-snmp-rfcv2
+    - --enable-snmp-rfcv3
+    - --enable-dbus
+    - --enable-json
+    - --enable-bfd
+    - --enable-regex
+```
+The installation prefix is generated dynamically using `keepalived_source_tag`.
+
+In addition, the following variable control the build dependencies on a distribution level:
+```yaml
+keepalived_build_dep_packages:
+  - git
+  - autoconf
+  - curl 
+  - gcc 
+  - libssl-dev 
+  - libnl-3-dev 
+  - libnl-genl-3-dev 
+  - libsnmp-dev
+  - libsystemd-dev
+  - libmnl-dev
+  - libipset-dev
+  - libnfnetlink-dev
+  - libnl-route-3-dev
+```
+
 Dependencies
 ------------
 
