@@ -10,7 +10,7 @@
   tasks:
     - name: Define vrrp nic
       ansible.builtin.set_fact:
-        vrrp_nic: "{{ ((ansible_interfaces | reject('equalto', 'lo')) | difference([ansible_default_ipv4.interface]))[0] | string }}"
+        vrrp_nic: "{{ ((ansible_interfaces | reject('equalto', 'lo')) | difference([ansible_default_ipv4.interface])) | sort | first | string }}"
 
     - name: Show ansible facts
       ansible.builtin.debug:
