@@ -59,6 +59,9 @@ jobs:
         run: pip3 install ansible molecule molecule-docker yamllint ansible-lint docker netaddr dnspython
         if: matrix.distro != 'centos8' && matrix.distro != 'debian10'  && matrix.distro != 'rockylinux9'
 
+      - name: Install ansible test dependencies
+        run: ansible-galaxy install -r molecule/test_requirements.yml
+
       - name: Run Molecule Default test
         run: molecule test
         env:
