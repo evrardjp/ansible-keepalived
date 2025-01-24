@@ -22,30 +22,58 @@ keepalived_selinux_compile_rules:
   - keepalived_ping
   - keepalived_setpgid
 
-#keepalived_package_state: "latest"
-keepalived_package_state: "{{ ( (keepalived_use_latest_stable | default(true)) | bool) | ternary('latest','present') }}"
+# keepalived_package_state: "latest"
+keepalived_package_state: "{{ ((keepalived_use_latest_stable | default(true)) | bool) | ternary('latest', 'present') }}"
+
+# Flag indicating whether to compile and install Keepalived from source instead of a package manager
+keepalived_install_from_source: false
+# Git source repository to use when installing Keepalived from source
+keepalived_source_repository: https://github.com/acassen/keepalived.git
+# The Git tag to compile when installing Keepalived from source
+keepalived_source_tag: v2.3.2
+# Configure options
+keepalived_source_configure_options:
+    - --includedir=${prefix}/include
+    - --mandir=${prefix}/share/man
+    - --infodir=${prefix}/share/info
+    - --sysconfdir=/etc
+    - --localstatedir=/var
+    - --disable-option-checking
+    - --disable-silent-rules
+    - --runstatedir=/run
+    - --disable-maintainer-mode
+    - --disable-dependency-tracking
+    - --enable-snmp
+    - --enable-sha1
+    - --enable-snmp-rfcv2
+    - --enable-snmp-rfcv3
+    - --enable-dbus
+    - --enable-json
+    - --enable-bfd
+    - --enable-regex
+    - --with-init=systemd
 
 # Keepalived scripts can be defined that trigger notification scripts.
 # Examples have been provided below and in the tests directory.
 # keepalived_scripts:
-  #haproxy_check_script:
+  # haproxy_check_script:
     # check_script: "/etc/keepalived/haproxy_check.sh"
     # ##if a src_check_script is defined, it will be uploaded from src_check_script
     # ##on the deploy host to the check_script location. If the check_script needs
     # ##parameters, you can define the location under dest_check_script.
     # src_check_script: "{{ playbook_dir }}/../scripts/keepalived_haproxy_check.sh"
-  #haproxy_check_script:
+  # haproxy_check_script:
     # Here is an example with a command instead of a script.
     # Add src_check_script if you want to run a script instead of a command
-    #check_script: "killall -0 haproxy"
+    # check_script: "killall -0 haproxy"
 keepalived_scripts: {}
 
 # Keepalived scripts may rely upon additional packages.
 keepalived_scripts_packages: []
 
-#This is the expiration time of your package manager cache.
-#When expired, this role will require to update the package manger cache.
-#This variable will be removed when the ansible upstream bugs will be fixed.
+# This is the expiration time of your package manager cache.
+# When expired, this role will require to update the package manger cache.
+# This variable will be removed when the ansible upstream bugs will be fixed.
 cache_timeout: 600
 
 keepalived_instances: {}
@@ -64,7 +92,7 @@ keepalived_sysctl_tcp_retries: 8
 # This list of strings will appear in the global_defs section of the
 # keepalived configuration file.
 # Example:
-#keepalived_global_defs:
+# keepalived_global_defs:
 #  - enable_script_security
 
 # Whether to add systemd overrides for keepalived:
@@ -84,6 +112,6 @@ keepalived_daemon_options_file_path: "{{ _keepalived_daemon_options_file_path }}
 # Overriding keepalived daemon extra arguments, which will be applied inside of
 # the keepalived_daemon_options_file_path variable.
 # Example:
-#keepalived_daemon_default_options_overrides:
+# keepalived_daemon_default_options_overrides:
 #  - "DAEMON_ARGS='--snmp'"
 keepalived_daemon_default_options_overrides: []

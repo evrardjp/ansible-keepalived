@@ -1,0 +1,52 @@
+---
+- name: Get installed Keepalived version
+  ansible.builtin.include_tasks: get_installed_version.yml
+
+- name: Gather the package facts
+  ansible.builtin.package_facts:
+  when: keepalived_installed
+
+- name: Disable services
+  block:
+    - name: Populate service facts
+      ansible.builtin.service_facts:
+
+    - name: Stop and disable services
+      ansible.builtin.service:
+        state: stopped
+        enabled: false
+        name: "{{ keepalived_service_name }}"
+      notify:
+        - Systemctl daemon-reload
+      when: keepalived_service_name in ansible_facts['services'].keys()
+
+- name: Uninstall Keepalived from source
+  when: 
+    - keepalived_installed
+    - ansible_facts.packages[keepalived_package_name] is not defined
+  block:
+    - name: Backup variables
+      ansible.builtin.set_fact:
+        keepalived_package_state_bak: "{{ keepalived_package_state }}"
+        keepalived_install_from_source_bak: "{{ keepalived_install_from_source }}"
+        
+    - name: Set uninstall variables
+      ansible.builtin.set_fact:
+        keepalived_package_state: absent
+        keepalived_install_from_source: true
+
+    - name: Uninstall Keepalived from source
+      ansible.builtin.include_tasks: install_from_source.yml
+    
+    - name: Restore variables
+      ansible.builtin.set_fact:
+        keepalived_package_state: "{{ keepalived_package_state_bak }}"
+        keepalived_install_from_source: "{{ keepalived_install_from_source_bak }}"
+
+- name: Remove Keepalived via package manager
+  when: 
+    - keepalived_installed
+    - ansible_facts.packages[keepalived_package_name] is defined
+  ansible.builtin.package:
+    name: "{{ keepalived_package_name }}"
+    state: absent

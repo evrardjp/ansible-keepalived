@@ -1,0 +1,95 @@
+# This task assumes it is only called if keepalived_install_from_source is true!
+# It does not include this check again!
+# For keepalived_package_state in (present, latest) it performs the following actions
+# - remove Keepalived if installed via package manager
+# - check if Keepalived is already installed and determine version
+# - if the wrong version is installed, it will uninstall it from source
+# - install the desired version from source
+# - install and enable the desired services#
+#
+# For keepalived_package_state == absent it performs the following actions
+# - remove Keepalived if installed via package manager
+# - check if Keepalived is already installed and determine version
+# - remove Keepalived from source if installed
+# - uninstall build dependencies
+---
+- name: Get installed Keepalived version
+  ansible.builtin.include_tasks: get_installed_version.yml
+
+- name: Gather package facts
+  ansible.builtin.package_facts:
+  when: keepalived_installed
+
+- name: Ensure Keepalived is not installed via package manager
+  ansible.builtin.include_tasks: uninstall.yml
+  when: ansible_facts.packages[keepalived_package_name] is defined
+
+- name: Initialize _keepalived_reinstall to false
+  ansible.builtin.set_fact:
+    _keepalived_reinstall: false
+
+- name: Get installed Keepalived version
+  ansible.builtin.include_tasks: get_installed_version.yml
+
+- name: Set _keepalived_reinstall to true if desired version not installed
+  ansible.builtin.set_fact:
+    _keepalived_reinstall: true
+  when: 
+    - keepalived_installed 
+    - keepalived_installed_version != keepalived_source_tag
+
+- name: Install build depedencies
+  when: "_keepalived_reinstall
+      or (keepalived_package_state in ('present', 'latest') and not keepalived_installed)
+      or (keepalived_package_state == 'absent' and keepalived_installed)"
+  block:
+    - name: Install build dependencies (non-rocky)
+      ansible.builtin.package:
+        name: "{{ keepalived_build_dep_packages }}"
+        update_cache: true
+        state: present
+      when: "ansible_facts['distribution'] | lower != 'rocky'"
+
+    - name: Install build dependencies (rocky)
+      ansible.builtin.dnf:
+        name: "{{ keepalived_build_dep_packages }}"
+        update_cache: true
+        state: present
+        enablerepo: devel
+      when: "ansible_facts['distribution'] | lower == 'rocky'"
+
+- name: Create temp folder for Keepalived
+  ansible.builtin.tempfile:
+    state: directory
+    prefix: keepalived
+  register: keepalived_dir
+  when: "_keepalived_reinstall
+      or (keepalived_package_state in ('present', 'latest') and not keepalived_installed)
+      or (keepalived_package_state == 'absent' and keepalived_installed)"
+
+- name: Uninstall old Keepalived version
+  when: _keepalived_reinstall 
+        or (keepalived_package_state == 'absent' and keepalived_installed)
+  block:
+    - name: Set uninstall variables
+      ansible.builtin.set_fact:
+        keepalived_source_install_dir: "{{ keepalived_dir }}"
+        keepalived_source_install_state: absent
+        keepalived_source_install_tag: "{{ keepalived_installed_version }}"
+        keepalived_source_install_repository: "{{ keepalived_source_repository }}"
+
+    - name: Uninstall Keepalived from source
+      ansible.builtin.include_tasks: compile_and_install_or_uninstall_from_source.yml
+
+- name: Install desired Keepalived version
+  when: _keepalived_reinstall or (keepalived_package_state in ('present', 'latest') and not keepalived_installed)
+  block:
+    - name: Set install variables
+      ansible.builtin.set_fact:
+        keepalived_source_install_dir: "{{ keepalived_dir }}"
+        keepalived_source_install_state: present
+        keepalived_source_install_tag: "{{ keepalived_source_tag }}"
+        keepalived_source_install_repository: "{{ keepalived_source_repository }}"
+
+    - name: Install Keepalived from source
+      ansible.builtin.include_tasks: compile_and_install_or_uninstall_from_source.yml

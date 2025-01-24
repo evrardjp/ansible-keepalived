@@ -1,0 +1,141 @@
+# This task performs a Git Clone and checkout operation on the desired source tag,
+# runs "configure", "make" and finally "make install" or "make uninstall".
+# Sources are removed in the end.
+#
+# It does NOT use the role's main variables but a subset:
+# - keepalived_source_install_repository: The Git repository to compile Keepalived from
+# - keepalived_source_install_dir: The working directory for cloning into and compiling in
+# - keepalived_source_install_tag: The Git tag/branch to check out before installing
+# - keepalived_source_install_state: 'present' to install or 'absent' to uninstall
+---
+- name: Get and configure Keepalived sources
+  block:
+    - name: Initialize keepalived_source_install_repository
+      ansible.builtin.set_fact:
+        keepalived_source_install_repository: "{{ keepalived_source_repository }}"
+      when: keepalived_source_install_repository is not defined
+
+    - name: Initialize keepalived_source_install_tag
+      ansible.builtin.set_fact:
+        keepalived_source_install_tag: "{{ keepalived_source_tag }}"
+      when: keepalived_source_install_tag is not defined
+
+    - name: Git checkout
+      ansible.builtin.git:
+        repo: '{{ keepalived_source_install_repository }}'
+        dest: "{{ keepalived_source_install_dir.path }}/keepalived"
+        version: "{{ keepalived_source_install_tag }}"
+
+    - name: Create install prefix
+      ansible.builtin.set_fact:
+        _keepalived_install_prefix: "/usr/local/keepalived-{{ keepalived_source_tag | regex_replace('v(.*)', '\\1') }}"
+
+    - name: Gather Architecture
+      ansible.builtin.command:
+        cmd: "gcc -print-multiarch"
+      changed_when: true
+      register: gcc_multiarch
+
+    - name: Build dynamic config options
+      ansible.builtin.set_fact:
+        _keepalived_dynamic_conf_options: "{{ _keepalived_dynamic_conf_options | default({}) | 
+          combine({'--with-init': ansible_service_mgr,
+            '--build': gcc_multiarch.stdout,
+            '--prefix': _keepalived_install_prefix,
+            '--libdir': '${prefix}/lib/x86_64-linux-gnu',
+            'build_alias': gcc_multiarch.stdout,
+            'CFLAGS': '-g'})
+          }}"
+
+    - name: Build config options
+      ansible.builtin.set_fact:
+        _keepalived_config_options: "{{ keepalived_source_configure_options + ['='.join([item.key, item.value])] }}"
+      when: keepalived_source_configure_options | select('search', '^'+item.key+'.*') | length == 0
+      with_items: "{{ _keepalived_dynamic_conf_options | dict2items }}"
+        
+    - name: Run NUT autogen
+      ansible.builtin.command:
+        chdir: "{{ keepalived_source_install_dir.path }}/keepalived"
+        cmd: "./autogen.sh"
+      changed_when: true
+
+    - name: Run Keepalived configure
+      ansible.builtin.command:
+        chdir: "{{ keepalived_source_install_dir.path }}/keepalived"
+        cmd: ./configure --prefix={{ _keepalived_install_prefix }}
+      changed_when: true
+
+    
+
+- name: Install Keepalived from source
+  when: keepalived_source_install_state in ('present', 'latest')
+  block:
+    - name: Make Keepalived
+      community.general.make:
+        chdir: "{{ keepalived_source_install_dir.path }}/keepalived"
+
+    - name: Install Keepalived
+      community.general.make:
+        chdir: "{{ keepalived_source_install_dir.path }}/keepalived"
+        target: install
+      become: true
+    
+    - name: Create binary symbolic link
+      ansible.builtin.file:
+        src: "{{ _keepalived_install_prefix }}/sbin/keepalived"
+        dest: /usr/sbin/keepalived
+        owner: root
+        group: root
+        mode: "0755"
+        state: link
+
+    - name: Create configuration folder
+      ansible.builtin.file:
+        path: "{{ keepalived_config_file_path | ansible.builtin.dirname }}"
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Install systemd service
+      ansible.builtin.copy:
+        src: "{{ keepalived_source_install_dir.path }}/keepalived/keepalived/keepalived.service"
+        dest: "{{ keepalived_serivce_unit_path }}"
+        mode: "0644"
+        remote_src: true
+      notify:
+        - Systemctl daemon-reload
+
+- name: Uninstall Keepalived from source
+  when: keepalived_source_install_state == 'absent'
+  block:
+    - name: Uninstall Keepalived
+      community.general.make:
+        chdir: "{{ keepalived_source_install_dir.path }}/keepalived"
+        target: uninstall
+      become: true
+
+    - name: Check if binary is a link
+      ansible.builtin.stat:
+        path: /usr/sbin/keepalived
+      register: _keepalived_link_check
+    
+    - name: Delete binary symbolic link
+      ansible.builtin.file:
+        path: /usr/sbin/keepalived
+        state: absent
+      when:
+        - _keepalived_link_check.islnk is defined
+        - _keepalived_link_check.islnk
+    
+    - name: Uninstall systemd service
+      ansible.builtin.file:
+        path: "{{ keepalived_serivce_unit_path }}"
+        state: absent
+      notify:
+        - Systemctl daemon-reload
+
+- name: Remove Keepalived sources
+  ansible.builtin.file:
+    path: "{{ keepalived_source_install_dir.path }}"
+    state: absent

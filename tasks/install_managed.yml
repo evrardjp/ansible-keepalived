@@ -1,0 +1,25 @@
+---
+- name: Get installed Keepalived version
+  ansible.builtin.include_tasks: get_installed_version.yml
+
+- name: Gather the package facts
+  ansible.builtin.package_facts:
+  when: keepalived_installed
+
+- name: Uninstall Keepalived from source
+  ansible.builtin.include_tasks: uninstall.yml
+  when: 
+    - keepalived_installed 
+    - ansible_facts.packages[keepalived_package_name] is not defined or keepalived_package_state == 'absent'
+
+- name: Install keepalived package(s)
+  ansible.builtin.package:
+    name: "{{ [keepalived_package_name] + keepalived_scripts_packages }}"
+    state: "present"
+    update_cache: yes
+    cache_valid_time: "{{ (ansible_facts['pkg_mgr'] == 'apt') | ternary(cache_timeout, omit) }}"
+  notify:
+    - Restart keepalived
+  tags:
+    - keepalived-packages
+    - keepalived-install

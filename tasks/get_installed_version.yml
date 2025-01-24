@@ -1,0 +1,27 @@
+# This determines if Keepalived is installed and sets
+# a fact '_keepalived_installed_version' with the format 'v<major>.<minor>.<patch>' if it is.
+# After running this task, check if Keepalived is installed by checking "_keepalived_installed"
+---
+- name: Determine if Keepalived must be removed from source to install desired version
+  block:
+    - name: Output keepalived version
+      ansible.builtin.command: keepalived --version
+      register: _keepalived_version
+      changed_when: false
+      check_mode: no
+      ignore_errors: true
+      tags:
+        - keepalived-version
+
+    - name: Evaluating check result
+      ansible.builtin.set_fact:
+        keepalived_installed: "{{ _keepalived_version.rc in [0] }}"
+      tags:
+        - keepalived-version
+
+    - name: Extract version testability flag
+      ansible.builtin.set_fact:
+        keepalived_installed_version: "v{{ _keepalived_version.stderr_lines[0] | regex_search('[kK]eepalived v(.*) ', '\\1') | join('.') }}"
+      tags:
+        - keepalived-config
+      when: keepalived_installed

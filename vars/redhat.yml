@@ -23,3 +23,20 @@ keepalived_selinux_packages:
   - python3-policycoreutils
   - libselinux
   - libselinux-devel
+
+keepalived_build_dep_packages:
+  - git
+  - automake
+  - autoconf
+  - curl
+  - gcc
+  - openssl-devel
+  - libmnl-devel
+  - libnl3-devel
+  - libnftnl-devel
+  - make
+  - man-db
+  - net-snmp-devel
+  - net-snmp
+  - net-snmp-utils
+  - net-snmp-libs
