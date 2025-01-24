@@ -51,7 +51,6 @@ keepalived_source_configure_options:
     - --enable-json
     - --enable-bfd
     - --enable-regex
-    - --with-init=systemd
 
 # Keepalived scripts can be defined that trigger notification scripts.
 # Examples have been provided below and in the tests directory.
