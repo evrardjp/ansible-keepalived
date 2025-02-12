@@ -46,7 +46,13 @@ No dependency
 Example Playbook
 ----------------
 
-See it in tests/keepalived-install-example.yml
+See it in tests/keepalived-install-example.yml for a simple example (the one used in CI gating).
+Please also check tests/keepalived-install-complex-example.yml for a more detailed example with more features (not gated).
+
+Contributing
+------------
+
+Please read our CONTRIBUTING.md
 
 License
 -------

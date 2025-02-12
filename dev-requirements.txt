@@ -1,8 +1,0 @@
-# Ansible-latest test environment
-ansible
-molecule
-molecule-plugins[docker]
-ansible-lint<6.4.0
-yamllint==1.28.0
-requests<2.29
-urllib3<2

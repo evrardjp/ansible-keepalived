@@ -1,0 +1,17 @@
+---
+- name: Setup keepalived
+  hosts: all
+  remote_user: vagrant
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Define NIC to use for VRRP
+      ansible.builtin.set_fact:
+        vrrp_nic: "{{ (ansible_facts['interfaces'] | reject('equalto', 'lo') | sort)[-1] }}"
+        vrrp_ip: 192.168.56.254/24
+
+    - name: Include keepalived scenario vars
+      ansible.builtin.include_vars: ../../tests/molecule-basic-scenario-vars.yml
+    - name: Include keepalived role
+      ansible.builtin.include_role:
+        name: evrardjp.keepalived

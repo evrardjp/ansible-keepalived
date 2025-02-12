@@ -1,5 +1,5 @@
 ---
-name: Monthly Molecule Test
+name: Monthly Test
 on:
   schedule:
     # Run on the 10th of each month at noon.
@@ -9,13 +9,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ansible: ["latest"]
+        tox: ["lint"]
     steps:
       - uses: actions/checkout@v2
       - name: Install dependencies
         run: |
           sudo apt remove ansible
           sudo apt install tox
-      - name: Test with molecule using tox
+      - name: Lint test with tox
         run: |
-          sudo -H -E tox -e ansible-${{ matrix.ansible }}
+          sudo -H -E tox -e lint

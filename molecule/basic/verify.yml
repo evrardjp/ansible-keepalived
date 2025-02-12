@@ -1,0 +1,47 @@
+---
+- name: Wait for keepalived to converge
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Wait for converge
+      ansible.builtin.wait_for:
+        timeout: 10
+
+- name: Create inventory of masters
+  hosts: all
+  order: sorted
+  gather_facts: yes
+  tasks:
+    - name: Define vrrp nic
+      ansible.builtin.set_fact:
+        vrrp_nic: "{{ (ansible_facts['interfaces'] | reject('equalto', 'lo') | sort)[-1] }}"
+        vrrp_ip: 192.168.56.254
+
+    - name: Current IPs
+      debug:
+        var: ansible_facts['locally_reachable_ips']['ipv4']
+
+    - name: Check if node has the VIP
+      ansible.builtin.set_fact:
+        has_vip: "{{ vrrp_ip in ansible_facts['locally_reachable_ips']['ipv4'] }}"
+
+    - name: Show the state of vip var
+      debug:
+        var: has_vip
+        verbosity: 2
+
+    - name: Register nodes with VIP
+      ansible.builtin.group_by:
+        key: "{{ has_vip | bool | ternary('keepalived_masters', 'keepalived_backups') }}"
+
+
+- name: Assert that at least one node has the VIP
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Ensure at least one node has the VIP
+      ansible.builtin.assert:
+        that:
+          - "groups['keepalived_masters'] | length > 0"
+        fail_msg: "No node has the specified VIP"
+        success_msg: "node {{ groups['keepalived_masters'] }} has the specified VIP"
