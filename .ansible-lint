@@ -7,3 +7,9 @@ skip_list:
 
 warn_list:  # or 'skip_list' to silence them completely
   - experimental  # all rules tagged as experimental
+
+exclude_paths:
+  - .ansible
+  - .cache
+  - .venv
+  - molecule

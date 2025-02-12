@@ -1,19 +1,19 @@
 ---
-name: Molecule Test
+name: Test
 on: [push, pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
-      max-parallel: 2
       matrix:
-        ansible: ["2.10", "latest"]
+        # not running molecule_basic in CI due to lack of support
+        # of macos image with nested virt + vagrant
+        tox: ["lint"]
     steps:
       - uses: actions/checkout@v2
       - name: Install dependencies
         run: |
-          sudo apt remove ansible
           sudo apt install tox
-      - name: Test with molecule using tox
+      - name: Test using tox
         run: |
-          sudo -H -E tox -e ansible-${{ matrix.ansible }}
+          sudo -H -E tox -e ${{ matrix.tox }}

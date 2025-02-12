@@ -44,100 +44,100 @@
         # will be uploaded from the deployment host to the keepalived server at the
         # notify_script location.
         #
-        #notify_script:
-        #src_notify_script:
-        #notify_master:
-        #src_notify_master:
-        #notify_backup:
-        #src_notify_backup:
-        #notify_fault:
-        #src_notify_fault:
+        # notify_script:
+        # src_notify_script:
+        # notify_master:
+        # src_notify_master:
+        # notify_backup:
+        # src_notify_backup:
+        # notify_fault:
+        # src_notify_fault:
 
-    # Uncomment this to have keepalived status checking. They will run on all the hosts
-    # whether it's master or backup. You can have multiple scripts.
-    keepalived_scripts:
-      pingable_check_script:
-        # Example only! If my keepalived's gateway doesn't answer to ping, I kill it.
-        check_script: "ping -c 1 193.0.14.129 1>&2"
-        # Interval is the time in seconds between each check
-        #interval: 10
-        # Fall is the time to mark the keepalived status as not ok. Only takes 4 errors to fall!
-        #fall: 4
-        # Rise is the time to mark the keepalived status as back to ok
-        #rise: 4
-        # Allow the check script to complete within a timeout of $timeout seconds
-        #timeout: 2
+      # Uncomment this to have keepalived status checking. They will run on all the hosts
+      # whether it's master or backup. You can have multiple scripts.
+      keepalived_scripts:
+        pingable_check_script:
+          # Example only! If my keepalived's gateway doesn't answer to ping, I kill it.
+          check_script: "ping -c 1 193.0.14.129 1>&2"
+          # Interval is the time in seconds between each check
+          # interval: 10
+          # Fall is the time to mark the keepalived status as not ok. Only takes 4 errors to fall!
+          # fall: 4
+          # Rise is the time to mark the keepalived status as back to ok
+          # rise: 4
+          # Allow the check script to complete within a timeout of $timeout seconds
+          # timeout: 2
 
-    keepalived_instances:
-      #This dict name is the same as the one above, in keepalived_sync_groups.
-      external:
-        #remember you can use ansible variables here.
-        interface:  "{{ keepalived_ext_nic | default('eth0') }}"
-        state: "{{ (groups['keepalived'].index(inventory_hostname) == 0) | ternary('MASTER','BACKUP') }}"
-        virtual_router_id: "{{ keepalived_vrrp_groupid_external | default('10') }}"
+      keepalived_instances:
+        # This dict name is the same as the one above, in keepalived_sync_groups.
+        external:
+          # remember you can use ansible variables here.
+          interface: "{{ keepalived_ext_nic | default('eth0') }}"
+          state: "{{ (groups['keepalived'].index(inventory_hostname) == 0) | ternary('MASTER','BACKUP') }}"
+          virtual_router_id: "{{ keepalived_vrrp_groupid_external | default('10') }}"
 
-        # Be smart and don't use 250/0 if you have more than 2 nodes. Spread it around.
-        # Think of things like
-        # priority: "{{ (groups['all'] | length - groups['all'].index(inventory_hostname)) * 250 // (groups['all'] | length) }}"
-        # Or use group_vars/host_vars.
-        # Or calculate on the 0->150 range for backups, and keeping 250 for master...
-        priority: "{{ inventory_hostname == groups['keepalived'][0] | ternary('250', '0') }}"
+          # Be smart and don't use 250/0 if you have more than 2 nodes. Spread it around.
+          # Think of things like
+          # priority: "{{ (groups['all'] | length - groups['all'].index(inventory_hostname)) * 250 // (groups['all'] | length) }}"
+          # Or use group_vars/host_vars.
+          # Or calculate on the 0->150 range for backups, and keeping 250 for master...
+          priority: "{{ inventory_hostname == groups['keepalived'][0] | ternary('250', '0') }}"
 
-        # Please set this if you want to use authentication in your VRRP
-        # instance. If more than 8 characters, it will be truncated.
-        # The password must be the same per router_id (so backup and
-        # master should have the same password).
-        # Keep in mind it's mostly plaintext, and not really useful.
-        #authentication_password: "your_password"
+          # Please set this if you want to use authentication in your VRRP
+          # instance. If more than 8 characters, it will be truncated.
+          # The password must be the same per router_id (so backup and
+          # master should have the same password).
+          # Keep in mind it's mostly plaintext, and not really useful.
+          # authentication_password: "your_password"
 
-        vips:
-          - "{{ keepalived_ext_vip_with_cidr | default('198.51.100.1/24') }} dev {{ keepalived_ext_nic | default('eth0') }}"
+          vips:
+            - "{{ keepalived_ext_vip_with_cidr | default('198.51.100.1/24') }} dev {{ keepalived_ext_nic | default('eth0') }}"
 
-        # Optional Scripts for tracking the current status of the keepalived instance
-        #track_scripts:
-        #  - haproxy_check_script
-        #  - pingable_check_script
-        # Optional Interfaces for tracking the link status of the interfaces listed
-        #track_interfaces:
-        #  - eth1
-        #  - eth2
+          # Optional Scripts for tracking the current status of the keepalived instance
+          # track_scripts:
+          #  - haproxy_check_script
+          #  - pingable_check_script
+          # Optional Interfaces for tracking the link status of the interfaces listed
+          # track_interfaces:
+          #  - eth1
+          #  - eth2
 
-      internal:
-        interface:  "{{ keepalived_int_nic | default('eth1') }}"
-        state: "{{ (groups['keepalived'].index(inventory_hostname) == 0) | ternary('MASTER','BACKUP') }}"
-        virtual_router_id: "{{ keepalived_vrrp_groupid_external | default('11') }}"
-        priority: "{{ inventory_hostname == groups['keepalived'][0] | ternary('250', '0') }}"
-        vips:
-          - "{{ keepalived_int_vip_with_cidr | default('192.0.2.1/24') }} dev {{ keepalived_int_nic | default('eth1') }} "
+        internal:
+          interface: "{{ keepalived_int_nic | default('eth1') }}"
+          state: "{{ (groups['keepalived'].index(inventory_hostname) == 0) | ternary('MASTER','BACKUP') }}"
+          virtual_router_id: "{{ keepalived_vrrp_groupid_external | default('11') }}"
+          priority: "{{ inventory_hostname == groups['keepalived'][0] | ternary('250', '0') }}"
+          vips:
+            - "{{ keepalived_int_vip_with_cidr | default('192.0.2.1/24') }} dev {{ keepalived_int_nic | default('eth1') }} "
 
-    # Uncomment and adjust to make use of keepalived's virtual_server functions.
-    keepalived_virtual_servers: []
-    #  # Example with recycled {{ keepalived_int_vip_with_cidr }}
-    #  - ip: "{{ keepalived_int_vip_with_cidr | ansible.utils.ipaddr('address') }}"
-    #    port: '53'
-    #    protocol: 'UDP'
-    #    lvs_method: 'NAT'
-    #    # Optional, set false or omit to not use it.
-    #    ha_suspend: true
-    #    real_servers:
-    #      - ip: '8.8.8.8'
-    #        port: '53'
-    #        # Currently on MISC_CHECK is supported. Section is optional.
-    #        misc_check:
-    #            - misc_path: '/usr/bin/host -W 1 github.com 8.8.8.8'
-    #              # Role default is 3
-    #              misc_timeout: '2'
-    #      - ip: '8.8.4.4'
-    #        port: '53'
-    #        misc_check:
-    #            - misc_path: '/usr/bin/host -W 1 github.com 8.8.4.4'
-    #              misc_timeout: '10'
-    #              # Optinal, set false or omit to not use it.
-    #              warmup: true
-    #              # Optinal, set false or omit to not use it.
-    #              misc_dynamic: true
+      # Uncomment and adjust to make use of keepalived's virtual_server functions.
+      keepalived_virtual_servers: []
+      #  # Example with recycled {{ keepalived_int_vip_with_cidr }}
+      #  - ip: "{{ keepalived_int_vip_with_cidr | ansible.utils.ipaddr('address') }}"
+      #    port: '53'
+      #    protocol: 'UDP'
+      #    lvs_method: 'NAT'
+      #    # Optional, set false or omit to not use it.
+      #    ha_suspend: true
+      #    real_servers:
+      #      - ip: '8.8.8.8'
+      #        port: '53'
+      #        # Currently on MISC_CHECK is supported. Section is optional.
+      #        misc_check:
+      #            - misc_path: '/usr/bin/host -W 1 github.com 8.8.8.8'
+      #              # Role default is 3
+      #              misc_timeout: '2'
+      #      - ip: '8.8.4.4'
+      #        port: '53'
+      #        misc_check:
+      #            - misc_path: '/usr/bin/host -W 1 github.com 8.8.4.4'
+      #              misc_timeout: '10'
+      #              # Optinal, set false or omit to not use it.
+      #              warmup: true
+      #              # Optinal, set false or omit to not use it.
+      #              misc_dynamic: true
 
   tasks:
-  - name: Include ansible-keepalived
-    ansible.builtin.include_role:
-      name: ansible-keepalived
+    - name: Include ansible-keepalived
+      ansible.builtin.include_role:
+        name: ansible-keepalived

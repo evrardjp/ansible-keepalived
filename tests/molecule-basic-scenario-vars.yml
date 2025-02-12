@@ -2,9 +2,6 @@
 # Original source:
 # Copyright 2017, Jean-Philippe Evrard <open-source@a.spamming.party>
 #
-# Re-created by git on:
-# Copyright 2022, Jean-Philippe Evrard <open-source@a.spamming.party>
-#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -24,12 +21,15 @@
 # have your own group/host vars to define the content
 # of the necessary keepalived variables.
 
-- name: Install keepalived
-  hosts: keepalived
-  order: sorted
-  tasks:
-    - name: Include vars
-      ansible.builtin.include_vars: molecule-basic-scenario-vars.yml
-    - name: Include ansible-keepalived
-      ansible.builtin.include_role:
-        name: ansible-keepalived
+keepalived_instances:
+  internal:
+    interface: "{{ vrrp_nic | default(ansible_default_ipv4.interface, true) }}"
+    # You can also use your own variable to determine which node is master and who
+    state: "{{ (groups['keepalived'].index(inventory_hostname) == 0) | ternary('MASTER','BACKUP') }}"
+    virtual_router_id: "{{ vrrp_id | default(42) }}"
+    # I advise you to define your own priority per node, instead of a generic all or nothing.
+    # Especially if you have more than two nodes.
+    priority: "{{ (inventory_hostname == groups['keepalived'][0]) | ternary('200', '100') }}"
+    # Do not forget to define the VIPs, and their CIDR.
+    vips:
+      - "{{ vrrp_ip | default('192.168.56.2/24') }} dev {{ vrrp_nic | default(ansible_default_ipv4.interface, true) }}"

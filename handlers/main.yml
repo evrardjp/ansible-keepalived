@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: restart keepalived
+- name: Restart keepalived
   ansible.builtin.service:
     name: "{{ keepalived_service_name }}"
     state: "restarted"
@@ -21,7 +21,7 @@
   when:
     - _servicestart is not changed
 
-- name: reload keepalived
+- name: Reload keepalived
   ansible.builtin.service:
     name: "{{ keepalived_service_name }}"
     state: "reloaded"

@@ -1,0 +1,4 @@
+ansible
+ansible-dev-tools
+molecule-plugins[vagrant]
+molecule_plugins[vagrant]

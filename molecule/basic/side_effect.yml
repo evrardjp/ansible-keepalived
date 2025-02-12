@@ -1,0 +1,13 @@
+---
+- name: Kill the nic hosting the vip
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: Define vrrp nic
+      ansible.builtin.set_fact:
+        vrrp_nic: "{{ (ansible_facts['interfaces'] | reject('equalto', 'lo') | sort)[-1] }}"
+        vrrp_ip: 192.168.56.254
+
+    - name: Disable nic
+      ansible.builtin.command: "ip link set dev {{ vrrp_nic }} down"
+      when: "vrrp_ip in ansible_facts['locally_reachable_ips']['ipv4']"

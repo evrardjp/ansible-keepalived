@@ -1,0 +1,63 @@
+---
+driver:
+  name: vagrant
+  provider:
+    name: virtualbox
+    type: virtualbox
+    options:
+      memory: 384
+      cpus: 1
+platforms:
+  # 20.04
+  - name: keepalived-ubuntu-focal
+    box: ubuntu/focal64
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: static
+        ip: 192.168.56.10
+    groups:
+      - ubuntu
+      - keepalived
+  # 22.04
+  - name: keepalived-ubuntu-jammy
+    box: ubuntu/jammy64
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: static
+        ip: 192.168.56.20
+    groups:
+      - ubuntu
+      - keepalived
+  # 24.04 is not officially provided anymore
+  - name: keepalived-ubuntu-noble
+    box: alvistack/ubuntu-24.04
+    memory: 512
+    cpus: 1
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: static
+        ip: 192.168.56.30
+    groups:
+      - ubuntu
+      - keepalived
+provisioner:
+  name: ansible
+  connection_options:
+    ansible_ssh_user: vagrant
+    ansible_become: true
+    ansible_command_timeout: 30
+  log: true
+
+scenario:
+  name: basic
+  test_sequence:
+    - create
+    - prepare
+    - converge
+    - verify
+    - side_effect
+    - verify
+    - destroy
