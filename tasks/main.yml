@@ -309,6 +309,7 @@
     - keepalived-config
   check_mode: false
   diff: false
+  changed_when: false
 
 - name: Configure keepalived
   ansible.builtin.template:
