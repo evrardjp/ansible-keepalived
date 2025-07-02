@@ -297,6 +297,19 @@
   tags:
     - keepalived-config
 
+- name: Test keepalived config
+  ansible.builtin.template:
+    src: keepalived.conf.j2
+    dest: "{{ keepalived_test_config_file_path }}"
+    mode: "0640"
+    validate: "{{ keepalived_config_testable | ternary('keepalived --config-test -f %s', omit) }}"
+  notify:
+    - Reload keepalived
+  tags:
+    - keepalived-config
+  check_mode: false
+  diff: false
+
 - name: Configure keepalived
   ansible.builtin.template:
     src: keepalived.conf.j2
