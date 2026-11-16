@@ -88,5 +88,5 @@ keepalived_daemon_options_file_path: "{{ _keepalived_daemon_options_file_path }}
 #   - "DAEMON_ARGS='--snmp'"
 keepalived_daemon_default_options_overrides: []
 
-#Path to a file for testing config without actually deploying it
+# Path to a file for testing config without actually deploying it
 keepalived_test_config_file_path: /tmp/keepalived-test.conf
