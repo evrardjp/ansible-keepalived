@@ -43,14 +43,20 @@
         # For convenience, if you set a variable src_*, the file mentioned in the 'src'
         # will be uploaded from the deployment host to the keepalived server at the
         # notify_script location.
+        # To specify a specific user (and group) to run each script as, set a variable *_user_group'
+        # as seen below.
         #
         # notify_script:
+        # notify_script_user_group:
         # src_notify_script:
         # notify_master:
+        # notify_master_user_group:
         # src_notify_master:
         # notify_backup:
+        # notify_backup_user_group:
         # src_notify_backup:
         # notify_fault:
+        # notify_fault_user_group:
         # src_notify_fault:
 
       # Uncomment this to have keepalived status checking. They will run on all the hosts
