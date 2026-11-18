@@ -15,6 +15,37 @@ Starting with this role version 4.0.0, the following minimum OS versions are req
 
 For older OSes, please use a previous version of this role.
 
+Installation
+------------
+
+This repository provides the `evrardjp.keepalived` Ansible **role**, not a collection.
+Install it from Ansible Galaxy with:
+
+```console
+ansible-galaxy role install evrardjp.keepalived
+```
+
+To install a downloaded `.tar.gz` role archive, create a `requirements.yml` file
+with the archive's path:
+
+```yaml
+---
+roles:
+  - name: evrardjp.keepalived
+    src: /path/to/ansible-keepalived.tar.gz
+```
+
+Then run:
+
+```console
+ansible-galaxy role install -r requirements.yml
+```
+
+Do not use `ansible-galaxy collection install` or list this role under
+`collections:` in a requirements file. Collections require a `MANIFEST.json`;
+role archives do not. A missing `MANIFEST.json` error means the role archive is
+being treated as a collection.
+
 Role Variables
 --------------
 
